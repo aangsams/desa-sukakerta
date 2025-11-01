@@ -1,0 +1,36 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Custom global styles */
+@layer base {
+	body {
+		@apply bg-base text-textmain font-sans leading-relaxed;
+	}
+
+	h1,
+	h2,
+	h3,
+	h4,
+	h5 {
+		@apply font-heading text-[#2E7D32];
+	}
+
+	a {
+		@apply text-accent hover:underline hover:text-[#0288D1];
+	}
+}
+
+@layer components {
+	.btn-primary {
+		@apply bg-primary text-white px-4 py-2 rounded-lg shadow-soft hover:bg-[#256628] transition;
+	}
+
+	.btn-outline {
+		@apply border border-primary text-primary px-4 py-2 rounded-lg hover:bg-primary hover:text-white transition;
+	}
+
+	.section-title {
+		@apply text-2xl font-bold text-center mb-10 text-primary;
+	}
+}
