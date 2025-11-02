@@ -30,7 +30,8 @@ document.addEventListener("DOMContentLoaded", function () {
 			// Setelah kedua file berhasil dimuat, panggil fungsi untuk membuat grafik
 			// Fungsi ini akan mengecek apakah elemen grafiknya ada di halaman
 			buatGrafikPenduduk(dataPenduduk);
-			buatGrafikApbdes(dataApbdes);
+			updateKartuApbdes(dataApbdes); // Memperbarui kartu ringkasan
+			buatChartApbdes(dataApbdes); // Membuat grafik APBDes
 		})
 		.catch((error) => {
 			console.error("Error saat memuat file JSON:", error);
@@ -118,84 +119,64 @@ function buatGrafikPenduduk(data) {
 }
 
 /**
- * Memperbarui kartu ringkasan dan membuat grafik APBDes
+ * Fungsi bantuan untuk memperbarui konten elemen DOM dengan aman.
+ * @param {string} id - ID elemen.
+ * @param {string} value - Nilai yang akan dimasukkan.
+ * @param {string} [property='textContent'] - Properti yang akan diubah (mis: 'textContent', 'href', 'style.width').
+ */
+function updateElement(id, value, property = "textContent") {
+	const el = document.getElementById(id);
+	if (el) {
+		if (property.startsWith("style.")) {
+			el.style[property.split(".")[1]] = value;
+		} else {
+			el[property] = value;
+		}
+	}
+}
+
+/**
+ * Memperbarui kartu ringkasan APBDes di halaman.
  * @param {object} data - Data dari apbdes2024.json
  */
-function buatGrafikApbdes(data) {
+function updateKartuApbdes(data) {
 	try {
-		// === 1. PERBARUI KONTEN DINAMIS (KARTU, JUDUL, PDF) ===
-		// Elemen-elemen ini mungkin tidak ada di setiap halaman,
-		// jadi kita cek 'if (element)' untuk menghindari error.
-
-		const tahunEl = document.getElementById("apbdes-tahun");
-		if (tahunEl) tahunEl.textContent = data.tahun;
-
-		const pdfLinkEl = document.getElementById("apbdes-pdf-link");
-		if (pdfLinkEl) pdfLinkEl.href = data.dokumenPdf;
-
-		const pdfTextEl = document.getElementById("apbdes-pdf-text");
-		if (pdfTextEl)
-			pdfTextEl.textContent = `Lihat Dokumen Lengkap (PDF ${data.tahun})`;
+		// Update Judul, Tahun, dan Link PDF
+		updateElement("apbdes-tahun", data.tahun);
+		updateElement("apbdes-pdf-link", data.dokumenPdf, "href");
+		updateElement("apbdes-pdf-text", `Lihat Dokumen Lengkap (PDF ${data.tahun})`);
 
 		// Kartu Pendapatan
 		const pend = data.ringkasan.pendapatan;
 		const pendPersen = ((pend.realisasi / pend.anggaran) * 100).toFixed(0);
-		const pendAnggaranEl = document.getElementById("pendapatan-anggaran");
-		if (pendAnggaranEl)
-			pendAnggaranEl.textContent = `Anggaran: ${formatRupiah(
-				pend.anggaran
-			)}`;
-
-		const pendRealisasiEl = document.getElementById("pendapatan-realisasi");
-		if (pendRealisasiEl)
-			pendRealisasiEl.textContent = `Realisasi: ${formatRupiah(
-				pend.realisasi
-			)}`;
-
-		const pendBarEl = document.getElementById("pendapatan-bar");
-		if (pendBarEl) pendBarEl.style.width = `${pendPersen}%`;
-
-		const pendPersenEl = document.getElementById("pendapatan-persen");
-		if (pendPersenEl)
-			pendPersenEl.textContent = `${pendPersen}% terealisasi`;
+		updateElement("pendapatan-anggaran", `Anggaran: ${formatRupiah(pend.anggaran)}`);
+		updateElement("pendapatan-realisasi", `Realisasi: ${formatRupiah(pend.realisasi)}`);
+		updateElement("pendapatan-bar", `${pendPersen}%`, "style.width");
+		updateElement("pendapatan-persen", `${pendPersen}% terealisasi`);
 
 		// Kartu Belanja
 		const bel = data.ringkasan.belanja;
 		const belPersen = ((bel.realisasi / bel.anggaran) * 100).toFixed(0);
-		const belAnggaranEl = document.getElementById("belanja-anggaran");
-		if (belAnggaranEl)
-			belAnggaranEl.textContent = `Anggaran: ${formatRupiah(
-				bel.anggaran
-			)}`;
-
-		const belRealisasiEl = document.getElementById("belanja-realisasi");
-		if (belRealisasiEl)
-			belRealisasiEl.textContent = `Realisasi: ${formatRupiah(
-				bel.realisasi
-			)}`;
-
-		const belBarEl = document.getElementById("belanja-bar");
-		if (belBarEl) belBarEl.style.width = `${belPersen}%`;
-
-		const belPersenEl = document.getElementById("belanja-persen");
-		if (belPersenEl) belPersenEl.textContent = `${belPersen}% terealisasi`;
+		updateElement("belanja-anggaran", `Anggaran: ${formatRupiah(bel.anggaran)}`);
+		updateElement("belanja-realisasi", `Realisasi: ${formatRupiah(bel.realisasi)}`);
+		updateElement("belanja-bar", `${belPersen}%`, "style.width");
+		updateElement("belanja-persen", `${belPersen}% terealisasi`);
 
 		// Kartu Pembiayaan
 		const pemb = data.ringkasan.pembiayaan;
-		const pembAnggaranEl = document.getElementById("pembiayaan-anggaran");
-		if (pembAnggaranEl)
-			pembAnggaranEl.textContent = `Anggaran: ${formatRupiah(
-				pemb.anggaran
-			)}`;
+		updateElement("pembiayaan-anggaran", `Anggaran: ${formatRupiah(pemb.anggaran)}`);
+		updateElement("pembiayaan-realisasi", `Realisasi: ${formatRupiah(pemb.realisasi)}`);
+	} catch (e) {
+		console.error("Gagal memperbarui kartu APBDes:", e);
+	}
+}
 
-		const pembRealisasiEl = document.getElementById("pembiayaan-realisasi");
-		if (pembRealisasiEl)
-			pembRealisasiEl.textContent = `Realisasi: ${formatRupiah(
-				pemb.realisasi
-			)}`;
-
-		// === 2. BUAT GRAFIK APBDES ===
-
+/**
+ * Membuat grafik batang untuk APBDes (Pendapatan dan Belanja).
+ * @param {object} data - Data dari apbdes2024.json
+ */
+function buatChartApbdes(data) {
+	try {
 		const commonOptions = {
 			responsive: true,
 			scales: {
@@ -300,6 +281,6 @@ function buatGrafikApbdes(data) {
 			});
 		}
 	} catch (e) {
-		console.error("Gagal memproses data APBDes:", e);
+		console.error("Gagal membuat grafik APBDes:", e);
 	}
 }

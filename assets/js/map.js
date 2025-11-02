@@ -35,7 +35,7 @@ document.addEventListener("DOMContentLoaded", function () {
 	// --- 3. BATAS WILAYAH (GEOJSON) ---
 
 	// Nama file GeoJSON Anda (pastikan ada di folder yang sama)
-	const urlGeoJSON = "assets/js/map.geojson";
+	const urlGeoJSON = "assets/js/mmap.geojson";
 
 	// Fungsi untuk memberi gaya pada batas wilayah
 	function styleBatas(feature) {
