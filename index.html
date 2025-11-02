@@ -3,18 +3,19 @@
 	<head>
 		<meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-		<title>Halaman Utama (Pemuat Komponen)</title>
-		<!-- 1. Muat Tailwind CSS -->
+		<title>Halaman Utama</title>
 		<script src="https://cdn.tailwindcss.com"></script>
-		<!-- 2. Muat Alpine.js (PENTING: 'defer' agar main.js bisa menunggu) -->
 		<script
 			defer
 			src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
-		<!-- 3. Muat main.js (PENTING: 'defer' dan setelah Alpine) -->
-		<!-- Ini adalah script dari Canvas "Perbaikan main.js" Anda -->
 		<script src="assets/js/main.js"></script>
-		<!-- STYLE TAMBAHAN: - Mendefinisikan [x-cloak] untuk menyembunyikan elemen Alpine.js saat dimuat. - Mendefinisikan warna kustom 'text-primary' dan 'text-textdark' agar bisa digunakan bersama Tailwind. -->
 		<!-- #2f7f33 rgb(47, 127, 51) #fbc02d rgb(251, 192, 45) #0287cf rgb(2, 135, 207) #f9fafb rgb(249, 250, 251) #384252 rgb(56, 66, 82) -->
+
+		<link
+			rel="stylesheet"
+			href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+		<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
 		<style type="text/tailwindcss">
 			[x-cloak] {
 				display: none !important;
@@ -358,81 +359,816 @@
 			</div>
 		</header>
 		<!-- Konten Halaman (Placeholder) -->
-		<div
-			x-data="{ show: false }"
-			x-init="setTimeout(() => show = true, 300)">
-			<div x-show="show" x-transition.duration.800ms></div>
-			<main>
-				<section
-					class="relative overflow-hidden pt-[8.75rem] pb-20 md:pt-40 xl:pt-[13rem] xl:pb-[14.75rem] bg-cover bg-center"
-					style="
-						background-image: url('assets/img/hero/landscape-desa.jpg');
-					">
-					<!-- Overlay -->
+		<main>
+			<!-- ===============================
+     HERO SECTION
+================================== -->
+			<!-- HERO SECTION -->
+			<section
+				class="relative h-[100vh] flex items-center justify-center text-center text-white"
+				style="
+					background-image: url('assets/img/hero/hero-desa.jpg');
+					background-size: cover;
+					background-position: center;
+				">
+				<!-- Gradient Overlay -->
+				<div
+					class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent"></div>
+
+				<!-- Konten Hero -->
+				<div class="relative z-10 px-4 md:px-8">
+					<!-- Tagline kecil -->
 					<div
-						class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/40 to-transparent"></div>
-					<div class="relative z-10 px-6 mx-auto max-w-7xl md:px-10">
+						class="flex items-center gap-2 px-4 py-2 mx-auto mb-6 transition border rounded-full border-gray-300/40 hover:border-gray-200/70 w-max bg-white/10 backdrop-blur-sm">
+						<span class="text-sm text-gray-100"
+							>Selamat datang di laman resmi</span
+						>
+						<span class="font-semibold text-yellow-400"
+							>Desa Sukakerta</span
+						>
+						<svg
+							width="16"
+							height="16"
+							viewBox="0 0 24 24"
+							fill="none"
+							xmlns="http://www.w3.org/2000/svg"
+							class="ml-1">
+							<path
+								d="M5 12h14M13 6l6 6-6 6"
+								stroke="#facc15"
+								stroke-width="2"
+								stroke-linecap="round"
+								stroke-linejoin="round" />
+						</svg>
+					</div>
+
+					<!-- Judul -->
+					<h1
+						class="text-4xl md:text-6xl font-extrabold text-yellow-300 drop-shadow-[0_4px_8px_rgba(0,0,0,0.8)]">
+						Selamat Datang di Desa Sukakerta
+					</h1>
+
+					<!-- Deskripsi -->
+					<p
+						class="max-w-2xl mx-auto mt-6 text-base md:text-lg leading-relaxed text-gray-100 drop-shadow-[0_2px_4px_rgba(0,0,0,0.7)]">
+						Desa Sukakerta terletak di kaki Gunung Sawal, Kecamatan
+						Panumbangan, Kabupaten Ciamis. Dikenal dengan keindahan
+						alamnya dan sejarah panjang para pemimpin desa yang
+						telah berjasa membangun masyarakat yang sejahtera dan
+						berdaya.
+					</p>
+
+					<!-- Tombol Aksi -->
+					<div class="flex items-center justify-center gap-4 mt-8">
+						<a
+							href="profil.html"
+							class="px-8 py-3 font-semibold text-gray-900 transition-all duration-200 bg-yellow-400 rounded-full shadow-md hover:bg-yellow-300 hover:-translate-y-1">
+							Jelajahi Desa
+						</a>
+						<a
+							href="profil.html#sejarah"
+							class="px-8 py-3 font-medium text-white transition-all duration-200 border border-gray-200 rounded-full hover:bg-white/10 backdrop-blur-sm hover:-translate-y-1">
+							Lihat Profil Desa
+						</a>
+					</div>
+				</div>
+				<!-- Scroll Down Indicator -->
+				<div
+					class="absolute flex flex-col items-center text-gray-200 bottom-6 animate-bounce">
+					<svg
+						xmlns="http://www.w3.org/2000/svg"
+						fill="none"
+						viewBox="0 0 24 24"
+						stroke-width="2"
+						stroke="currentColor"
+						class="w-6 h-6">
+						<path
+							stroke-linecap="round"
+							stroke-linejoin="round"
+							d="M19 9l-7 7-7-7" />
+					</svg>
+					<span class="mt-1 text-xs">Scroll</span>
+				</div>
+			</section>
+
+			<!-- Jelajahi Desa Section -->
+			<section id="jelajahi" class="py-20 bg-[#F9FAFB]">
+				<div class="px-6 mx-auto text-center max-w-7xl">
+					<!-- Judul -->
+					<h2
+						class="text-3xl md:text-4xl font-extrabold text-[#2E7D32]">
+						Jelajahi Desa Sukakerta
+					</h2>
+					<p class="max-w-2xl mx-auto mt-3 text-gray-600">
+						Temukan informasi seputar profil desa, layanan publik,
+						potensi daerah, dan berita terbaru dari Desa Sukakerta.
+					</p>
+
+					<!-- Grid Navigasi -->
+					<div
+						class="grid grid-cols-1 gap-8 mt-12 sm:grid-cols-2 lg:grid-cols-4">
+						<!-- Kartu 1: Profil Desa -->
 						<div
-							class="flex flex-col-reverse items-center justify-between gap-10 lg:flex-row">
-							<!-- 🟢 Kiri: Sambutan & Deskripsi -->
-							<div class="text-white lg:w-1/2 animate_left">
-								<h1
-									class="font-bold font-(Open_Sans) text-4xl md:text-5xl xl:text-[52px] xl:leading-[64px] text-white drop-shadow-[0_2px_8px_rgba(0,0,0,0.6)] mb-4">
-									Selamat Datang di Desa Sukakerta
-								</h1>
-								<p
-									class="text-lg leading-relaxed text-gray-100 drop-shadow-[0_2px_6px_rgba(0,0,0,0.5)] xl:w-[85%]">
-									Desa Sukakerta merupakan desa yang terus
-									tumbuh dengan semangat gotong royong,
-									inovasi pelayanan publik, dan komitmen pada
-									pembangunan berkelanjutan untuk masyarakat.
-								</p>
-								<div class="flex flex-wrap gap-4 mt-8">
-									<a
-										href="profil.html"
-										class="inline-flex items-center px-6 py-3 font-semibold text-white transition bg-green-700 rounded-full shadow-lg hover:bg-green-800">
-										Lihat Profil Desa
-									</a>
-									<a
-										href="#potensi"
-										class="inline-flex items-center px-6 py-3 font-semibold text-green-700 transition bg-white rounded-full shadow-md hover:bg-gray-100">
-										Jelajahi Potensi
-									</a>
+							x-data="{ hover: false }"
+							@mouseenter="hover = true"
+							@mouseleave="hover = false"
+							class="p-6 transition duration-300 transform bg-white border border-gray-100 shadow-sm rounded-2xl hover:-translate-y-2 hover:shadow-lg">
+							<div class="flex justify-center mb-4">
+								<div class="bg-[#2E7D32]/10 p-3 rounded-full">
+									<svg
+										xmlns="http://www.w3.org/2000/svg"
+										class="w-8 h-8 text-[#2E7D32]"
+										fill="none"
+										viewBox="0 0 24 24"
+										stroke="currentColor">
+										<path
+											stroke-linecap="round"
+											stroke-linejoin="round"
+											stroke-width="2"
+											d="M12 2l9 4.9v10.2L12 22l-9-4.9V6.9L12 2z" />
+									</svg>
 								</div>
 							</div>
-							<!-- 🟢 Kanan: Foto Kepala Desa -->
-							<div class="relative flex justify-center lg:w-1/2">
-								<div class="relative">
+							<h3
+								class="mb-2 text-xl font-semibold text-gray-800">
+								Profil Desa
+							</h3>
+							<p class="mb-4 text-gray-600">
+								Kenali sejarah, visi misi, dan struktur
+								pemerintahan Desa Sukakerta.
+							</p>
+							<a
+								href="profil.html"
+								class="inline-block text-[#2E7D32] font-medium hover:text-[#25632a]">
+								Lihat Profil →
+							</a>
+						</div>
+
+						<!-- Kartu 2: Layanan -->
+						<div
+							x-data="{ hover: false }"
+							@mouseenter="hover = true"
+							@mouseleave="hover = false"
+							class="p-6 transition duration-300 transform bg-white border border-gray-100 shadow-sm rounded-2xl hover:-translate-y-2 hover:shadow-lg">
+							<div class="flex justify-center mb-4">
+								<div class="bg-[#0288D1]/10 p-3 rounded-full">
+									<svg
+										xmlns="http://www.w3.org/2000/svg"
+										class="w-8 h-8 text-[#0288D1]"
+										fill="none"
+										viewBox="0 0 24 24"
+										stroke="currentColor">
+										<path
+											stroke-linecap="round"
+											stroke-linejoin="round"
+											stroke-width="2"
+											d="M9 12h6m2 0a9 9 0 11-18 0 9 9 0 0118 0z" />
+									</svg>
+								</div>
+							</div>
+							<h3
+								class="mb-2 text-xl font-semibold text-gray-800">
+								Layanan Desa
+							</h3>
+							<p class="mb-4 text-gray-600">
+								Ajukan surat atau layanan administrasi secara
+								online dengan mudah.
+							</p>
+							<a
+								href="layanan.html"
+								class="inline-block text-[#0288D1] font-medium hover:text-[#0273B8]">
+								Akses Layanan →
+							</a>
+						</div>
+
+						<!-- Kartu 3: Berita Desa -->
+						<div
+							x-data="{ hover: false }"
+							@mouseenter="hover = true"
+							@mouseleave="hover = false"
+							class="p-6 transition duration-300 transform bg-white border border-gray-100 shadow-sm rounded-2xl hover:-translate-y-2 hover:shadow-lg">
+							<div class="flex justify-center mb-4">
+								<div class="bg-[#FBC02D]/10 p-3 rounded-full">
+									<svg
+										xmlns="http://www.w3.org/2000/svg"
+										class="w-8 h-8 text-[#FBC02D]"
+										fill="none"
+										viewBox="0 0 24 24"
+										stroke="currentColor">
+										<path
+											stroke-linecap="round"
+											stroke-linejoin="round"
+											stroke-width="2"
+											d="M19 21H5a2 2 0 01-2-2V7a2 2 0 012-2h4l2-2h6a2 2 0 012 2v14a2 2 0 01-2 2z" />
+									</svg>
+								</div>
+							</div>
+							<h3
+								class="mb-2 text-xl font-semibold text-gray-800">
+								Berita & Kegiatan
+							</h3>
+							<p class="mb-4 text-gray-600">
+								Baca berita terkini dan dokumentasi kegiatan
+								desa dalam satu laman.
+							</p>
+							<a
+								href="galeri.html"
+								class="inline-block text-[#FBC02D] font-medium hover:text-[#D6A513]">
+								Lihat Berita →
+							</a>
+						</div>
+
+						<!-- Kartu 4: Potensi Desa -->
+						<div
+							x-data="{ hover: false }"
+							@mouseenter="hover = true"
+							@mouseleave="hover = false"
+							class="p-6 transition duration-300 transform bg-white border border-gray-100 shadow-sm rounded-2xl hover:-translate-y-2 hover:shadow-lg">
+							<div class="flex justify-center mb-4">
+								<div class="bg-[#2E7D32]/10 p-3 rounded-full">
+									<svg
+										xmlns="http://www.w3.org/2000/svg"
+										class="w-8 h-8 text-[#2E7D32]"
+										fill="none"
+										viewBox="0 0 24 24"
+										stroke="currentColor">
+										<path
+											stroke-linecap="round"
+											stroke-linejoin="round"
+											stroke-width="2"
+											d="M12 20l9-5-9-5-9 5 9 5z" />
+									</svg>
+								</div>
+							</div>
+							<h3
+								class="mb-2 text-xl font-semibold text-gray-800">
+								Potensi Desa
+							</h3>
+							<p class="mb-4 text-gray-600">
+								Eksplorasi potensi ekonomi, wisata, dan sumber
+								daya alam Desa Sukakerta.
+							</p>
+							<a
+								href="lapak.html"
+								class="inline-block text-[#2E7D32] font-medium hover:text-[#25632a]">
+								Jelajahi Potensi →
+							</a>
+						</div>
+					</div>
+				</div>
+			</section>
+
+			<!-- Sambutan Kepala Desa -->
+			<section id="sambutan" class="py-24 bg-white">
+				<div
+					class="grid items-center max-w-6xl gap-12 px-6 mx-auto md:grid-cols-2">
+					<!-- FOTO KEPALA DESA -->
+					<div class="relative">
+						<img
+							src="assets/img/people.png"
+							alt="Kepala Desa Sukakerta"
+							class="object-cover w-full" />
+						<div
+							class="absolute -bottom-4 -right-4 bg-[#2E7D32] text-white px-4 py-2 rounded-tl-lg rounded-br-2xl shadow-md text-sm">
+							Kepala Desa Sukakerta
+						</div>
+					</div>
+
+					<!-- TEKS SAMBUTAN -->
+					<div>
+						<h2
+							class="text-3xl md:text-4xl font-extrabold text-[#2E7D32] mb-4">
+							Sambutan Kepala Desa
+						</h2>
+						<p class="mb-6 leading-relaxed text-gray-700">
+							Assalamu’alaikum warahmatullahi wabarakatuh. Puji
+							syukur kita panjatkan ke hadirat Allah SWT, karena
+							atas rahmat dan karunia-Nya website resmi
+							<strong>Desa Sukakerta</strong> ini dapat terwujud
+							sebagai sarana informasi, komunikasi, dan
+							transparansi bagi seluruh masyarakat.
+						</p>
+						<p class="mb-6 leading-relaxed text-gray-700">
+							Melalui media ini, kami berharap masyarakat dapat
+							lebih mudah mengakses berbagai informasi mengenai
+							profil desa, potensi wilayah, serta pelayanan
+							administrasi secara digital. Mari bersama-sama kita
+							wujudkan desa yang
+							<span class="font-semibold text-[#2E7D32]"
+								>sejahtera, mandiri, dan berdaya saing</span
+							>.
+						</p>
+
+						<!-- Tanda tangan -->
+						<div class="mt-8">
+							<p class="text-lg font-semibold text-gray-800">
+								Nama Kepala Desa
+							</p>
+							<p class="text-sm text-gray-500">
+								Kepala Desa Sukakerta
+							</p>
+							<!-- <img
+								src="assets/img/ttd.png"
+								alt="Tanda Tangan"
+								class="w-32 mt-2 opacity-80" /> -->
+						</div>
+					</div>
+				</div>
+			</section>
+
+			<section class="bg-[#F9FAFB] pt-32 pb-24">
+				<div class="max-w-6xl px-6 mx-auto text-center">
+					<h2
+						class="text-3xl md:text-4xl font-extrabold text-[#2E7D32] mb-4">
+						Peta Desa Sukakerta
+					</h2>
+					<p class="max-w-2xl mx-auto mb-10 text-gray-700">
+						Lihat lokasi dan batas wilayah Desa Sukakerta secara
+						langsung melalui peta interaktif di bawah ini. Gunakan
+						fitur zoom dan geser untuk menjelajahi wilayah desa
+						kami.
+					</p>
+
+					<div
+						id="map"
+						class="w-full h-[500px] rounded-2xl shadow-md overflow-hidden border border-gray-200"></div>
+				</div>
+			</section>
+
+			<!-- STRUKTUR ORGANISASI BPD -->
+			<section id="bpd" class="bg-[#F9FAFB] py-24">
+				<div class="max-w-6xl px-6 mx-auto text-center">
+					<h2
+						class="text-3xl md:text-4xl font-extrabold text-[#2E7D32] mb-4">
+						Struktur Organisasi BPD Desa Sukakerta
+					</h2>
+					<p class="max-w-3xl mx-auto mb-12 text-gray-700">
+						<strong>Badan Permusyawaratan Desa (BPD)</strong>
+						merupakan lembaga pemerintahan desa yang memiliki peran
+						penting dalam membahas dan menyepakati peraturan desa,
+						menampung aspirasi masyarakat, serta mengawasi kinerja
+						kepala desa dalam mewujudkan tata kelola pemerintahan
+						yang partisipatif dan transparan.
+					</p>
+
+					<!-- GRID STRUKTUR -->
+					<div
+						class="grid gap-8 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4"
+						x-data="{ selected: null }">
+						<!-- Kartu Anggota -->
+						<template
+							x-for="(anggota, index) in [
+                                    { nama: 'Tateng', jabatan: 'Ketua', kontak: '082118738256', alamat: 'Dusun Cidoyang RT 3 RW 2' },
+                                    { nama: 'Samsudin, S.Pd, M.M', jabatan: 'Wakil Ketua', kontak: '081323209666', alamat: 'Dusun Sukamanah RT 3 RW 1' },
+                                    { nama: 'Nonoh Sukanah, S.Pd, M.Pd', jabatan: 'Sekretaris', kontak: '082218923613', alamat: 'Dusun Sukasari RT 2 RW 2' },
+                                    { nama: 'Lili Sudirahayu', jabatan: 'Anggota', kontak: '081323175321', alamat: 'Dusun Sukamanah RT 4 RW 2' },
+                                    { nama: 'Arif Hidayat, S.Pd', jabatan: 'Anggota', kontak: '082126414546', alamat: 'Dusun Sukasari RT 3 RW 1' },
+                                    { nama: 'Heri Simri', jabatan: 'Anggota', kontak: '081320077590', alamat: 'Dusun Sukasari RT 2 RW 2' },
+                                    { nama: 'Norma Mustika, S.Pd.I', jabatan: 'Anggota', kontak: '087802837560', alamat: 'Dusun Cidoyang RT 1 RW 1' },
+                                    { nama: 'Nana', jabatan: 'Anggota', kontak: '-', alamat: 'Dusun Cidoyang RT 1 RW 1' }
+                                ]"
+							:key="index">
+							<!-- Kartu Individu -->
+							<div
+								class="relative p-6 transition-all duration-300 bg-white shadow-md cursor-pointer rounded-2xl hover:shadow-xl"
+								@click="selected = selected === index ? null : index">
+								<div
+									class="flex flex-col items-center text-center">
 									<img
-										src="assets/img/kepala-desa.png"
-										alt="Kepala Desa Sukakerta"
-										class="w-[300px] md:w-[380px] lg:w-[420px]" />
+										src="assets/img/people.png"
+										alt=""
+										class="w-20 h-20 object-cover rounded-full border-4 border-[#2E7D32]/60 mb-4" />
+
+									<h4
+										class="text-lg font-semibold text-gray-800"
+										x-text="anggota.nama"></h4>
+									<p
+										class="text-sm text-[#2E7D32]"
+										x-text="anggota.jabatan"></p>
+
+									<!-- Detail Info (toggle) -->
 									<div
-										class="absolute px-4 py-2 text-center -translate-x-1/2 shadow-lg bottom-4 left-1/2 bg-white/80 backdrop-blur-md rounded-xl">
-										<h3
-											class="text-lg font-semibold text-[#2E7D32]">
-											H. Engkos Kosim
-										</h3>
-										<p class="text-sm text-gray-700">
-											Kepala Desa Sukakerta
+										x-show="selected === index"
+										x-transition
+										class="pt-3 mt-4 text-sm text-gray-600 border-t border-gray-200">
+										<p>
+											<strong>Kontak:</strong>
+											<span
+												x-text="anggota.kontak"></span>
+										</p>
+										<p>
+											<strong>Alamat:</strong>
+											<span
+												x-text="anggota.alamat"></span>
 										</p>
 									</div>
 								</div>
 							</div>
+						</template>
+					</div>
+
+					<!-- Keterangan Bawah -->
+					<p class="mt-10 text-sm text-gray-500">
+						Masa Bakti Anggota BPD Sukakerta:
+						<strong>2019 – 2025</strong>
+					</p>
+				</div>
+			</section>
+
+			<!-- ADMINISTRASI PENDUDUK -->
+			<section id="penduduk" class="py-24 bg-white">
+				<div class="max-w-6xl px-6 mx-auto text-center">
+					<h2
+						class="text-3xl md:text-4xl font-extrabold text-[#2E7D32] mb-4">
+						Administrasi Penduduk
+					</h2>
+					<p class="max-w-2xl mx-auto mb-12 text-gray-700">
+						Berikut adalah data penduduk Desa Sukakerta yang
+						mencakup jumlah Kepala Keluarga (KK), perbandingan
+						gender, dan distribusi pekerjaan masyarakat.
+					</p>
+
+					<!-- Statistik Ringkas -->
+					<div class="grid gap-8 mb-16 sm:grid-cols-2 md:grid-cols-3">
+						<div class="bg-[#F9FAFB] shadow-sm rounded-2xl p-6">
+							<h3 class="text-2xl font-bold text-[#2E7D32]">
+								1,245
+							</h3>
+							<p class="text-gray-600">Jumlah Kepala Keluarga</p>
+						</div>
+						<div class="bg-[#F9FAFB] shadow-sm rounded-2xl p-6">
+							<h3 class="text-2xl font-bold text-[#2E7D32]">
+								3,912
+							</h3>
+							<p class="text-gray-600">Total Penduduk</p>
+						</div>
+						<div class="bg-[#F9FAFB] shadow-sm rounded-2xl p-6">
+							<h3 class="text-2xl font-bold text-[#2E7D32]">
+								12
+							</h3>
+							<p class="text-gray-600">Jumlah RT & RW</p>
 						</div>
 					</div>
-					<!-- Ornamen Latar (opsional dekoratif) -->
-					<img
-						src="assets/img/shape/shape-01.svg"
-						alt=""
-						class="hidden xl:block absolute top-[10%] left-[5%] opacity-30" />
-					<img
-						src="assets/img/shape/shape-02.svg"
-						alt=""
-						class="hidden xl:block absolute bottom-[15%] right-[10%] opacity-30" />
-				</section>
-			</main>
-		</div>
+
+					<!-- GRAFIK -->
+					<div class="grid gap-12 md:grid-cols-2">
+						<!-- Grafik Gender -->
+						<div class="bg-[#F9FAFB] p-6 rounded-2xl shadow-md">
+							<h4 class="mb-4 font-semibold text-gray-700">
+								Perbandingan Gender
+							</h4>
+							<canvas id="genderChart" height="200"></canvas>
+						</div>
+
+						<!-- Grafik Pekerjaan -->
+						<div class="bg-[#F9FAFB] p-6 rounded-2xl shadow-md">
+							<h4 class="mb-4 font-semibold text-gray-700">
+								Distribusi Pekerjaan
+							</h4>
+							<canvas id="pekerjaanChart" height="200"></canvas>
+						</div>
+					</div>
+				</div>
+			</section>
+
+			<section id="apbdes" class="bg-[#F9FAFB] py-24">
+				<div class="max-w-6xl px-6 mx-auto">
+					<div class="mb-16 text-center">
+						<h2
+							class="text-3xl md:text-4xl font-extrabold text-[#2E7D32] mb-3">
+							Transparansi APBDes Tahun
+							<span id="apbdes-tahun">...</span>
+						</h2>
+						<p class="max-w-2xl mx-auto text-gray-700">
+							Data Anggaran Pendapatan dan Belanja Desa Sukakerta.
+							Informasi ini bertujuan untuk mendukung transparansi
+							dan akuntabilitas keuangan desa.
+						</p>
+					</div>
+
+					<div class="grid grid-cols-1 gap-8 mb-16 md:grid-cols-3">
+						<div
+							class="p-6 transition-all duration-300 ease-in-out transform bg-white border border-gray-100 shadow-lg rounded-xl hover:shadow-xl hover:-translate-y-1">
+							<div class="flex items-start justify-between mb-4">
+								<div>
+									<h4
+										class="mb-2 text-lg font-semibold text-green-700">
+										Pendapatan
+									</h4>
+									<p
+										id="pendapatan-anggaran"
+										class="text-sm text-gray-600">
+										Anggaran: Rp 0
+									</p>
+									<p
+										id="pendapatan-realisasi"
+										class="mb-4 text-sm text-gray-600">
+										Realisasi: Rp 0
+									</p>
+								</div>
+								<div class="p-3 bg-green-100 rounded-full">
+									<svg
+										xmlns="http://www.w3.org/2000/svg"
+										fill="none"
+										viewBox="0 0 24 24"
+										stroke-width="1.5"
+										stroke="currentColor"
+										class="w-6 h-6 text-green-700">
+										<path
+											stroke-linecap="round"
+											stroke-linejoin="round"
+											d="M2.25 18 9 11.25l4.306 4.306a11.95 11.95 0 0 1 5.814-5.518l2.74-1.22m0 0-5.94-2.281m5.94 2.28-2.28 5.941" />
+									</svg>
+								</div>
+							</div>
+							<div
+								class="h-3 overflow-hidden bg-gray-200 rounded-full">
+								<div
+									id="pendapatan-bar"
+									class="h-3 bg-[#2E7D32]"
+									style="width: 0%"></div>
+							</div>
+							<p
+								id="pendapatan-persen"
+								class="mt-1 text-xs text-right text-gray-500">
+								0% terealisasi
+							</p>
+						</div>
+
+						<div
+							class="p-6 transition-all duration-300 ease-in-out transform bg-white border border-gray-100 shadow-lg rounded-xl hover:shadow-xl hover:-translate-y-1">
+							<div class="flex items-start justify-between mb-4">
+								<div>
+									<h4
+										class="mb-2 text-lg font-semibold text-red-700">
+										Belanja
+									</h4>
+									<p
+										id="belanja-anggaran"
+										class="text-sm text-gray-600">
+										Anggaran: Rp 0
+									</p>
+									<p
+										id="belanja-realisasi"
+										class="mb-4 text-sm text-gray-600">
+										Realisasi: Rp 0
+									</p>
+								</div>
+								<div class="p-3 bg-red-100 rounded-full">
+									<svg
+										xmlns="http://www.w3.org/2000/svg"
+										fill="none"
+										viewBox="0 0 24 24"
+										stroke-width="1.5"
+										stroke="currentColor"
+										class="w-6 h-6 text-red-700">
+										<path
+											stroke-linecap="round"
+											stroke-linejoin="round"
+											d="M2.25 6 9 12.75l4.306-4.306a11.95 11.95 0 0 1 5.814 5.518l2.74 1.22m0 0-5.94 2.281m5.94-2.28-2.28-5.941" />
+									</svg>
+								</div>
+							</div>
+							<div
+								class="h-3 overflow-hidden bg-gray-200 rounded-full">
+								<div
+									id="belanja-bar"
+									class="h-3 bg-red-600"
+									style="width: 0%"></div>
+							</div>
+							<p
+								id="belanja-persen"
+								class="mt-1 text-xs text-right text-gray-500">
+								0% terealisasi
+							</p>
+						</div>
+
+						<div
+							class="p-6 transition-all duration-300 ease-in-out transform bg-white border border-gray-100 shadow-lg rounded-xl hover:shadow-xl hover:-translate-y-1">
+							<div class="flex items-start justify-between mb-4">
+								<div>
+									<h4
+										class="mb-2 text-lg font-semibold text-blue-700">
+										Pembiayaan
+									</h4>
+									<p
+										id="pembiayaan-anggaran"
+										class="text-sm text-gray-600">
+										Anggaran: Rp 0
+									</p>
+									<p
+										id="pembiayaan-realisasi"
+										class="mb-4 text-sm text-gray-600">
+										Realisasi: Rp 0
+									</p>
+								</div>
+								<div class="p-3 bg-blue-100 rounded-full">
+									<svg
+										xmlns="http://www.w3.org/2000/svg"
+										fill="none"
+										viewBox="0 0 24 24"
+										stroke-width="1.5"
+										stroke="currentColor"
+										class="w-6 h-6 text-blue-700">
+										<path
+											stroke-linecap="round"
+											stroke-linejoin="round"
+											d="M12 21v-8.25M15.75 21v-8.25M8.25 21v-8.25M3 9l9-6 9 6m-1.5 12V10.332A48.36 48.36 0 0 0 12 9.75c-2.551 0-5.056.2-7.5.582V21M3 21h18M12 6.75h.008v.008H12V6.75Z" />
+									</svg>
+								</div>
+							</div>
+							<div
+								class="h-3 overflow-hidden bg-gray-200 rounded-full">
+								<div
+									class="h-3 bg-[#0288D1]"
+									style="width: 75%"></div>
+							</div>
+							<p class="mt-1 text-xs text-right text-gray-500">
+								Surplus/Defisit
+							</p>
+						</div>
+					</div>
+
+					<div class="grid grid-cols-1 gap-12 mb-20 lg:grid-cols-2">
+						<div
+							class="p-6 bg-white border border-gray-100 shadow-xl rounded-2xl">
+							<h4
+								class="mb-4 text-lg font-semibold text-gray-800">
+								Pendapatan Desa (Anggaran vs Realisasi)
+							</h4>
+							<canvas id="incomeChart" height="220"></canvas>
+						</div>
+						<div
+							class="p-6 bg-white border border-gray-100 shadow-xl rounded-2xl">
+							<h4
+								class="mb-4 text-lg font-semibold text-gray-800">
+								Belanja Desa (Anggaran vs Realisasi)
+							</h4>
+							<canvas id="expenseChart" height="220"></canvas>
+						</div>
+					</div>
+
+					<div class="text-center">
+						<a
+							id="apbdes-pdf-link"
+							href="#"
+							target="_blank"
+							class="inline-flex items-center gap-3 bg-[#2E7D32] text-white px-8 py-3 rounded-full font-medium transform transition-all duration-300 ease-in-out hover:bg-green-700 hover:-translate-y-1 hover:shadow-lg">
+							<svg
+								xmlns="http://www.w3.org/2000/svg"
+								fill="none"
+								viewBox="0 0 24 24"
+								stroke-width="1.5"
+								stroke="currentColor"
+								class="w-5 h-5">
+								<path
+									stroke-linecap="round"
+									stroke-linejoin="round"
+									d="M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5M16.5 12 12 16.5m0 0L7.5 12m4.5 4.5V3" />
+							</svg>
+							<span id="apbdes-pdf-text"
+								>Lihat Dokumen Lengkap (PDF)</span
+							>
+						</a>
+					</div>
+				</div>
+			</section>
+
+			<section id="berita" class="py-24 bg-[#F9FAFB]">
+				<div class="px-6 mx-auto max-w-7xl">
+					<!-- JUDUL -->
+					<div class="mb-12 text-center">
+						<h2
+							class="text-3xl md:text-4xl font-extrabold text-[#2E7D32] mb-3">
+							Berita & Artikel Desa
+						</h2>
+						<p class="max-w-2xl mx-auto text-gray-600">
+							Update informasi terkini seputar kegiatan,
+							pembangunan, dan kebijakan Desa Sukakerta.
+						</p>
+					</div>
+
+					<!-- GRID BERITA -->
+					<div
+						class="grid grid-cols-1 gap-10 md:grid-cols-2 lg:grid-cols-3">
+						<!-- CARD 1 -->
+						<div
+							class="overflow-hidden transition bg-white shadow-md group rounded-2xl hover:shadow-lg">
+							<div class="relative">
+								<img
+									src="assets/img/berita1.jpg"
+									alt="Berita Desa"
+									class="object-cover w-full transition duration-500 h-52 group-hover:scale-105" />
+								<div
+									class="absolute top-0 left-0 bg-[#2E7D32]/80 text-white text-sm px-3 py-1 rounded-br-lg">
+									21 Okt 2025
+								</div>
+							</div>
+							<div class="p-6">
+								<h4
+									class="font-semibold text-xl text-gray-800 mb-2 group-hover:text-[#2E7D32] transition">
+									Desa Cerdas, Desa Berdaulat: Saatnya
+									Mengelola Data Sendiri
+								</h4>
+								<p class="mb-4 text-sm text-gray-600">
+									Admin: Edi Setiawan · 3.514 kali dibuka
+								</p>
+								<a
+									href="#"
+									class="inline-block mt-2 text-[#2E7D32] font-medium hover:underline">
+									Buka Halaman →
+								</a>
+							</div>
+						</div>
+
+						<!-- CARD 2 -->
+						<div
+							class="overflow-hidden transition bg-white shadow-md group rounded-2xl hover:shadow-lg">
+							<div class="relative">
+								<img
+									src="assets/img/berita2.jpg"
+									alt="Berita Desa"
+									class="object-cover w-full transition duration-500 h-52 group-hover:scale-105" />
+								<div
+									class="absolute top-0 left-0 bg-[#2E7D32]/80 text-white text-sm px-3 py-1 rounded-br-lg">
+									18 Okt 2025
+								</div>
+							</div>
+							<div class="p-6">
+								<h4
+									class="font-semibold text-xl text-gray-800 mb-2 group-hover:text-[#2E7D32] transition">
+									Desa di Era Medsos dan Efek Domino
+									Kepercayaan
+								</h4>
+								<p class="mb-4 text-sm text-gray-600">
+									Admin: Edi Setiawan · 3.354 kali dibuka
+								</p>
+								<a
+									href="#"
+									class="inline-block mt-2 text-[#2E7D32] font-medium hover:underline">
+									Buka Halaman →
+								</a>
+							</div>
+						</div>
+
+						<!-- CARD 3 -->
+						<div
+							class="overflow-hidden transition bg-white shadow-md group rounded-2xl hover:shadow-lg">
+							<div class="relative">
+								<img
+									src="assets/img/berita3.jpg"
+									alt="Berita Desa"
+									class="object-cover w-full transition duration-500 h-52 group-hover:scale-105" />
+								<div
+									class="absolute top-0 left-0 bg-[#2E7D32]/80 text-white text-sm px-3 py-1 rounded-br-lg">
+									17 Okt 2025
+								</div>
+							</div>
+							<div class="p-6">
+								<h4
+									class="font-semibold text-xl text-gray-800 mb-2 group-hover:text-[#2E7D32] transition">
+									Posbankum Desa: Melindungi Warga dengan
+									Kearifan Lokal
+								</h4>
+								<p class="mb-4 text-sm text-gray-600">
+									Admin: Edi Setiawan · 1.904 kali dibuka
+								</p>
+								<a
+									href="#"
+									class="inline-block mt-2 text-[#2E7D32] font-medium hover:underline">
+									Buka Halaman →
+								</a>
+							</div>
+						</div>
+					</div>
+
+					<!-- PAGINATION -->
+					<div class="flex items-center justify-center gap-2 mt-12">
+						<button
+							class="px-4 py-2 text-sm text-gray-700 border rounded-md hover:bg-gray-100">
+							«
+						</button>
+						<button
+							class="px-4 py-2 border rounded-md text-sm bg-[#2E7D32] text-white">
+							1
+						</button>
+						<button
+							class="px-4 py-2 text-sm border rounded-md hover:bg-gray-100">
+							2
+						</button>
+						<button
+							class="px-4 py-2 text-sm border rounded-md hover:bg-gray-100">
+							3
+						</button>
+						<button
+							class="px-4 py-2 text-sm border rounded-md hover:bg-gray-100">
+							▸
+						</button>
+					</div>
+				</div>
+			</section>
+		</main>
+
 		<footer class="bg-[#2E7D32] text-white pt-12 pb-6">
 			<div class="px-6 mx-auto max-w-7xl md:px-10">
 				<div
@@ -553,5 +1289,11 @@
 				</div>
 			</div>
 		</footer>
+
+		<!-- CHART.JS CDN -->
+		<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+		<script src="assets/js/map.js"></script>
+		<script src="assets/js/chart.js"></script>
 	</body>
 </html>

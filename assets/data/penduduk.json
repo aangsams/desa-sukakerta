@@ -1,0 +1,14 @@
+{
+	"gender": {
+		"laki_laki": 2000,
+		"perempuan": 1912
+	},
+	"pekerjaan": [
+		{ "nama": "Petani", "jumlah": 1200 },
+		{ "nama": "Pedagang", "jumlah": 450 },
+		{ "nama": "Guru", "jumlah": 150 },
+		{ "nama": "Karyawan", "jumlah": 600 },
+		{ "nama": "Pelajar", "jumlah": 1000 },
+		{ "nama": "Lainnya", "jumlah": 512 }
+	]
+}

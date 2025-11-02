@@ -1,0 +1,49 @@
+{
+	"tahun": 2024,
+	"dokumenPdf": "assets/docs/APBDes_2024.pdf",
+	"ringkasan": {
+		"pendapatan": {
+			"anggaran": 2122529609,
+			"realisasi": 1089444456
+		},
+		"belanja": {
+			"anggaran": 2103188829,
+			"realisasi": 1012414814
+		},
+		"pembiayaan": {
+			"anggaran": -19340780,
+			"realisasi": 8659220
+		}
+	},
+	"charts": {
+		"pendapatan": {
+			"labels": [
+				"Hasil Usaha Desa",
+				"Hasil Aset Desa",
+				"Dana Desa",
+				"Bagi Hasil Pajak",
+				"Alokasi Dana Desa",
+				"Bantuan Provinsi",
+				"Bunga Bank"
+			],
+			"anggaran": [
+				2001000, 307279460, 1193273000, 47891549, 440084600, 130000000,
+				2000000
+			],
+			"realisasi": [
+				501000, 109319460, 715963800, 14923549, 248354800, 0, 381847
+			]
+		},
+		"belanja": {
+			"labels": [
+				"Penyelenggaraan Pemerintahan",
+				"Pelaksanaan Pembangunan",
+				"Pembinaan Kemasyarakatan",
+				"Pemberdayaan Masyarakat",
+				"Penanggulangan Bencana"
+			],
+			"anggaran": [935546829, 583003500, 222689500, 331749000, 30200000],
+			"realisasi": [389819314, 382041000, 167784500, 55170000, 17600000]
+		}
+	}
+}
