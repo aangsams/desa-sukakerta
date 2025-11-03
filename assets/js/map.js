@@ -5,12 +5,17 @@ document.addEventListener("DOMContentLoaded", function () {
 	// Inisialisasi peta
 	const map = L.map("map").setView(desaSukakerta, 14);
 
-	// Tambahkan tile layer OpenStreetMap
-	L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
-		attribution:
-			'&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
-		maxZoom: 19,
-	}).addTo(map);
+	// --- PERUBAHAN DI SINI: Mengganti Tile Layer ---
+	// Sebelumnya: L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", ...)
+	// Sekarang: Menggunakan layer satelit Esri World Imagery
+	L.tileLayer(
+		"https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
+		{
+			attribution:
+				"Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community",
+			maxZoom: 18,
+		}
+	).addTo(map);
 
 	// --- 1. PENANDA (MARKER) UTAMA ---
 	const marker = L.marker(desaSukakerta).addTo(map);

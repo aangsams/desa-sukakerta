@@ -671,7 +671,7 @@
 				</div>
 			</section>
 
-			<section class="bg-[#F9FAFB] mt-32 pb-24">
+			<section class="bg-[#F9FAFB] py-24">
 				<div class="max-w-6xl px-6 mx-auto text-center">
 					<h2
 						class="text-3xl md:text-4xl font-extrabold text-[#2E7D32] mb-4">
@@ -1440,12 +1440,7 @@
 						</p>
 					</div>
 
-					<!-- BUTTON FILTER (Sekarang Dinamis) -->
 					<div class="flex flex-wrap justify-center gap-3 mb-10">
-						<!-- 
-            Looping tombol filter sekarang mengambil data dari 'categories' 
-            yang dibuat di 'init()'
-          -->
 						<template x-for="btn in categories" :key="btn.key">
 							<button
 								@click="tab = btn.key"
@@ -1461,12 +1456,6 @@
 						<template
 							x-for="album in filteredAlbums"
 							:key="album.id">
-							<!-- 
-                IMPROVEMENT 3: Kartu Didesain Ulang
-                - Menggunakan aspect-square untuk rasio foto yang konsisten.
-                - Efek hover slide-up untuk caption.
-                - @click sekarang membuka modal lightbox.
-              -->
 							<div
 								@click="openModal(album)"
 								class="relative overflow-hidden transition-all duration-300 shadow-lg cursor-pointer group rounded-2xl hover:shadow-xl">
@@ -1484,7 +1473,6 @@
 										class="text-sm opacity-80"
 										x-text="categories.find(c => c.key === album.category)?.label || album.category"></span>
 								</div>
-								<!-- Ikon 'zoom' di pojok kanan atas -->
 								<div
 									class="absolute p-2 text-white transition-opacity duration-300 rounded-full opacity-0 top-3 right-3 bg-white/20 group-hover:opacity-100">
 									<svg
@@ -1505,10 +1493,6 @@
 					</div>
 				</div>
 
-				<!-- 
-        IMPROVEMENT 4: LIGHTBOX MODAL
-        Modal ini akan muncul saat item galeri di-klik.
-      -->
 				<div
 					x-show="modalOpen"
 					@click="closeModal()"
