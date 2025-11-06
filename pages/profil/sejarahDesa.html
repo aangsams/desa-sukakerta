@@ -1,0 +1,916 @@
+<!DOCTYPE html>
+<html lang="id" class="scroll-smooth">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Desa Sukakerta | Sejarah Desa</title>
+		<base href="../../" />
+		<script src="https://cdn.tailwindcss.com"></script>
+		<script
+			defer
+			src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+		<style type="text/tailwindcss">
+			[x-cloak] {
+				display: none !important;
+			}
+			/* Style kustom yang konsisten */
+			@layer utilities {
+				.text-primary {
+					color: #2e7d32;
+				}
+				.hover\:text-primary:hover {
+					color: #1b6d21;
+				}
+				.text-textdark {
+					color: #1f2937;
+				}
+				.bg-primary {
+					background-color: #2e7d32;
+				}
+				.bg-primary .border-accent {
+					border-color: #fbc02d;
+				}
+				.text-accent {
+					color: #fbc02d;
+				}
+			}
+		</style>
+	</head>
+
+	<body
+		class="font-sans text-gray-800 bg-gray-50"
+		x-data="pageData()"
+		@scroll.window="sticky = (window.pageYOffset > 50)">
+		<!-- 
+      HEADER DINAMIS KONSISTEN
+    -->
+		<header
+			:class="{ 'shadow-md bg-white/90 backdrop-blur-lg text-gray-700': sticky, 'text-white': !sticky}"
+			class="fixed top-0 left-0 z-50 w-full transition-all duration-300">
+			<div
+				class="flex items-center justify-between px-6 py-4 mx-auto max-w-7xl">
+				<a href="index.html" class="flex items-center gap-2">
+					<img
+						src="assets/img/logo.webp"
+						alt="Logo Desa"
+						class="w-10 h-10 rounded-full" />
+					<div class="flex flex-col leading-tight">
+						<span
+							class="text-lg font-semibold transition-colors"
+							:class="{'text-primary': sticky, 'text-white': !sticky}"
+							>Desa Sukakerta</span
+						>
+						<span class="text-xs"
+							>Kec. Panumbangan, Kab. Ciamis</span
+						>
+					</div>
+				</a>
+				<nav
+					class="hidden lg:flex items-center space-x-8 text-[15px] font-medium">
+					<a href="index.html" class="hover:text-primary">Beranda</a>
+					<div
+						@mouseenter="profilOpen = true"
+						@mouseleave="profilOpen = false"
+						class="relative">
+						<button
+							type="button"
+							class="flex items-center gap-1 transition hover:text-primary"
+							:class="{ 'text-primary': profilOpen }"
+							aria-haspopup="true"
+							:aria-expanded="profilOpen">
+							Profil Desa
+							<svg
+								class="w-4 h-4 mt-[2px] transition-transform duration-200"
+								:class="{ 'rotate-180': profilOpen }"
+								xmlns="http://www.w3.org/2000/svg"
+								fill="none"
+								viewBox="0 0 24 24"
+								stroke="currentColor">
+								<path
+									stroke-linecap="round"
+									stroke-linejoin="round"
+									stroke-width="2"
+									d="M19 9l-7 7-7-7" />
+							</svg>
+						</button>
+						<div
+							x-cloak
+							x-show="profilOpen"
+							x-transition.opacity.duration.150ms
+							class="absolute left-0 w-56 py-2 mt-3 bg-white border border-gray-200 rounded-lg shadow-md text-textdark"
+							role="menu">
+							<a
+								href="pages/profil/identitasDesa.html"
+								class="block px-4 py-2 hover:bg-gray-100"
+								>Identitas Desa</a
+							>
+							<a
+								href="pages/profil/visiMisi.html"
+								class="block px-4 py-2 hover:bg-gray-100"
+								>Visi & Misi</a
+							>
+							<a
+								href="pages/profil/strukturBPD.html"
+								class="block px-4 py-2 hover:bg-gray-100"
+								>BPD & Lembaga</a
+							>
+							<a
+								href="pages/profil/sejarahDesa.html"
+								class="block px-4 py-2 hover:bg-gray-100"
+								>Sejarah Desa</a
+							>
+						</div>
+					</div>
+					<div
+						@mouseenter="dataOpen = true"
+						@mouseleave="dataOpen = false"
+						class="relative">
+						<button
+							type="button"
+							class="flex items-center gap-1 transition hover:text-primary"
+							:class="{ 'text-primary': dataOpen }">
+							Data Desa
+							<svg
+								class="w-4 h-4 mt-[2px] transition-transform duration-200"
+								:class="{ 'rotate-180': dataOpen }"
+								xmlns="http://www.w3.org/2000/svg"
+								fill="none"
+								viewBox="0 0 24 24"
+								stroke="currentColor">
+								<path
+									stroke-linecap="round"
+									stroke-linejoin="round"
+									stroke-width="2"
+									d="M19 9l-7 7-7-7" />
+							</svg>
+						</button>
+						<div
+							x-cloak
+							x-show="dataOpen"
+							x-transition.opacity.duration.150ms
+							class="absolute left-0 w-56 py-2 mt-3 bg-white border border-gray-200 rounded-lg shadow-md text-textdark">
+							<a
+								href="pages/data/statistik.html"
+								class="block px-4 py-2 hover:bg-gray-100"
+								>Statistik Penduduk</a
+							>
+							<a
+								href="pages/data/sdgs.html"
+								class="block px-4 py-2 hover:bg-gray-100"
+								>Skor SDGs</a
+							>
+						</div>
+					</div>
+					<a href="pages/transparansi.html" class="hover:text-primary"
+						>Transparansi</a
+					>
+					<a href="pages/layanan.html" class="hover:text-primary"
+						>Layanan</a
+					>
+					<a href="pages/lapak.html" class="hover:text-primary"
+						>Lapak Desa</a
+					>
+					<a href="pages/galeri.html" class="hover:text-primary"
+						>Galeri</a
+					>
+				</nav>
+				<div @click.outside="mobileMenuOpen = false" class="lg:hidden">
+					<button
+						@click="mobileMenuOpen = !mobileMenuOpen"
+						class="focus:outline-none"
+						aria-label="Toggle menu"
+						:class="{'text-primary': sticky, 'text-white': !sticky}">
+						<svg
+							x-show="!mobileMenuOpen"
+							xmlns="http://www.w3.org/2000/svg"
+							class="h-7 w-7"
+							fill="none"
+							viewBox="0 0 24 24"
+							stroke="currentColor">
+							<path
+								stroke-linecap="round"
+								stroke-linejoin="round"
+								stroke-width="2"
+								d="M4 6h16M4 12h16M4 18h16" />
+						</svg>
+						<svg
+							x-show="mobileMenuOpen"
+							x-cloak
+							xmlns="http://www.w3.org/2000/svg"
+							class="h-7 w-7"
+							fill="none"
+							viewBox="0 0 24 24"
+							stroke="currentColor">
+							<path
+								stroke-linecap="round"
+								stroke-linejoin="round"
+								stroke-width="2"
+								d="M6 18L18 6M6 6l12 12" />
+						</svg>
+					</button>
+					<nav
+						x-cloak
+						x-show="mobileMenuOpen"
+						x-transition:enter="transition ease-out duration-200"
+						x-transition:enter-start="opacity-0 transform -translate-y-4"
+						x-transition:enter-end="opacity-100 transform translate-y-0"
+						x-transition:leave="transition ease-in duration-150"
+						x-transition:leave-start="opacity-100 transform translate-y-0"
+						x-transition:leave-end="opacity-0 transform -translate-y-4"
+						class="absolute left-0 w-full bg-white border-t border-gray-200 shadow-lg top-full">
+						<ul
+							class="flex flex-col px-6 py-4 space-y-2 font-medium text-textdark">
+							<li>
+								<a
+									href="index.html"
+									class="block py-2 hover:text-primary"
+									>Beranda</a
+								>
+							</li>
+							<li x-data="{ open: false }">
+								<button
+									@click="open = !open"
+									class="flex items-center justify-between w-full py-2 hover:text-primary">
+									<span>Profil Desa</span>
+									<svg
+										:class="{ 'rotate-180': open }"
+										class="w-4 h-4 transition-transform transform"
+										xmlns="http://www.w3.org/2000/svg"
+										fill="none"
+										viewBox="0 0 24 24"
+										stroke="currentColor">
+										<path
+											stroke-linecap="round"
+											stroke-linejoin="round"
+											stroke-width="2"
+											d="M19 9l-7 7-7-7" />
+									</svg>
+								</button>
+								<ul
+									x-show="open"
+									x-transition
+									x-cloak
+									class="pl-3 ml-4 space-y-1 text-sm text-gray-700 border-l border-gray-200">
+									<li>
+										<a
+											href="pages/profil/identitasDesa.html"
+											class="block py-1 hover:text-primary"
+											>Identitas Desa</a
+										>
+									</li>
+									<li>
+										<a
+											href="pages/profil/visiMisi.html"
+											class="block py-1 hover:text-primary"
+											>Visi & Misi</a
+										>
+									</li>
+									<li>
+										<a
+											href="pages/profil/strukturBPD.html"
+											class="block py-1 hover:text-primary"
+											>BPD & Lembaga</a
+										>
+									</li>
+									<li>
+										<a
+											href="pages/profil/sejarahDesa.html"
+											class="block py-1 hover:text-primary"
+											>Sejarah Desa</a
+										>
+									</li>
+								</ul>
+							</li>
+							<li x-data="{ open: false }">
+								<button
+									@click="open = !open"
+									class="flex items-center justify-between w-full py-2 hover:text-primary">
+									<span>Data Desa</span>
+									<svg
+										:class="{ 'rotate-180': open }"
+										class="w-4 h-4 transition-transform transform"
+										xmlns="http://www.w3.org/2000/svg"
+										fill="none"
+										viewBox="0 0 24 24"
+										stroke="currentColor">
+										<path
+											stroke-linecap="round"
+											stroke-linejoin="round"
+											stroke-width="2"
+											d="M19 9l-7 7-7-7" />
+									</svg>
+								</button>
+								<ul
+									x-show="open"
+									x-transition
+									x-cloak
+									class="pl-3 ml-4 space-y-1 text-sm text-gray-700 border-l border-gray-200">
+									<li>
+										<a
+											href="pages/data/statistik.html"
+											class="block py-1 hover:text-primary"
+											>Statistik Penduduk</a
+										>
+									</li>
+									<li>
+										<a
+											href="pages/data/sdgs.html"
+											class="block py-1 hover:text-primary"
+											>Skor SDGs</a
+										>
+									</li>
+								</ul>
+							</li>
+							<li>
+								<a
+									href="pages/transparansi.html"
+									class="block py-2 hover:text-primary"
+									>Transparansi</a
+								>
+							</li>
+							<li>
+								<a
+									href="pages/layanan.html"
+									class="block py-2 hover:text-primary"
+									>Layanan</a
+								>
+							</li>
+							<li>
+								<a
+									href="pages/lapak.html"
+									class="block py-2 hover:text-primary"
+									>Lapak Desa</a
+								>
+							</li>
+							<li>
+								<a
+									href="pages/galeri.html"
+									class="block py-2 hover:text-primary"
+									>Galeri</a
+								>
+							</li>
+						</ul>
+					</nav>
+				</div>
+			</div>
+		</header>
+
+		<main class="pt-24 bg-gray-50">
+			<!-- 
+        FIX #1: HERO DIGANTI
+        Menggunakan header breadcrumb putih yang konsisten
+        dengan halaman profil lainnya.
+      -->
+			<section class="py-12 bg-white border-b border-gray-200">
+				<div class="px-6 mx-auto max-w-7xl">
+					<nav class="flex mb-2" aria-label="Breadcrumb">
+						<ol
+							class="inline-flex items-center space-x-1 text-sm text-gray-500 md:space-x-2">
+							<li class="inline-flex items-center">
+								<a
+									href="index.html"
+									class="inline-flex items-center transition-colors hover:text-primary">
+									<svg
+										class="w-4 h-4 mr-2"
+										fill="currentColor"
+										viewBox="0 0 20 20"
+										xmlns="http://www.w3.org/2000/svg">
+										<path
+											d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z"></path>
+									</svg>
+									Beranda
+								</a>
+							</li>
+							<li>
+								<div class="flex items-center">
+									<svg
+										class="w-3 h-3 text-gray-400"
+										fill="currentColor"
+										viewBox="0 0 20 20"
+										xmlns="http://www.w3.org/2000/svg">
+										<path
+											fill-rule="evenodd"
+											d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
+											clip-rule="evenodd"></path>
+									</svg>
+									<span class="ml-1 md:ml-2"
+										>Profil Desa</span
+									>
+								</div>
+							</li>
+							<li aria-current="page">
+								<div class="flex items-center">
+									<svg
+										class="w-3 h-3 text-gray-400"
+										fill="currentColor"
+										viewBox="0 0 20 20"
+										xmlns="http://www.w3.org/2000/svg">
+										<path
+											fill-rule="evenodd"
+											d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
+											clip-rule="evenodd"></path>
+									</svg>
+									<span
+										class="ml-1 font-medium text-gray-800 md:ml-2"
+										>Sejarah Desa</span
+									>
+								</div>
+							</li>
+						</ol>
+					</nav>
+					<!-- Menggunakan data dinamis dari 'sejarah.title' -->
+					<h1
+						class="text-3xl font-bold text-primary md:text-4xl"
+						x-text="sejarah.title"></h1>
+					<p
+						class="mt-2 text-lg text-gray-600"
+						x-text="sejarah.subtitle"></p>
+				</div>
+			</section>
+
+			<!-- ASAL-USUL (2 Kolom) -->
+			<section class="px-6 py-16 mx-auto max-w-7xl">
+				<div class="grid grid-cols-1 gap-12 lg:grid-cols-3 lg:gap-16">
+					<!-- Kolom Teks Cerita -->
+					<div class="lg:col-span-2">
+						<div
+							class="p-8 space-y-4 leading-relaxed bg-white shadow-lg rounded-xl">
+							<h2
+								class="mb-4 text-2xl font-bold text-primary"
+								x-text="sejarah.asalUsul.title"></h2>
+							<!-- Teks dinamis dari Alpine -->
+							<template
+								x-for="paragraf in sejarah.asalUsul.paragraphs"
+								:key="paragraf">
+								<p class="text-gray-700" x-html="paragraf"></p>
+							</template>
+						</div>
+					</div>
+					<!-- Kolom Tokoh Kunci -->
+					<div class="lg:col-span-1">
+						<div
+							class="sticky p-6 bg-white shadow-lg rounded-xl top-32">
+							<h3 class="mb-4 text-xl font-semibold text-primary">
+								Tokoh Kunci & Wilayah Awal
+							</h3>
+							<ul class="space-y-3">
+								<template
+									x-for="tokoh in sejarah.tokohKunci"
+									:key="tokoh.nama">
+									<li class="flex items-center gap-3">
+										<span
+											class="flex items-center justify-center w-8 h-8 rounded-full bg-primary/10 text-primary"
+											x-html="tokoh.icon">
+										</span>
+										<div>
+											<h4
+												class="font-semibold text-textdark"
+												x-text="tokoh.nama"></h4>
+											<p
+												class="text-sm text-gray-500"
+												x-text="tokoh.deskripsi"></p>
+										</div>
+									</li>
+								</template>
+							</ul>
+						</div>
+					</div>
+				</div>
+			</section>
+
+			<!-- TIMELINE KEPEMIMPINAN -->
+			<section class="py-20 bg-gray-100 border-gray-200 border-y">
+				<div class="max-w-4xl px-6 mx-auto">
+					<h2
+						class="mb-12 text-3xl font-bold text-center text-primary">
+						Perjalanan Kepemimpinan Desa Sukakerta
+					</h2>
+					<!-- 
+              FIX #2 (Revisi): Garis Timeline Diperbaiki
+              Menggunakan pseudo-element 'before:' pada container ini 
+              untuk membuat garis. Ini lebih reliable.
+            -->
+					<div class="relative">
+						<!-- 
+              FIX #2: Garis Timeline Diperbaiki
+              Mengganti 'h-full' dengan 'top-0 bottom-0' agar 
+              garisnya merentang penuh.
+            -->
+						<div
+							class="absolute left-4 md:left-1/2 -ml-0.5 w-1 top-0 bottom-0 bg-primary rounded-full"
+							aria-hidden="true"></div>
+
+						<!-- Item Timeline -->
+						<template
+							x-for="(item, index) in kepalaDesa"
+							:key="index">
+							<div
+								class="relative flex justify-between mb-12 md:items-center">
+								<!-- Teks (Kiri/Kanan) -->
+								<div
+									:class="{ 'md:order-1': index % 2 === 0, 'md:order-3': index % 2 !== 0 }"
+									class="order-3 md:w-[calc(50%-2.5rem)] w-[calc(100%-4rem)]">
+									<div
+										class="p-6 bg-white rounded-lg shadow-lg">
+										<span
+											class="block mb-2 text-sm font-semibold text-primary"
+											x-text="item.masa"></span>
+										<h3
+											class="mb-2 text-xl font-semibold text-textdark"
+											x-text="item.nama"></h3>
+										<p
+											class="text-sm text-gray-600"
+											x-text="item.deskripsi"></p>
+									</div>
+								</div>
+								<!-- Titik Tengah -->
+								<div
+									class="relative z-10 flex items-center justify-center order-2 w-10 h-10">
+									<div
+										class="w-5 h-5 rounded-full bg-primary ring-8 ring-white"></div>
+								</div>
+								<!-- Spacer Kosong (hanya untuk desktop) -->
+								<div
+									:class="{ 'order-3': index % 2 === 0, 'order-1': index % 2 !== 0 }"
+									class="hidden md:block md:w-[calc(50%-2.5rem)]"></div>
+							</div>
+						</template>
+					</div>
+				</div>
+			</section>
+		</main>
+
+		<!-- 
+      FOOTER DINAMIS KONSISTEN
+    -->
+		<footer class="pt-16 pb-8 text-white bg-primary" x-data="footerData()">
+			<div class="px-6 mx-auto max-w-7xl md:px-10">
+				<div
+					class="grid grid-cols-1 gap-12 pb-10 border-b md:grid-cols-3 border-white/20">
+					<!-- 1️⃣ Identitas Desa (Dinamis) -->
+					<div>
+						<div class="flex items-center gap-4 mb-4">
+							<img
+								:src="identity.logoSrc"
+								alt="Logo Desa"
+								class="border-2 rounded-full w-14 h-14 border-white/70" />
+							<div>
+								<h2
+									class="text-2xl font-semibold"
+									x-text="identity.name"></h2>
+								<p
+									class="text-sm text-accent"
+									x-text="identity.tagline"></p>
+							</div>
+						</div>
+						<p
+							class="text-sm leading-relaxed text-gray-100"
+							x-text="identity.description"></p>
+					</div>
+
+					<!-- 2️⃣ Navigasi Cepat (Dinamis) -->
+					<div>
+						<h3 class="mb-4 text-xl font-semibold text-accent">
+							Navigasi Cepat
+						</h3>
+						<ul
+							class="gap-8 space-y-3 text-sm text-gray-100 columns-2">
+							<template
+								x-for="link in quickLinks"
+								:key="link.href">
+								<li>
+									<a
+										:href="link.href"
+										class="inline-block transition-colors hover:text-accent hover:underline underline-offset-4"
+										x-text="link.label">
+									</a>
+								</li>
+							</template>
+						</ul>
+					</div>
+
+					<!-- 3️⃣ Kontak & Sosial (Dinamis) -->
+					<div>
+						<h3 class="mb-4 text-xl font-semibold text-accent">
+							Kontak & Sosial
+						</h3>
+						<!-- Kontak (Ikon diganti dari emoji ke SVG) -->
+						<ul class="space-y-3 text-sm text-gray-100">
+							<template
+								x-for="item in contactInfo"
+								:key="item.text">
+								<li class="flex items-start gap-3">
+									<span
+										class="w-5 h-5 flex-shrink-0 mt-0.5 opacity-80"
+										x-html="item.icon"></span>
+									<a
+										:href="item.href"
+										class="transition-colors hover:text-accent"
+										x-text="item.text"></a>
+								</li>
+							</template>
+						</ul>
+						<!-- Sosial Media (Dinamis) -->
+						<div class="flex gap-3 mt-6">
+							<template
+								x-for="social in socialLinks"
+								:key="social.title">
+								<a
+									:href="social.href"
+									:title="social.title"
+									target="_blank"
+									rel="noopener noreferrer"
+									class="p-2 text-white transition-colors rounded-full bg-white/10 hover:bg-accent hover:text-primary">
+									<span
+										class="sr-only"
+										x-text="social.title"></span>
+									<div
+										class="w-5 h-5"
+										x-html="social.icon"></div>
+								</a>
+							</template>
+						</div>
+					</div>
+				</div>
+				<!-- Copyright (Dinamis) -->
+				<div class="pt-6 text-sm text-center text-gray-200" x-cloak>
+					&copy;
+					<span x-text="copyright.year"></span>
+					<span x-text="copyright.text"></span>
+					<a
+						:href="copyright.developerLink"
+						target="_blank"
+						rel="noopener noreferrer"
+						class="font-medium transition-colors text-accent hover:text-white"
+						x-text="copyright.developerName"></a
+					>.
+				</div>
+			</div>
+		</footer>
+
+		<!-- 
+      SKRIP TERPUSAT
+      (Data dari halaman lain + data Sejarah)
+    -->
+		<script>
+			// Data global untuk seluruh halaman
+			function pageData() {
+				return {
+					// State UI
+					sticky: false,
+					profilOpen: false,
+					dataOpen: false,
+					mobileMenuOpen: false,
+					open: null, // (Tidak terpakai di halaman ini, tapi ada untuk konsistensi)
+
+					// Data khusus halaman Sejarah
+					sejarah: {
+						title: "Sejarah Desa Sukakerta",
+						subtitle:
+							"Jejak panjang perjalanan Desa Sukakerta dari masa Dalem Cageur hingga masa modern, mencerminkan semangat masyarakat yang tangguh dan berdaya.",
+						asalUsul: {
+							title: "Asal-usul Berdirinya Desa",
+							paragraphs: [
+								`Konon menurut cerita orang tua, proses berdirinya desa Sukakerta dimulai dengan keberadaan sosok tokoh masyarakat kharismatik yang bernama <strong>Dalem Cageur</strong> (Rd. Muhamad Satari Suryadilaga). Beliau adalah seorang dalem yang berasal dari daerah Kuningan yang pergi meninggalkan kampung halamannya.`,
+								`Beliau “pundung” dan mengembara, sehingga sampailah beliau di suatu tempat yang berada di kawasan kaki gunung Sawal. Beliau tinggal ditempat tersebut membangun pemukiman dan menikah dengan seorang wanita yang bernama <strong>Jasmirah</strong>. Dari hasil pernikahan tersebut, beliau dikaruniai tiga orang putra yang kemudian memimpin wilayah-wilayah <strong>Kakuwuan Cisaar, Kakuwuan Cidoyang, dan Kakuwuan Sukapulang</strong>.`,
+								`Seiring perkembangan zaman, putra Dalem Cageur yang bernama <strong>Anggadimerta (H. Muhamad Soleh)</strong> menggabungkan kakuwuan Cisaar dan Cidoyang menjadi <strong>Kakuwuan Sukaraja</strong>. Pada masa kepemimpinan kuwu <strong>H. Sudja’i</strong> (sekitar tahun 1902), Kakuwuan Sukaraja digabung dengan Kakuwuan Sukapulang dan diberi nama <strong>Desa Sukakerta</strong>.`,
+							],
+						},
+						tokohKunci: [
+							{
+								nama: "Dalem Cageur",
+								deskripsi:
+									"Pendiri desa, berasal dari Kuningan.",
+								icon: `<svg fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z" /></svg>`,
+							},
+							{
+								nama: "Jasmirah",
+								deskripsi: "Istri Dalem Cageur.",
+								icon: `<svg fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6.042A8.967 8.967 0 0 0 6 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 0 1 6 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 0 1 6-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0 0 18 18c-2.305 0-4.408.867-6 2.292m0-14.25v14.25" /></svg>`,
+							},
+							{
+								nama: "Anggadimerta (H. M. Soleh)",
+								deskripsi:
+									"Putra Dalem Cageur, pemersatu Kakuwuan.",
+								icon: `<svg fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5"><path stroke-linecap="round" stroke-linejoin="round" d="M18 18.72a9.094 9.094 0 0 0 3.741-.479 3 3 0 0 0-3.741-5.582M11.995 12.75a9.004 9.004 0 0 1-5.482-1.935A3 3 0 0 0 3 13.181V18.72A9.094 9.094 0 0 0 6.259 18.24m5.736-5.49a3 3 0 0 0-5.482-1.935 3 3 0 0 0-3.741 5.582M21 13.181V18.72a9.094 9.094 0 0 1-3.741-.479 3 3 0 0 1 3.741-5.582Z" /></svg>`,
+							},
+						],
+					},
+					// Data Timeline (diambil dari Teks Sejarah & Tabel 2.1)
+					// DIURUTKAN DARI YANG TERBARU KE TERLAMA
+					kepalaDesa: [
+						{
+							nama: "Dadang Jayusman",
+							masa: "2021–2026",
+							deskripsi:
+								"Menjabat Kepala Desa saat ini, melanjutkan program pembangunan desa.",
+						},
+						{
+							nama: "H. Engkos Kosim",
+							masa: "2018–2024",
+							deskripsi:
+								"Dilantik pasca Pilkades serentak 2018. Menyusun RPJMDes 2019-2025.",
+						},
+						{
+							nama: "Ujang Tolib (Pj.)",
+							masa: "2018",
+							deskripsi:
+								"Penjabat (Pj.) PNS dari Kec. Panumbangan. Melaksanakan Pilkades serentak 2018 dan membangun Jogging Track.",
+						},
+						{
+							nama: "H. Engkos Kosim",
+							masa: "2012–2018",
+							deskripsi:
+								"Membangun Gedung Dakwah Islam (GDI), Kios Desa, dan perubahan status SMEA Bhakti menjadi SMKN 1 Panumbangan.",
+						},
+						{
+							nama: "E. Husenudin (Pj.)",
+							masa: "2010–2011",
+							deskripsi:
+								"Penjabat (Pj.) Kepala Desa selama satu periode (1 tahun).",
+						},
+						{
+							nama: "Edi Kusniadi (Pj.)",
+							masa: "2007–2010",
+							deskripsi:
+								"Penjabat setelah Pilkades 2007 dimenangkan 'Kotak Kosong'. Melaksanakan Rehab Masjid As Salam dan TK Mawar.",
+						},
+						{
+							nama: "Herman Suherman (Pj.)",
+							masa: "2006–2007",
+							deskripsi:
+								"Penjabat (Pj.) Sekretaris Desa setelah Dedi Kusmayadi mengundurkan diri. Membangun jalan Sukamanah.",
+						},
+						{
+							nama: "Dedi Kusmayadi, S.E.",
+							masa: "1999–2006",
+							deskripsi:
+								"Kuwu termuda pada masanya, memimpin era modernisasi awal Desa Sukakerta dan pembangunan jalan strategis.",
+						},
+						{
+							nama: "Oleh Permana & Herman Suherman (Pj.)",
+							masa: "1996–1999",
+							deskripsi:
+								"Masa transisi diisi oleh Penjabat (Pj.) dari Kecamatan (Oleh Permana) dan Sekdes (Herman Suherman).",
+						},
+						{
+							nama: "Otong Sukayat Djuwaeni",
+							masa: "1994–1996",
+							deskripsi:
+								"Seorang pensiunan PNS yang berperan dalam penataan administrasi pemerintahan desa.",
+						},
+						{
+							nama: "Irin Suherdi",
+							masa: "1984–1994",
+							deskripsi:
+								"Mengembangkan sarana olahraga (Kompetisi antar klub), rehab masjid As Salam, dan rehab THR.",
+						},
+						{
+							nama: "Ede Suhada",
+							masa: "1979–1982",
+							deskripsi:
+								"Memimpin masa pemekaran Desa Sukakerta dan Desa Kertaraharja. (Memilih menjadi Kades Kertaraharja).",
+						},
+						{
+							nama: "Sutardi",
+							masa: "1975–1978",
+							deskripsi:
+								"Melanjutkan pemerintahan desa pada masa transisi pembangunan daerah.",
+						},
+						{
+							nama: "Wihanda (H. Ibrahim)",
+							masa: "1951–1974",
+							deskripsi:
+								"Masa keemasan desa dengan berdirinya THR dan menginisiasi berdirinya SMEA Bhakti Panumbangan.",
+						},
+						{
+							nama: "Atmawinata (Emo)",
+							masa: "1948–1951",
+							deskripsi:
+								"Memimpin di masa pemberontakan DI/TII, gugur dalam menjalankan tugas pemerintahan.",
+						},
+						{
+							nama: "H. Yusuf Yudharedja",
+							masa: "Tidak Diketahui",
+							deskripsi:
+								"Putra Dalem Cageur yang melanjutkan garis kepemimpinan awal.",
+						},
+						{
+							nama: "Sukatmadiredja (Guru Sukatma)",
+							masa: "Tidak Diketahui",
+							deskripsi:
+								"Tokoh pendidik yang juga menjabat kepala desa di masa awal pembentukan.",
+						},
+						{
+							nama: "H. Pakih",
+							masa: "Tidak Diketahui",
+							deskripsi: "Salah satu Kuwu pasca H. Sudja'i.",
+						},
+						{
+							nama: "H. Sudja’i",
+							masa: "Sekitar 1902",
+							deskripsi:
+								"Menyatukan Kakuwuan Sukaraja menjadi Desa Sukakerta yang diakui pemerintah kolonial Belanda.",
+						},
+						{
+							nama: "Anggadimerta (H. M. Soleh)",
+							masa: "Pra 1902",
+							deskripsi:
+								"Pemersatu kakuwuan Cisaar dan Cidoyang menjadi Kakuwuan Sukaraja.",
+						},
+						{
+							nama: "Dalem Cageur (Rd. M. Satari S.)",
+							masa: "Pendiri",
+							deskripsi:
+								"Pendiri awal pemukiman di kaki Gunung Sawal yang menjadi cikal bakal desa.",
+						},
+					],
+				};
+			}
+
+			// Data khusus untuk komponen footer
+			function footerData() {
+				return {
+					identity: {
+						logoSrc: "assets/img/logo.webp",
+						name: "Desa Sukakerta",
+						tagline: "Kec. Panumbangan, Kab. Ciamis",
+						description:
+							"Desa Sukakerta merupakan desa yang terus berkembang melalui inovasi pelayanan publik, transparansi keuangan, dan potensi lokal yang berdaya saing.",
+					},
+					quickLinks: [
+						{ label: "Beranda", href: "index.html" },
+						{
+							label: "Identitas",
+							href: "pages/profil/identitasDesa.html",
+						},
+						{
+							label: "Visi & Misi",
+							href: "pages/profil/visiMisi.html",
+						},
+						{
+							label: "Struktur BPD",
+							href: "pages/profil/strukturBPD.html",
+						},
+						{
+							label: "Sejarah",
+							href: "pages/profil/sejarahDesa.html",
+						},
+						{
+							label: "Statistik",
+							href: "pages/data/statistik.html",
+						},
+						{
+							label: "Transparansi",
+							href: "pages/transparansi.html",
+						},
+						{ label: "Layanan", href: "pages/layanan.html" },
+						{ label: "Lapak", href: "pages/lapak.html" },
+						{ label: "Galeri", href: "pages/galeri.html" },
+					],
+					contactInfo: [
+						{
+							icon: `<svg fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M9.69 18.933l.003.001C9.89 19.02 10 19 10 19s.11.02.308-.066l.002-.001.006-.003.018-.008a5.741 5.741 0 00.281-.14c.186-.096.446-.24.757-.433.62-.384 1.445-.966 2.274-1.765C15.302 14.988 17 12.493 17 9A7 7 0 103 9c0 3.492 1.698 5.988 3.355 7.584a13.733 13.733 0 002.273 1.765 11.842 11.842 0 00.757.433c.126.05.209.09.28.14l.018.008.006.003zM10 11.25a2.25 2.25 0 100-4.5 2.25 2.25 0 000 4.5z" clip-rule="evenodd"></path></svg>`,
+							text: "Jl. Raya Sukakerta No.10, Panumbangan, Ciamis, Jawa Barat",
+							href: "https://maps.google.com/?q=Desa+Sukakerta+Panumbangan+Ciamis",
+						},
+						{
+							icon: `<svg fill="currentColor" viewBox="0 0 20 20"><path d="M2 3.5A1.5 1.5 0 013.5 2h1.148c.16 0 .315.025.462.074l2.54.847a.5.5 0 01.33.633Request.InvalidNumberA 7.0 7.0 0 00-.72 4.04c.09.43.52.72.96.65.07-.01.139-.02.208-.03a.5.5 0 01.58.6c-1.14 3.867-3.867 6.594-7.733 7.734a.5.5 0 01-.6-.58c.01-.07.02-.138.03-.207.07-.44-.22-.87-.65-.96a7.0 7.0 0 00-4.04.72.5.5 0 01-.633-.33L2.074 5.11A1.5 1.5 0 013.5 2H2z"></path></svg>`,
+							text: "(0265) 123456",
+							href: "tel:+62265123456",
+						},
+						{
+							icon: `<svg fill="currentColor" viewBox="0 0 20 20"><path d="M3 4a2 2 0 00-2 2v1.161l8.441 4.221a1.25 1.25 0 001.118 0L19 7.162V6a2 2 0 00-2-2H3z"></path><path d="M19 8.839l-7.77 3.885a2.75 2.75 0 01-2.46 0L1 8.839V14a2 2 0 002 2h14a2 2 0 002-2V8.839z"></path></svg>`,
+							text: "info@desasukakerta.go.id",
+							href: "mailto:info@desasukakerta.go.id",
+						},
+					],
+					socialLinks: [
+						{
+							title: "Facebook",
+							href: "#",
+							icon: `<svg fill="currentColor" viewBox="0 0 24 24"><path d="M22.675 0h-21.35C.597 0 0 .597 0 1.325v21.351C0 23.403.597 24 1.325 24h11.483v-9.294H9.692V11.09h3.116V8.413c0-3.1 1.893-4.788 4.659-4.788 1.325 0 2.463.099 2.795.143v3.24l-1.919.001c-1.504 0-1.796.715-1.796 1.763v2.314h3.59l-.467 3.616h-3.123V24h6.116C23.403 24 24 23.403 24 22.676V1.325C24 .597 23.403 0 22.675 0z"></path></svg>`,
+						},
+						{
+							title: "Instagram",
+							href: "#",
+							icon: `<svg fill="currentColor" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 1.366.062 2.633.35 3.608 1.326.975.975 1.264 2.243 1.326 3.608.058 1.266.07 1.645.07 4.85s-.012 3.584-.07 4.85c-.062 1.366-.35 2.633-1.326 3.608-.975.975-2.243 1.264-3.608 1.326-1.266.058-1.645.07-4.85.07s-3.584-.012-4.85-.07c-1.366-.062-2.633-.35-3.608-1.326-.975-.975-1.264-2.243-1.326-3.608C2.175 15.647 2.163 15.268 2.163 12s.012-3.584.07-4.85c.062-1.366.35-2.633 1.326-3.608.975-.975 2.243-1.264 3.608-1.326C8.416 2.175 8.796 2.163 12 2.163zm0 1.684c-3.17 0-3.548.012-4.796.07-1.067.05-1.652.23-2.037.385-.513.2-.877.438-1.262.823-.385.385-.623.749-.823 1.262-.155.385-.335.97-.385 2.037-.058 1.248-.07 1.626-.07 4.796s.012 3.548.07 4.796c.05 1.067.23 1.652.385 2.037.2.513.438.877.823 1.262.385.385.749.623 1.262.823.385.155.97.335 2.037.385 1.248.058 1.626.07 4.796.07s3.548-.012 4.796-.07c1.067-.05 1.652-.23 2.037-.385.513-.2.877.438-1.262.823.385-.385.623-.749.823-1.262.155-.385.335-.97-.385-2.037.058-1.248.07-1.626.07-4.796s-.012-3.548-.07-4.796c-.05-1.067-.23-1.652-.385-2.037-.2-.513-.438.877-.823-1.262-.385-.385-.749-.623-1.262.823-.385-.155-.97.335-2.037-.385-1.248-.058-1.626-.07-4.796-.07zm0 3.838a5.999 5.999 0 1 1 0 11.998 5.999 5.999 0 0 1 0-11.998zm0 9.9a3.9 3.9 0 1 0 0-7.8 3.9 3.9 0 0 0 0 7.8zm6.406-10.845a1.44 1.44 0 1 1 0-2.88 1.44 1.44 0 0 1 0 2.88z"></path></svg>`,
+						},
+					],
+					copyright: {
+						year: new Date().getFullYear(),
+						text: "Desa Sukakerta. Dikembangkan oleh",
+						developerName: "Hans Dev",
+						developerLink: "#", // Ganti dengan link Anda
+					},
+				};
+			}
+
+			// Inisialisasi Alpine
+			document.addEventListener("alpine:init", () => {
+				Alpine.data("pageData", pageData);
+				Alpine.data("footerData", footerData);
+			});
+		</script>
+	</body>
+</html>
