@@ -35,29 +35,12 @@
 				.bg-primary {
 					background-color: #2e7d32;
 				}
-				/* REVISI: Menambahkan warna ungu IDM */
-				.bg-idm-purple {
-					background-color: #7e22ce;
-				}
-				.text-idm-purple {
-					color: #7e22ce;
-				}
 				.border-accent {
 					border-color: #fbc02d;
 				}
 				.text-accent {
 					color: #fbc02d;
 				}
-			}
-
-			/* Style kustom untuk dot-pattern di card */
-			.dot-pattern {
-				background-image: radial-gradient(
-					circle,
-					rgba(255, 255, 255, 0.1) 1px,
-					transparent 1.5px
-				);
-				background-size: 10px 10px;
 			}
 		</style>
 	</head>
@@ -67,7 +50,7 @@
 		x-data="pageData()"
 		x-init="
             setHighchartsTheme(); 
-            initIdmDonutChart();
+            initIdmPieChart();
         "
 		@scroll.window="sticky = (window.pageYOffset > 50)">
 		<header
@@ -176,11 +159,6 @@
 							x-transition.opacity.duration.150ms
 							class="absolute left-0 w-64 py-2 mt-3 overflow-y-auto bg-white border border-gray-200 rounded-lg shadow-md text-textdark max-h-96">
 							<a
-								href="pages/data/idm.html"
-								class="block px-4 py-2 text-gray-400 cursor-not-allowed"
-								>Indeks Desa Membangun (IDM)</a
-							>
-							<a
 								href="pages/data/penduduk.html"
 								class="block px-4 py-2 hover:bg-gray-100"
 								>Data Penduduk</a
@@ -219,6 +197,11 @@
 								href="pages/data/kelompokUmur.html"
 								class="block px-4 py-2 hover:bg-gray-100"
 								>Kelompok Umur</a
+							>
+							<a
+								href="pages/data/idm.html"
+								class="block px-4 py-2 text-gray-400 cursor-not-allowed"
+								>Indeks Desa Membangun</a
 							>
 						</div>
 					</div>
@@ -368,11 +351,6 @@
 									x-cloak
 									class="pl-3 ml-4 space-y-1 overflow-y-auto text-sm text-gray-700 border-l border-gray-200 max-h-64">
 									<a
-										href="pages/data/idm.html"
-										class="block px-4 py-2 text-gray-400 cursor-not-allowed"
-										>IDM</a
-									>
-									<a
 										href="pages/data/penduduk.html"
 										class="block px-4 py-2 hover:bg-gray-100"
 										>Data Penduduk</a
@@ -411,6 +389,11 @@
 										href="pages/data/kelompokUmur.html"
 										class="block px-4 py-2 hover:bg-gray-100"
 										>Kelompok Umur</a
+									>
+									<a
+										href="#"
+										class="block px-4 py-2 text-gray-400 cursor-not-allowed"
+										>Indeks Desa Membangun</a
 									>
 								</ul>
 							</li>
@@ -514,129 +497,149 @@
 
 			<section class="py-16">
 				<div class="px-6 mx-auto max-w-7xl lg:px-8">
-					<div class="grid grid-cols-1 gap-6 md:grid-cols-3">
-						<div class="space-y-6">
-							<div
-								class="relative p-6 overflow-hidden text-white shadow-lg bg-idm-purple rounded-xl dot-pattern">
-								<h3
-									class="text-lg font-medium text-purple-200"
-									x-text="summaries.tahun + ' Skor IDM'"></h3>
-								<p
-									class="mt-1 text-5xl font-bold"
-									x-text="summaries.skor"></p>
-								<p
-									class="mt-1 text-purple-200"
-									x-text="'Data Tahun ' + summaries.tahun"></p>
+					<div
+						class="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-5">
+						<div
+							class="p-6 text-white shadow-lg sm:col-span-2 lg:col-span-2 rounded-xl"
+							style="background-color: #7c3aed">
+							<div class="flex items-center justify-between">
+								<span class="text-sm font-medium opacity-80"
+									>Skor IDM Tahun
+									<span x-text="summary.TAHUN"></span
+								></span>
 								<svg
-									class="absolute w-20 h-20 -right-4 -bottom-4 text-white/10"
 									xmlns="http://www.w3.org/2000/svg"
-									fill="none"
-									viewBox="0 0 24 24"
-									stroke-width="1.5"
-									stroke="currentColor">
+									viewBox="0 0 20 20"
+									fill="currentColor"
+									class="w-5 h-5 opacity-80">
 									<path
-										stroke-linecap="round"
-										stroke-linejoin="round"
-										d="M2.25 18 9 11.25l4.306 4.306a11.95 11.95 0 0 1 5.814-5.518l2.74-1.22m0 0-5.94-2.281m5.94 2.28-2.28 5.941" />
+										fill-rule="evenodd"
+										d="M18 10a8 8 0 1 1-16 0 8 8 0 0 1 16 0Zm-7-4a1 1 0 1 1-2 0 1 1 0 0 1 2 0ZM9 9a.75.75 0 0 0 0 1.5h.253a.25.25 0 0 1 .244.304l-.459 2.066A1.75 1.75 0 0 0 10.75 15h.5a.75.75 0 0 0 0-1.5h-.5a.25.25 0 0 1-.244-.304l.459-2.066A1.75 1.75 0 0 0 9.25 9H9Z"
+										clip-rule="evenodd" />
 								</svg>
 							</div>
-							<div class="p-6 bg-white shadow-lg rounded-xl">
-								<h3 class="font-medium text-gray-500">
-									Skor Minimal
-								</h3>
-								<p
-									class="mt-1 text-3xl font-bold text-textdark"
-									x-text="summaries.skorMinimal"></p>
-								<p class="mt-1 text-sm text-gray-600">
-									Skor minimal untuk mendapatkan status
-									mandiri.
-								</p>
-							</div>
+							<p
+								class="mt-2 text-4xl font-bold"
+								x-text="summary.SKOR_SAAT_INI.toFixed(5)"></p>
+							<p class="text-sm opacity-80">
+								Data Tahun <span x-text="summary.TAHUN"></span>
+							</p>
 						</div>
 
-						<div class="space-y-6">
-							<div class="p-6 bg-white shadow-lg rounded-xl">
-								<h3 class="font-medium text-gray-500">
-									Status IDM
-								</h3>
-								<p
-									class="mt-1 text-3xl font-bold text-primary"
-									x-text="summaries.status"></p>
+						<div class="p-5 bg-white shadow-lg rounded-xl">
+							<div class="flex items-center justify-between">
+								<span class="text-sm font-medium text-gray-500"
+									>Status IDM</span
+								>
+								<svg
+									xmlns="http://www.w3.org/2000/svg"
+									viewBox="0 0 20 20"
+									fill="currentColor"
+									class="w-5 h-5 text-gray-400">
+									<path
+										fill-rule="evenodd"
+										d="M18 10a8 8 0 1 1-16 0 8 8 0 0 1 16 0Zm-7-4a1 1 0 1 1-2 0 1 1 0 0 1 2 0ZM9 9a.75.75 0 0 0 0 1.5h.253a.25.25 0 0 1 .244.304l-.459 2.066A1.75 1.75 0 0 0 10.75 15h.5a.75.75 0 0 0 0-1.5h-.5a.25.25 0 0 1-.244-.304l.459-2.066A1.75 1.75 0 0 0 9.25 9H9Z"
+										clip-rule="evenodd" />
+								</svg>
 							</div>
-							<div class="p-6 bg-white shadow-lg rounded-xl">
-								<h3 class="font-medium text-gray-500">
-									Selisih Skor
-								</h3>
-								<p
-									class="mt-1 text-3xl font-bold text-textdark"
-									x-text="summaries.selisih"></p>
-								<p class="mt-1 text-sm text-gray-600">
-									Selisih skor yang harus diraih.
-								</p>
-							</div>
+							<p
+								class="mt-2 text-2xl font-bold text-primary"
+								x-text="summary.STATUS"></p>
 						</div>
 
-						<div class="space-y-6">
-							<div class="p-6 bg-white shadow-lg rounded-xl">
-								<h3 class="font-medium text-gray-500">
-									Target Desa Dewasari
-								</h3>
-								<p
-									class="mt-1 text-3xl font-bold text-primary"
-									x-text="summaries.targetStatus"></p>
+						<div class="p-5 bg-white shadow-lg rounded-xl">
+							<div class="flex items-center justify-between">
+								<span class="text-sm font-medium text-gray-500"
+									>Target Status</span
+								>
+								<svg
+									xmlns="http://www.w3.org/2000/svg"
+									viewBox="0 0 20 20"
+									fill="currentColor"
+									class="w-5 h-5 text-gray-400">
+									<path
+										fill-rule="evenodd"
+										d="M18 10a8 8 0 1 1-16 0 8 8 0 0 1 16 0Zm-7-4a1 1 0 1 1-2 0 1 1 0 0 1 2 0ZM9 9a.75.75 0 0 0 0 1.5h.253a.25.25 0 0 1 .244.304l-.459 2.066A1.75 1.75 0 0 0 10.75 15h.5a.75.75 0 0 0 0-1.5h-.5a.25.25 0 0 1-.244-.304l.459-2.066A1.75 1.75 0 0 0 9.25 9H9Z"
+										clip-rule="evenodd" />
+								</svg>
 							</div>
-							<div class="p-6 bg-white shadow-lg rounded-xl">
-								<h3 class="mb-3 font-semibold text-textdark">
-									Identitas Desa
-								</h3>
-								<dl class="text-sm">
-									<div class="flex justify-between py-1">
-										<dt class="text-gray-500">Desa</dt>
-										<dd
-											class="font-medium text-gray-800"
-											x-text="identitas.desa"></dd>
-									</div>
-									<div class="flex justify-between py-1">
-										<dt class="text-gray-500">Kecamatan</dt>
-										<dd
-											class="font-medium text-gray-800"
-											x-text="identitas.kecamatan"></dd>
-									</div>
-									<div class="flex justify-between py-1">
-										<dt class="text-gray-500">Kabupaten</dt>
-										<dd
-											class="font-medium text-gray-800"
-											x-text="identitas.kabupaten"></dd>
-									</div>
-									<div class="flex justify-between py-1">
-										<dt class="text-gray-500">Provinsi</dt>
-										<dd
-											class="font-medium text-gray-800"
-											x-text="identitas.provinsi"></dd>
-									</div>
-								</dl>
+							<p
+								class="mt-2 text-2xl font-bold text-textdark"
+								x-text="summary.TARGET_STATUS"></p>
+						</div>
+
+						<div class="p-5 bg-white shadow-lg rounded-xl">
+							<div class="flex items-center justify-between">
+								<span class="text-sm font-medium text-gray-500"
+									>Selisih Skor</span
+								>
+								<svg
+									xmlns="http://www.w3.org/2000/svg"
+									viewBox="0 0 20 20"
+									fill="currentColor"
+									class="w-5 h-5 text-gray-400">
+									<path
+										fill-rule="evenodd"
+										d="M18 10a8 8 0 1 1-16 0 8 8 0 0 1 16 0Zm-7-4a1 1 0 1 1-2 0 1 1 0 0 1 2 0ZM9 9a.75.75 0 0 0 0 1.5h.253a.25.25 0 0 1 .244.304l-.459 2.066A1.75 1.75 0 0 0 10.75 15h.5a.75.75 0 0 0 0-1.5h-.5a.25.25 0 0 1-.244-.304l.459-2.066A1.75 1.75 0 0 0 9.25 9H9Z"
+										clip-rule="evenodd" />
+								</svg>
 							</div>
+							<p
+								class="mt-2 text-2xl font-bold"
+								:class="selisihSkor >= 0 ? 'text-green-600' : 'text-red-600'"
+								x-text="selisihSkor.toFixed(5) + ' Poin'"></p>
+						</div>
+
+						<div
+							class="p-5 bg-white shadow-lg sm:col-span-2 lg:col-span-3 rounded-xl">
+							<div class="flex items-center justify-between">
+								<span class="text-sm font-medium text-gray-500"
+									>Skor Minimal</span
+								>
+								<svg
+									xmlns="http://www.w3.org/2000/svg"
+									viewBox="0 0 20 20"
+									fill="currentColor"
+									class="w-5 h-5 text-gray-400">
+									<path
+										fill-rule="evenodd"
+										d="M18 10a8 8 0 1 1-16 0 8 8 0 0 1 16 0Zm-7-4a1 1 0 1 1-2 0 1 1 0 0 1 2 0ZM9 9a.75.75 0 0 0 0 1.5h.253a.25.25 0 0 1 .244.304l-.459 2.066A1.75 1.75 0 0 0 10.75 15h.5a.75.75 0 0 0 0-1.5h-.5a.25.25 0 0 1-.244-.304l.459-2.066A1.75 1.75 0 0 0 9.25 9H9Z"
+										clip-rule="evenodd" />
+								</svg>
+							</div>
+							<p
+								class="mt-1 text-2xl font-bold text-textdark"
+								x-text="summary.SKOR_MINIMAL + ' Poin'"></p>
+							<p class="text-sm text-gray-500">
+								Skor minimal untuk mendapatkan status
+								<span
+									x-text="summary.TARGET_STATUS"
+									class="font-medium"></span
+								>.
+							</p>
 						</div>
 					</div>
 				</div>
 			</section>
 
-			<section class="pb-16 -mt-8">
+			<section class="pb-16 -mt-6">
 				<div class="px-6 mx-auto max-w-7xl lg:px-8">
-					<div class="grid grid-cols-1 gap-6 lg:grid-cols-3">
+					<div class="grid grid-cols-1 gap-8 lg:grid-cols-3">
 						<div
-							class="p-6 bg-white shadow-lg lg:col-span-2 rounded-xl">
-							<div id="idm-donut-chart" class="w-full h-96"></div>
+							class="p-6 bg-white shadow-lg lg:col-span-2 rounded-xl md:p-8">
+							<div id="idm-pie-chart" style="height: 400px"></div>
 						</div>
 
 						<div class="lg:col-span-1">
-							<div class="space-y-4" x-data="{ open: 'iks' }">
+							<div
+								class="space-y-4"
+								x-data="{ openAccordion: 'IKS' }">
 								<div class="bg-white shadow-lg rounded-xl">
 									<button
-										@click="open = (open === 'iks' ? '' : 'iks')"
+										@click="openAccordion = (openAccordion === 'IKS' ? null : 'IKS')"
 										class="flex items-center justify-between w-full p-5">
 										<span
-											class="text-lg font-semibold text-idm-purple"
+											class="text-lg font-semibold text-primary"
 											>Apa itu Indeks Ketahanan Sosial
 											(IKS)?</span
 										>
@@ -645,7 +648,7 @@
 											viewBox="0 0 20 20"
 											fill="currentColor"
 											class="w-5 h-5 transition-transform"
-											:class="open === 'iks' ? 'rotate-180' : ''">
+											:class="openAccordion === 'IKS' ? 'rotate-180' : ''">
 											<path
 												fill-rule="evenodd"
 												d="M5.22 8.22a.75.75 0 0 1 1.06 0L10 11.94l3.72-3.72a.75.75 0 1 1 1.06 1.06l-4.25 4.25a.75.75 0 0 1-1.06 0L5.22 9.28a.75.75 0 0 1 0-1.06Z"
@@ -653,13 +656,13 @@
 										</svg>
 									</button>
 									<div
-										x-show="open === 'iks'"
+										x-show="openAccordion === 'IKS'"
 										x-collapse
 										class="px-5 pb-5 text-gray-700">
-										<p class="text-sm leading-relaxed">
+										<p>
 											Indeks Ketahanan Sosial terdiri dari
 											Dimensi Modal Sosial (indikator
-											solidarias sosial, memiliki
+											solidaritas sosial, memiliki
 											toleransi, rasa aman penduduk,
 											kesejahteraan Sosial); Dimensi
 											Kesehatan (indikator pelayanan
@@ -676,12 +679,13 @@
 										</p>
 									</div>
 								</div>
+
 								<div class="bg-white shadow-lg rounded-xl">
 									<button
-										@click="open = (open === 'ike' ? '' : 'ike')"
+										@click="openAccordion = (openAccordion === 'IKE' ? null : 'IKE')"
 										class="flex items-center justify-between w-full p-5">
 										<span
-											class="text-lg font-semibold text-red-600"
+											class="text-lg font-semibold text-primary"
 											>Apa itu Indeks Ketahanan Ekonomi
 											(IKE)?</span
 										>
@@ -690,7 +694,7 @@
 											viewBox="0 0 20 20"
 											fill="currentColor"
 											class="w-5 h-5 transition-transform"
-											:class="open === 'ike' ? 'rotate-180' : ''">
+											:class="openAccordion === 'IKE' ? 'rotate-180' : ''">
 											<path
 												fill-rule="evenodd"
 												d="M5.22 8.22a.75.75 0 0 1 1.06 0L10 11.94l3.72-3.72a.75.75 0 1 1 1.06 1.06l-4.25 4.25a.75.75 0 0 1-1.06 0L5.22 9.28a.75.75 0 0 1 0-1.06Z"
@@ -698,25 +702,27 @@
 										</svg>
 									</button>
 									<div
-										x-show="open === 'ike'"
+										x-show="openAccordion === 'IKE'"
 										x-collapse
 										class="px-5 pb-5 text-gray-700">
-										<p class="text-sm leading-relaxed">
-											Indeks Ketahanan Ekonomi terdiri
-											dari Dimensi Ekonomi (indikator
-											keragaman produksi, tersedia pusat
-											pelayanan, akses logistik, akses
-											kredit, lembaga ekonomi, dan
-											keterbukaan wilayah).
+										<p>
+											Indeks Ketahanan Ekonomi (IKE)
+											mencakup indikator-indikator seperti
+											keragaman produksi, ketersediaan
+											pusat perdagangan, akses ke pasar,
+											lembaga keuangan, logistik, dan
+											kualitas infrastruktur jalan untuk
+											mendukung perekonomian desa.
 										</p>
 									</div>
 								</div>
+
 								<div class="bg-white shadow-lg rounded-xl">
 									<button
-										@click="open = (open === 'ikl' ? '' : 'ikl')"
+										@click="openAccordion = (openAccordion === 'IKL' ? null : 'IKL')"
 										class="flex items-center justify-between w-full p-5">
 										<span
-											class="text-lg font-semibold text-green-700"
+											class="text-lg font-semibold text-primary"
 											>Apa itu Indeks Ketahanan Lingkungan
 											(IKL)?</span
 										>
@@ -725,7 +731,7 @@
 											viewBox="0 0 20 20"
 											fill="currentColor"
 											class="w-5 h-5 transition-transform"
-											:class="open === 'ikl' ? 'rotate-180' : ''">
+											:class="openAccordion === 'IKL' ? 'rotate-180' : ''">
 											<path
 												fill-rule="evenodd"
 												d="M5.22 8.22a.75.75 0 0 1 1.06 0L10 11.94l3.72-3.72a.75.75 0 1 1 1.06 1.06l-4.25 4.25a.75.75 0 0 1-1.06 0L5.22 9.28a.75.75 0 0 1 0-1.06Z"
@@ -733,14 +739,18 @@
 										</svg>
 									</button>
 									<div
-										x-show="open === 'ikl'"
+										x-show="openAccordion === 'IKL'"
 										x-collapse
 										class="px-5 pb-5 text-gray-700">
-										<p class="text-sm leading-relaxed">
-											Indeks Ketahanan Lingkungan/Ekologi
-											terdiri dari Dimensi Ekologi
-											(indikator kualitas lingkungan dan
-											potensi/rawan bencana).
+										<p>
+											Indeks Ketahanan Lingkungan (IKL)
+											mengukur kualitas lingkungan hidup
+											di desa, termasuk
+											indikator-indikator seperti
+											kebersihan, pengelolaan sampah,
+											ketersediaan air bersih, serta
+											kewaspadaan dan mitigasi terhadap
+											bencana alam.
 										</p>
 									</div>
 								</div>
@@ -750,162 +760,429 @@
 				</div>
 			</section>
 
-			<section class="pb-16">
+			<section class="pb-16 -mt-8">
 				<div class="px-6 mx-auto max-w-7xl lg:px-8">
-					<div
-						class_name="bg-white shadow-lg rounded-xl"
-						x-data="{ activeTab: 'iks' }">
-						<div class="p-6 border-b border-gray-200">
-							<h2 class="text-xl font-semibold text-textdark">
-								Rincian Indikator IDM 2024
-							</h2>
-							<p class="mt-1 text-sm text-gray-600">
-								Daftar lengkap indikator, skor, dan rekomendasi
-								kegiatan untuk peningkatan status desa.
-							</p>
-							<div class="mt-6">
-								<nav
-									class="flex -mb-[1px] border-b border-gray-200"
-									aria-label="Tabs">
-									<button
-										@click="activeTab = 'iks'"
-										:class="activeTab === 'iks' ? 'border-idm-purple text-idm-purple' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'"
-										class="w-1/3 py-3 font-medium text-center border-b-2">
-										IKS (Sosial)
-									</button>
-									<button
-										@click="activeTab = 'ike'"
-										:class="activeTab === 'ike' ? 'border-red-600 text-red-600' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'"
-										class="w-1/3 py-3 font-medium text-center border-b-2">
-										IKE (Ekonomi)
-									</button>
-									<button
-										@click="activeTab = 'ikl'"
-										:class="activeTab === 'ikl' ? 'border-primary text-primary' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'"
-										class="w-1/3 py-3 font-medium text-center border-b-2">
-										IKL (Lingkungan)
-									</button>
-								</nav>
-							</div>
+					<h2
+						class="mb-6 text-2xl font-bold text-center text-textdark">
+						Rincian Indikator IDM
+					</h2>
+
+					<div x-data="{ activeTab: 'IKS', openDetail: null }">
+						<div
+							class="mb-6 overflow-hidden bg-white shadow-lg rounded-xl">
+							<nav
+								class="flex -mb-px border-b border-gray-200"
+								aria-label="Tabs">
+								<button
+									@click="activeTab = 'IKS'"
+									:class="activeTab === 'IKS' ? 'border-primary text-primary' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'"
+									class="flex-1 w-1/3 px-1 py-4 text-sm font-medium text-center transition border-b-2">
+									<span
+										class="md:text-lg"
+										x-text="`IKS (${iksScore.toFixed(4)})`"></span>
+								</button>
+								<button
+									@click="activeTab = 'IKE'"
+									:class="activeTab === 'IKE' ? 'border-primary text-primary' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'"
+									class="flex-1 w-1/3 px-1 py-4 text-sm font-medium text-center transition border-b-2">
+									<span
+										class="md:text-lg"
+										x-text="`IKE (${ikeScore.toFixed(4)})`"></span>
+								</button>
+								<button
+									@click="activeTab = 'IKL'"
+									:class="activeTab === 'IKL' ? 'border-primary text-primary' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'"
+									class="flex-1 w-1/3 px-1 py-4 text-sm font-medium text-center transition border-b-2">
+									<span
+										class="md:text-lg"
+										x-text="`IKL (${iklScore.toFixed(4)})`"></span>
+								</button>
+							</nav>
 						</div>
 
-						<div class="p-4 md:p-6">
-							<div x-show="activeTab === 'iks'" class="space-y-4">
-								<template
-									x-for="row in detailRows.iks"
-									:key="row.NO">
+						<div>
+							<div x-show="activeTab === 'IKS'" x-cloak>
+								<div
+									class="overflow-hidden bg-white shadow-lg rounded-xl">
 									<div
-										class="p-4 border rounded-lg"
-										:class="row.SKOR < 5 ? 'bg-yellow-50 border-yellow-200' : 'bg-white border-gray-200'">
-										<div
-											class="flex flex-col md:flex-row md:items-center md:justify-between">
-											<div
-												class="flex items-center gap-4">
-												<span
-													class="flex items-center justify-center flex-shrink-0 w-10 h-10 text-lg font-bold text-white rounded-full"
-													:class="row.SKOR < 5 ? 'bg-yellow-500' : 'bg-primary'"
-													x-text="row.SKOR"></span>
-												<div>
-													<h4
-														class="font-semibold text-textdark"
-														x-text="row.INDIKATOR"></h4>
-													<p
-														class="text-sm text-gray-600"
-														x-text="row.KETERANGAN"></p>
+										class="p-5 border-b-2"
+										:class="getSkorBadgeClass(iksScore, true)">
+										<h3 class="text-xl font-bold">
+											Indeks Ketahanan Sosial (IKS)
+										</h3>
+										<p class="text-sm">
+											Indikator terkait Kesehatan,
+											Pendidikan, Modal Sosial, dan
+											Permukiman.
+										</p>
+									</div>
+									<div class="divide-y divide-gray-200">
+										<template
+											x-for="row in iksRows"
+											:key="row.ROW_CELL">
+											<div class="bg-white">
+												<button
+													@click="openDetail = (openDetail === row.ROW_CELL ? null : row.ROW_CELL)"
+													class="flex items-center justify-between w-full p-4 text-left hover:bg-gray-50">
+													<div class="flex-1 pr-4">
+														<span
+															class="text-sm font-semibold text-gray-500"
+															x-text="`IKS-${row.NO}`"></span>
+														<span
+															class="block font-medium text-textdark"
+															x-text="row.INDIKATOR"></span>
+													</div>
+													<div
+														class="flex items-center flex-shrink-0 gap-4">
+														<span
+															class="text-lg font-bold"
+															:class="getSkorBadgeClass(row.SKOR, false)"
+															x-text="row.SKOR"></span>
+														<svg
+															xmlns="http://www.w3.org/2000/svg"
+															viewBox="0 0 20 20"
+															fill="currentColor"
+															class="w-5 h-5 text-gray-400 transition-transform"
+															:class="openDetail === row.ROW_CELL ? 'rotate-180' : ''">
+															<path
+																fill-rule="evenodd"
+																d="M5.22 8.22a.75.75 0 0 1 1.06 0L10 11.94l3.72-3.72a.75.75 0 1 1 1.06 1.06l-4.25 4.25a.75.75 0 0 1-1.06 0L5.22 9.28a.75.75 0 0 1 0-1.06Z"
+																clip-rule="evenodd" />
+														</svg>
+													</div>
+												</button>
+												<div
+													x-show="openDetail === row.ROW_CELL"
+													x-collapse
+													class="p-4 pt-0 bg-gray-50">
+													<div
+														class="grid grid-cols-1 gap-4 md:grid-cols-2">
+														<div>
+															<h5
+																class="text-xs font-semibold text-gray-500 uppercase">
+																Keterangan
+															</h5>
+															<p
+																class="text-sm text-gray-800"
+																x-text="row.KETERANGAN"></p>
+														</div>
+														<div>
+															<h5
+																class="text-xs font-semibold text-gray-500 uppercase">
+																Kegiatan yang
+																Dapat Dilakukan
+															</h5>
+															<p
+																class="text-sm text-gray-800"
+																x-text="row.KEGIATAN"></p>
+														</div>
+													</div>
+													<div class="mt-4">
+														<h5
+															class="text-xs font-semibold text-gray-500 uppercase">
+															Pelaksana Kegiatan
+														</h5>
+														<div
+															class="flex flex-wrap gap-2 mt-2">
+															<template
+																x-if="row.PUSAT"
+																><span
+																	class="px-2 py-1 text-xs font-medium text-blue-800 bg-blue-100 rounded-full"
+																	x-text="row.PUSAT"></span
+															></template>
+															<template
+																x-if="row.PROV"
+																><span
+																	class="px-2 py-1 text-xs font-medium text-green-800 bg-green-100 rounded-full"
+																	x-text="row.PROV"></span
+															></template>
+															<template
+																x-if="row.KAB"
+																><span
+																	class="px-2 py-1 text-xs font-medium text-yellow-800 bg-yellow-100 rounded-full"
+																	x-text="row.KAB"></span
+															></template>
+															<template
+																x-if="row.DESA"
+																><span
+																	class="px-2 py-1 text-xs font-medium text-indigo-800 bg-indigo-100 rounded-full"
+																	x-text="row.DESA"></span
+															></template>
+															<template
+																x-if="row.CSR"
+																><span
+																	class="px-2 py-1 text-xs font-medium text-pink-800 bg-pink-100 rounded-full"
+																	x-text="row.CSR"></span
+															></template>
+															<template
+																x-if="row.LAINNYA"
+																><span
+																	class="px-2 py-1 text-xs font-medium text-gray-800 bg-gray-200 rounded-full"
+																	x-text="row.LAINNYA"></span
+															></template>
+														</div>
+													</div>
 												</div>
 											</div>
-											<div
-												x-show="row.KEGIATAN !== '-'"
-												class="mt-3 md:mt-0 md:ml-6 md:w-1/3">
-												<p
-													class="text-sm font-semibold text-yellow-800">
-													Rekomendasi Kegiatan:
-												</p>
-												<p
-													class="text-sm text-yellow-700"
-													x-text="row.KEGIATAN"></p>
-											</div>
-										</div>
+										</template>
 									</div>
-								</template>
+								</div>
 							</div>
-							<div x-show="activeTab === 'ike'" class="space-y-4">
-								<template
-									x-for="row in detailRows.ike"
-									:key="row.NO">
+
+							<div x-show="activeTab === 'IKE'" x-cloak>
+								<div
+									class="overflow-hidden bg-white shadow-lg rounded-xl">
 									<div
-										class="p-4 border rounded-lg"
-										:class="row.SKOR < 5 ? 'bg-yellow-50 border-yellow-200' : 'bg-white border-gray-200'">
-										<div
-											class="flex flex-col md:flex-row md:items-center md:justify-between">
-											<div
-												class="flex items-center gap-4">
-												<span
-													class="flex items-center justify-center flex-shrink-0 w-10 h-10 text-lg font-bold text-white rounded-full"
-													:class="row.SKOR < 5 ? 'bg-yellow-500' : 'bg-primary'"
-													x-text="row.SKOR"></span>
-												<div>
-													<h4
-														class="font-semibold text-textdark"
-														x-text="row.INDIKATOR"></h4>
-													<p
-														class="text-sm text-gray-600"
-														x-text="row.KETERANGAN"></p>
+										class="p-5 border-b-2"
+										:class="getSkorBadgeClass(ikeScore, true)">
+										<h3 class="text-xl font-bold">
+											Indeks Ketahanan Ekonomi (IKE)
+										</h3>
+										<p class="text-sm">
+											Indikator terkait Perdagangan, Akses
+											Kredit, Logistik, dan Infrastruktur
+											Ekonomi.
+										</p>
+									</div>
+									<div class="divide-y divide-gray-200">
+										<template
+											x-for="row in ikeRows"
+											:key="row.ROW_CELL">
+											<div class="bg-white">
+												<button
+													@click="openDetail = (openDetail === row.ROW_CELL ? null : row.ROW_CELL)"
+													class="flex items-center justify-between w-full p-4 text-left hover:bg-gray-50">
+													<div class="flex-1 pr-4">
+														<span
+															class="text-sm font-semibold text-gray-500"
+															x-text="`IKE-${row.NO}`"></span>
+														<span
+															class="block font-medium text-textdark"
+															x-text="row.INDIKATOR"></span>
+													</div>
+													<div
+														class="flex items-center flex-shrink-0 gap-4">
+														<span
+															class="text-lg font-bold"
+															:class="getSkorBadgeClass(row.SKOR, false)"
+															x-text="row.SKOR"></span>
+														<svg
+															xmlns="http://www.w3.org/2000/svg"
+															viewBox="0 0 20 20"
+															fill="currentColor"
+															class="w-5 h-5 text-gray-400 transition-transform"
+															:class="openDetail === row.ROW_CELL ? 'rotate-180' : ''">
+															<path
+																fill-rule="evenodd"
+																d="M5.22 8.22a.75.75 0 0 1 1.06 0L10 11.94l3.72-3.72a.75.75 0 1 1 1.06 1.06l-4.25 4.25a.75.75 0 0 1-1.06 0L5.22 9.28a.75.75 0 0 1 0-1.06Z"
+																clip-rule="evenodd" />
+														</svg>
+													</div>
+												</button>
+												<div
+													x-show="openDetail === row.ROW_CELL"
+													x-collapse
+													class="p-4 pt-0 bg-gray-50">
+													<div
+														class="grid grid-cols-1 gap-4 md:grid-cols-2">
+														<div>
+															<h5
+																class="text-xs font-semibold text-gray-500 uppercase">
+																Keterangan
+															</h5>
+															<p
+																class="text-sm text-gray-800"
+																x-text="row.KETERANGAN"></p>
+														</div>
+														<div>
+															<h5
+																class="text-xs font-semibold text-gray-500 uppercase">
+																Kegiatan yang
+																Dapat Dilakukan
+															</h5>
+															<p
+																class="text-sm text-gray-800"
+																x-text="row.KEGIATAN"></p>
+														</div>
+													</div>
+													<div class="mt-4">
+														<h5
+															class="text-xs font-semibold text-gray-500 uppercase">
+															Pelaksana Kegiatan
+														</h5>
+														<div
+															class="flex flex-wrap gap-2 mt-2">
+															<template
+																x-if="row.PUSAT"
+																><span
+																	class="px-2 py-1 text-xs font-medium text-blue-800 bg-blue-100 rounded-full"
+																	x-text="row.PUSAT"></span
+															></template>
+															<template
+																x-if="row.PROV"
+																><span
+																	class="px-2 py-1 text-xs font-medium text-green-800 bg-green-100 rounded-full"
+																	x-text="row.PROV"></span
+															></template>
+															<template
+																x-if="row.KAB"
+																><span
+																	class="px-2 py-1 text-xs font-medium text-yellow-800 bg-yellow-100 rounded-full"
+																	x-text="row.KAB"></span
+															></template>
+															<template
+																x-if="row.DESA"
+																><span
+																	class="px-2 py-1 text-xs font-medium text-indigo-800 bg-indigo-100 rounded-full"
+																	x-text="row.DESA"></span
+															></template>
+															<template
+																x-if="row.CSR"
+																><span
+																	class="px-2 py-1 text-xs font-medium text-pink-800 bg-pink-100 rounded-full"
+																	x-text="row.CSR"></span
+															></template>
+															<template
+																x-if="row.LAINNYA"
+																><span
+																	class="px-2 py-1 text-xs font-medium text-gray-800 bg-gray-200 rounded-full"
+																	x-text="row.LAINNYA"></span
+															></template>
+														</div>
+													</div>
 												</div>
 											</div>
-											<div
-												x-show="row.KEGIATAN !== '-'"
-												class="mt-3 md:mt-0 md:ml-6 md:w-1/3">
-												<p
-													class="text-sm font-semibold text-yellow-800">
-													Rekomendasi Kegiatan:
-												</p>
-												<p
-													class="text-sm text-yellow-700"
-													x-text="row.KEGIATAN"></p>
-											</div>
-										</div>
+										</template>
 									</div>
-								</template>
+								</div>
 							</div>
-							<div x-show="activeTab === 'ikl'" class="space-y-4">
-								<template
-									x-for="row in detailRows.ikl"
-									:key="row.NO">
+
+							<div x-show="activeTab === 'IKL'" x-cloak>
+								<div
+									class="overflow-hidden bg-white shadow-lg rounded-xl">
 									<div
-										class="p-4 border rounded-lg"
-										:class="row.SKOR < 5 ? 'bg-yellow-50 border-yellow-200' : 'bg-white border-gray-200'">
-										<div
-											class="flex flex-col md:flex-row md:items-center md:justify-between">
-											<div
-												class="flex items-center gap-4">
-												<span
-													class="flex items-center justify-center flex-shrink-0 w-10 h-10 text-lg font-bold text-white rounded-full"
-													:class="row.SKOR < 5 ? 'bg-yellow-500' : 'bg-primary'"
-													x-text="row.SKOR"></span>
-												<div>
-													<h4
-														class="font-semibold text-textdark"
-														x-text="row.INDIKATOR"></h4>
-													<p
-														class="text-sm text-gray-600"
-														x-text="row.KETERANGAN"></p>
+										class="p-5 border-b-2"
+										:class="getSkorBadgeClass(iklScore, true)">
+										<h3 class="text-xl font-bold">
+											Indeks Ketahanan Lingkungan (IKL)
+										</h3>
+										<p class="text-sm">
+											Indikator terkait Kualitas
+											Lingkungan, Bencana Alam, dan
+											Tanggap Bencana.
+										</p>
+									</div>
+									<div class="divide-y divide-gray-200">
+										<template
+											x-for="row in iklRows"
+											:key="row.ROW_CELL">
+											<div class="bg-white">
+												<button
+													@click="openDetail = (openDetail === row.ROW_CELL ? null : row.ROW_CELL)"
+													class="flex items-center justify-between w-full p-4 text-left hover:bg-gray-50">
+													<div class="flex-1 pr-4">
+														<span
+															class="text-sm font-semibold text-gray-500"
+															x-text="`IKL-${row.NO}`"></span>
+														<span
+															class="block font-medium text-textdark"
+															x-text="row.INDIKATOR"></span>
+													</div>
+													<div
+														class="flex items-center flex-shrink-0 gap-4">
+														<span
+															class="text-lg font-bold"
+															:class="getSkorBadgeClass(row.SKOR, false)"
+															x-text="row.SKOR"></span>
+														<svg
+															xmlns="http://www.w3.org/2000/svg"
+															viewBox="0 0 20 20"
+															fill="currentColor"
+															class="w-5 h-5 text-gray-400 transition-transform"
+															:class="openDetail === row.ROW_CELL ? 'rotate-180' : ''">
+															<path
+																fill-rule="evenodd"
+																d="M5.22 8.22a.75.75 0 0 1 1.06 0L10 11.94l3.72-3.72a.75.75 0 1 1 1.06 1.06l-4.25 4.25a.75.75 0 0 1-1.06 0L5.22 9.28a.75.75 0 0 1 0-1.06Z"
+																clip-rule="evenodd" />
+														</svg>
+													</div>
+												</button>
+												<div
+													x-show="openDetail === row.ROW_CELL"
+													x-collapse
+													class="p-4 pt-0 bg-gray-50">
+													<div
+														class="grid grid-cols-1 gap-4 md:grid-cols-2">
+														<div>
+															<h5
+																class="text-xs font-semibold text-gray-500 uppercase">
+																Keterangan
+															</h5>
+															<p
+																class="text-sm text-gray-800"
+																x-text="row.KETERANGAN"></p>
+														</div>
+														<div>
+															<h5
+																class="text-xs font-semibold text-gray-500 uppercase">
+																Kegiatan yang
+																Dapat Dilakukan
+															</h5>
+															<p
+																class="text-sm text-gray-800"
+																x-text="row.KEGIATAN"></p>
+														</div>
+													</div>
+													<div class="mt-4">
+														<h5
+															class="text-xs font-semibold text-gray-500 uppercase">
+															Pelaksana Kegiatan
+														</h5>
+														<div
+															class="flex flex-wrap gap-2 mt-2">
+															<template
+																x-if="row.PUSAT"
+																><span
+																	class="px-2 py-1 text-xs font-medium text-blue-800 bg-blue-100 rounded-full"
+																	x-text="row.PUSAT"></span
+															></template>
+															<template
+																x-if="row.PROV"
+																><span
+																	class="px-2 py-1 text-xs font-medium text-green-800 bg-green-100 rounded-full"
+																	x-text="row.PROV"></span
+															></template>
+															<template
+																x-if="row.KAB"
+																><span
+																	class="px-2 py-1 text-xs font-medium text-yellow-800 bg-yellow-100 rounded-full"
+																	x-text="row.KAB"></span
+															></template>
+															<template
+																x-if="row.DESA"
+																><span
+																	class="px-2 py-1 text-xs font-medium text-indigo-800 bg-indigo-100 rounded-full"
+																	x-text="row.DESA"></span
+															></template>
+															<template
+																x-if="row.CSR"
+																><span
+																	class="px-2 py-1 text-xs font-medium text-pink-800 bg-pink-100 rounded-full"
+																	x-text="row.CSR"></span
+															></template>
+															<template
+																x-if="row.LAINNYA"
+																><span
+																	class="px-2 py-1 text-xs font-medium text-gray-800 bg-gray-200 rounded-full"
+																	x-text="row.LAINNYA"></span
+															></template>
+														</div>
+													</div>
 												</div>
 											</div>
-											<div
-												x-show="row.KEGIATAN !== '-'"
-												class="mt-3 md:mt-0 md:ml-6 md:w-1/3">
-												<p
-													class="text-sm font-semibold text-yellow-800">
-													Rekomendasi Kegiatan:
-												</p>
-												<p
-													class="text-sm text-yellow-700"
-													x-text="row.KEGIATAN"></p>
-											</div>
-										</div>
+										</template>
 									</div>
-								</template>
+								</div>
 							</div>
 						</div>
 					</div>
@@ -1015,8 +1292,8 @@
 		<script>
 			// Data global untuk seluruh halaman
 			function pageData() {
-				// Ambil data mentah dari JSON yang disediakan
-				const rawData = {
+				// DATA JSON LENGKAP DARI ANDA
+				const idmData = {
 					SUMMARIES: {
 						SKOR_SAAT_INI: 0.94047619047619,
 						STATUS: "MANDIRI",
@@ -1026,13 +1303,20 @@
 						TAHUN: 2024,
 					},
 					ROW: [
+						// IKS (35 items)
 						{
 							NO: 1,
 							INDIKATOR: "Skor Akses Sarkes",
 							SKOR: 5,
-							KETERANGAN: "Waktu tempuh dari ≤ 30  Menit",
+							KETERANGAN: "Waktu tempuh dari ≤ 30  Menit",
 							KEGIATAN: "-",
 							NILAI: "0",
+							PUSAT: null,
+							PROV: null,
+							KAB: "Dinkes, PU",
+							DESA: null,
+							CSR: null,
+							LAINNYA: null,
 							ROW_CELL: 10,
 						},
 						{
@@ -1042,6 +1326,12 @@
 							KETERANGAN: "Jumlah dokter ≥ 1 orang",
 							KEGIATAN: "-",
 							NILAI: "0",
+							PUSAT: null,
+							PROV: null,
+							KAB: "DINKES",
+							DESA: null,
+							CSR: null,
+							LAINNYA: null,
 							ROW_CELL: 11,
 						},
 						{
@@ -1051,6 +1341,12 @@
 							KETERANGAN: "Jumlah bidan ≥ 1 orang",
 							KEGIATAN: "-",
 							NILAI: "0",
+							PUSAT: null,
+							PROV: null,
+							KAB: "DINKES",
+							DESA: null,
+							CSR: null,
+							LAINNYA: null,
 							ROW_CELL: 12,
 						},
 						{
@@ -1061,6 +1357,12 @@
 								"Jumlah tenaga kesehatan lainnya ≥ 5 orang",
 							KEGIATAN: "-",
 							NILAI: "0",
+							PUSAT: null,
+							PROV: null,
+							KAB: "DINKES",
+							DESA: null,
+							CSR: null,
+							LAINNYA: null,
 							ROW_CELL: 13,
 						},
 						{
@@ -1072,6 +1374,12 @@
 							KEGIATAN:
 								"Fasilitasi kepesertaan BPJS warga Desa hingga > 75%",
 							NILAI: "0.00571429",
+							PUSAT: null,
+							PROV: null,
+							KAB: "DINKES",
+							DESA: null,
+							CSR: null,
+							LAINNYA: "BPJS",
 							ROW_CELL: 14,
 						},
 						{
@@ -1082,6 +1390,12 @@
 								"Jarak tempuh menuju Poskesdes = 500 Meter",
 							KEGIATAN: "-",
 							NILAI: "0",
+							PUSAT: null,
+							PROV: null,
+							KAB: "DINKES",
+							DESA: null,
+							CSR: null,
+							LAINNYA: null,
 							ROW_CELL: 15,
 						},
 						{
@@ -1092,6 +1406,12 @@
 								"Jumlah Posyandu aktif 1 bulan sekali/ Jumlah Posyandu > 0,75",
 							KEGIATAN: "-",
 							NILAI: "0",
+							PUSAT: null,
+							PROV: "DPMD",
+							KAB: "DPMD, DINKES",
+							DESA: "DD",
+							CSR: null,
+							LAINNYA: null,
 							ROW_CELL: 16,
 						},
 						{
@@ -1102,6 +1422,12 @@
 								"Jarak tempuh menuju SD atau MI = 3000 Meter",
 							KEGIATAN: "-",
 							NILAI: "0",
+							PUSAT: null,
+							PROV: null,
+							KAB: "DISDIK, PU",
+							DESA: null,
+							CSR: null,
+							LAINNYA: null,
 							ROW_CELL: 17,
 						},
 						{
@@ -1112,6 +1438,12 @@
 								"Jarak tempuh menuju SMP atau MTs ≤ 6000 Meter",
 							KEGIATAN: "-",
 							NILAI: "0",
+							PUSAT: null,
+							PROV: null,
+							KAB: "DISDIK, PU",
+							DESA: null,
+							CSR: null,
+							LAINNYA: null,
 							ROW_CELL: 18,
 						},
 						{
@@ -1122,6 +1454,12 @@
 								"Jarak tempuh menuju SMU atau SMK ≤ 6000 Meter",
 							KEGIATAN: "-",
 							NILAI: "0",
+							PUSAT: null,
+							PROV: "DISDIK",
+							KAB: "PU",
+							DESA: null,
+							CSR: null,
+							LAINNYA: null,
 							ROW_CELL: 19,
 						},
 						{
@@ -1131,6 +1469,12 @@
 							KETERANGAN: "Jumlah PAUD ≥ 1 ",
 							KEGIATAN: "-",
 							NILAI: "0",
+							PUSAT: null,
+							PROV: "DISDIK",
+							KAB: "DISDIK",
+							DESA: "DD",
+							CSR: null,
+							LAINNYA: null,
 							ROW_CELL: 20,
 						},
 						{
@@ -1140,6 +1484,12 @@
 							KETERANGAN: "Jumlah PKBM atau Paket ABC ≥ 1 ",
 							KEGIATAN: "-",
 							NILAI: "0",
+							PUSAT: null,
+							PROV: null,
+							KAB: "DISDIK",
+							DESA: null,
+							CSR: null,
+							LAINNYA: null,
 							ROW_CELL: 21,
 						},
 						{
@@ -1150,6 +1500,12 @@
 								"Jumlah Pusat Keterampilan atau Kursus ≥ 1 ",
 							KEGIATAN: "-",
 							NILAI: "0",
+							PUSAT: null,
+							PROV: null,
+							KAB: null,
+							DESA: null,
+							CSR: "CSR",
+							LAINNYA: "Swasta, Perorangan",
 							ROW_CELL: 22,
 						},
 						{
@@ -1161,6 +1517,12 @@
 								"Taman Bacaan Masyarakat atau perpustakaan Desa tersedia ",
 							KEGIATAN: "-",
 							NILAI: "0",
+							PUSAT: "Kemenperpus Arsip",
+							PROV: "Dinas Perpus",
+							KAB: "Dinas Perpus",
+							DESA: "DD",
+							CSR: "CSR",
+							LAINNYA: null,
 							ROW_CELL: 23,
 						},
 						{
@@ -1170,6 +1532,12 @@
 							KETERANGAN: "Terdapat Kebiasaan Gotong Royong",
 							KEGIATAN: "-",
 							NILAI: "0",
+							PUSAT: null,
+							PROV: null,
+							KAB: null,
+							DESA: "Desa",
+							CSR: null,
+							LAINNYA: null,
 							ROW_CELL: 24,
 						},
 						{
@@ -1179,6 +1547,12 @@
 							KETERANGAN: "Frekuensi Gotong Royong > 2",
 							KEGIATAN: "-",
 							NILAI: "0",
+							PUSAT: null,
+							PROV: null,
+							KAB: null,
+							DESA: "Desa",
+							CSR: null,
+							LAINNYA: null,
 							ROW_CELL: 25,
 						},
 						{
@@ -1188,6 +1562,12 @@
 							KETERANGAN: "Ruang Publik terdapat didesa",
 							KEGIATAN: "-",
 							NILAI: "0",
+							PUSAT: null,
+							PROV: null,
+							KAB: "PU",
+							DESA: "DD",
+							CSR: null,
+							LAINNYA: null,
 							ROW_CELL: 26,
 						},
 						{
@@ -1197,6 +1577,12 @@
 							KETERANGAN: "Jumlah kelompok kegiatan olahraga > 7",
 							KEGIATAN: "-",
 							NILAI: "0",
+							PUSAT: null,
+							PROV: "DISPORA",
+							KAB: "DISPORA",
+							DESA: "Karang Taruna",
+							CSR: null,
+							LAINNYA: null,
 							ROW_CELL: 27,
 						},
 						{
@@ -1206,6 +1592,12 @@
 							KETERANGAN: "Jumlah kegiatan olahraga > 7",
 							KEGIATAN: "-",
 							NILAI: "0",
+							PUSAT: "Kemepora/ Kemendes",
+							PROV: "DISPORA",
+							KAB: "DISPORA",
+							DESA: "DD",
+							CSR: "CSR",
+							LAINNYA: "Perorangan",
 							ROW_CELL: 28,
 						},
 						{
@@ -1215,6 +1607,12 @@
 							KETERANGAN: "Jumlah Jenis Agama di Desa > 1",
 							KEGIATAN: "-",
 							NILAI: "0",
+							PUSAT: null,
+							PROV: null,
+							KAB: null,
+							DESA: "Desa",
+							CSR: null,
+							LAINNYA: null,
 							ROW_CELL: 29,
 						},
 						{
@@ -1225,6 +1623,12 @@
 								"Jumlah Bahasa yang digunakan sehari-hari > 1",
 							KEGIATAN: "-",
 							NILAI: "0",
+							PUSAT: null,
+							PROV: null,
+							KAB: null,
+							DESA: "Desa",
+							CSR: null,
+							LAINNYA: null,
 							ROW_CELL: 30,
 						},
 						{
@@ -1234,15 +1638,27 @@
 							KETERANGAN: "Warga Desa terdiri dari Suku > 1",
 							KEGIATAN: "-",
 							NILAI: "0",
+							PUSAT: null,
+							PROV: null,
+							KAB: null,
+							DESA: "Desa",
+							CSR: null,
+							LAINNYA: null,
 							ROW_CELL: 31,
 						},
 						{
 							NO: 23,
 							INDIKATOR: "Skor Poskamling",
 							SKOR: 5,
-							KETERANGAN: "Terdapat Pos Keamanan  di Desa",
+							KETERANGAN: "Terdapat Pos Keamanan  di Desa",
 							KEGIATAN: "-",
 							NILAI: "0",
+							PUSAT: null,
+							PROV: null,
+							KAB: null,
+							DESA: "DD",
+							CSR: null,
+							LAINNYA: null,
 							ROW_CELL: 32,
 						},
 						{
@@ -1253,6 +1669,12 @@
 								"Terdapat Sistem Keamanan Lingkungan warga di Desa",
 							KEGIATAN: "-",
 							NILAI: "0",
+							PUSAT: null,
+							PROV: null,
+							KAB: null,
+							DESA: "Desa",
+							CSR: null,
+							LAINNYA: null,
 							ROW_CELL: 33,
 						},
 						{
@@ -1263,15 +1685,27 @@
 								"Tidak terdapat atau tidak ada Konflik di Desa",
 							KEGIATAN: "-",
 							NILAI: "0",
+							PUSAT: null,
+							PROV: null,
+							KAB: "Kesbangpol",
+							DESA: null,
+							CSR: null,
+							LAINNYA: null,
 							ROW_CELL: 34,
 						},
 						{
 							NO: 26,
 							INDIKATOR: "Skor PMKS",
 							SKOR: 5,
-							KETERANGAN: "Jumlah PMKS  tidak ada atau 0 ",
+							KETERANGAN: "Jumlah PMKS  tidak ada atau 0 ",
 							KEGIATAN: "-",
 							NILAI: "0",
+							PUSAT: null,
+							PROV: null,
+							KAB: "Dinsos",
+							DESA: null,
+							CSR: null,
+							LAINNYA: null,
 							ROW_CELL: 35,
 						},
 						{
@@ -1281,6 +1715,12 @@
 							KETERANGAN: "Jumlah Skor SLB antara 4 s.d 5",
 							KEGIATAN: "Penanganan SLB",
 							NILAI: "0.00380952",
+							PUSAT: null,
+							PROV: "DIKNAS",
+							KAB: null,
+							DESA: null,
+							CSR: null,
+							LAINNYA: null,
 							ROW_CELL: 36,
 						},
 						{
@@ -1291,6 +1731,12 @@
 								"(Jumlah Keluarga Memakai listrik + non Listrik/Jumlah keluarga memakai listrik) ≥ 0,9 )",
 							KEGIATAN: "-",
 							NILAI: "0",
+							PUSAT: "ESDM",
+							PROV: "ESDM",
+							KAB: null,
+							DESA: "DD",
+							CSR: "CSR",
+							LAINNYA: "Perorangan",
 							ROW_CELL: 37,
 						},
 						{
@@ -1300,6 +1746,12 @@
 							KETERANGAN: "Sinyal telepon seluler di Desa Kuat",
 							KEGIATAN: "-",
 							NILAI: "0",
+							PUSAT: "Kominfo",
+							PROV: "Diskominfo",
+							KAB: "Diskominfo",
+							DESA: null,
+							CSR: null,
+							LAINNYA: "Operator Selular",
 							ROW_CELL: 38,
 						},
 						{
@@ -1310,6 +1762,12 @@
 								"Terdapat fasilitas internet di kantor Desa ",
 							KEGIATAN: "-",
 							NILAI: "0",
+							PUSAT: "Kominfo/ Kemendes",
+							PROV: null,
+							KAB: null,
+							DESA: "Desa",
+							CSR: "CSR",
+							LAINNYA: null,
 							ROW_CELL: 39,
 						},
 						{
@@ -1319,6 +1777,12 @@
 							KETERANGAN: "Terdapat Akses internet warga di Desa",
 							KEGIATAN: "-",
 							NILAI: "0",
+							PUSAT: "Kominfo",
+							PROV: "Diskominfo",
+							KAB: "Diskominfo",
+							DESA: null,
+							CSR: null,
+							LAINNYA: "Operator Selular",
 							ROW_CELL: 40,
 						},
 						{
@@ -1328,6 +1792,12 @@
 							KETERANGAN: "Warga Desa BAB di Jamban Sendiri",
 							KEGIATAN: "-",
 							NILAI: "0",
+							PUSAT: null,
+							PROV: null,
+							KAB: "DINSOS,DINKES",
+							DESA: null,
+							CSR: "CSR",
+							LAINNYA: "Perorangan",
 							ROW_CELL: 41,
 						},
 						{
@@ -1338,6 +1808,12 @@
 								"Warga desa membuang sampah di Tempat Sampah kemudian diangkut",
 							KEGIATAN: "-",
 							NILAI: "0",
+							PUSAT: null,
+							PROV: "DLH",
+							KAB: "DLH, DKPP",
+							DESA: "DD",
+							CSR: "CSR",
+							LAINNYA: null,
 							ROW_CELL: 42,
 						},
 						{
@@ -1348,6 +1824,12 @@
 								"Sumber air minum berasal dari PAM, Air Ledeng tanpa Meteran",
 							KEGIATAN: "-",
 							NILAI: "0",
+							PUSAT: "PAMSIMAS, PU",
+							PROV: null,
+							KAB: "PU",
+							DESA: "DD",
+							CSR: "CSR",
+							LAINNYA: "PDAM",
 							ROW_CELL: 43,
 						},
 						{
@@ -1358,14 +1840,31 @@
 								"Sumber air mandi dan cuci berasal dari PAM, Air Ledeng tanpa Meteran",
 							KEGIATAN: "-",
 							NILAI: "0",
+							PUSAT: "PAMSIMAS, PU",
+							PROV: null,
+							KAB: "PU",
+							DESA: "DD",
+							CSR: "CSR",
+							LAINNYA: "PDAM",
 							ROW_CELL: 44,
 						},
 						{
 							NO: null,
 							INDIKATOR: "IKS 2024",
 							SKOR: 0.97142857142857,
+							KETERANGAN: null,
+							KEGIATAN: null,
+							NILAI: null,
+							PUSAT: null,
+							PROV: null,
+							KAB: null,
+							DESA: null,
+							CSR: null,
+							LAINNYA: null,
 							ROW_CELL: 45,
 						},
+
+						// IKE (12 items)
 						{
 							NO: 1,
 							INDIKATOR: "Skor Keragaman Produksi",
@@ -1374,6 +1873,12 @@
 								"Jumlah Industri Mikro/ Jumlah KK ≥ 0,004",
 							KEGIATAN: "-",
 							NILAI: "0",
+							PUSAT: null,
+							PROV: "DISPERINDAKOP UKM",
+							KAB: "DISPERINDAKOP UKM",
+							DESA: "DD",
+							CSR: "CSR",
+							LAINNYA: "Perorangan",
 							ROW_CELL: 46,
 						},
 						{
@@ -1384,6 +1889,12 @@
 								"Jarak ke kelompok pertokoan terdekat ≤ 7 KM",
 							KEGIATAN: "-",
 							NILAI: "0",
+							PUSAT: null,
+							PROV: null,
+							KAB: "DISPERINDAKOP UKM",
+							DESA: null,
+							CSR: null,
+							LAINNYA: "Perorangan, Swasta",
 							ROW_CELL: 47,
 						},
 						{
@@ -1393,6 +1904,12 @@
 							KETERANGAN: "(Total KK/jumlah pasar(permanen)) = 0",
 							KEGIATAN: "Pembangunan Pasar Permanen",
 							NILAI: "0.02222222",
+							PUSAT: "Kemenperind, Kemendes",
+							PROV: "DISPERINDAKOP UKM",
+							KAB: "DISPERINDAKOP UKM",
+							DESA: null,
+							CSR: null,
+							LAINNYA: null,
 							ROW_CELL: 48,
 						},
 						{
@@ -1402,6 +1919,12 @@
 							KETERANGAN: "Jumlah Toko dan warung kelontong > 3",
 							KEGIATAN: "-",
 							NILAI: "0",
+							PUSAT: null,
+							PROV: null,
+							KAB: null,
+							DESA: "DD",
+							CSR: null,
+							LAINNYA: "Perorangan",
 							ROW_CELL: 49,
 						},
 						{
@@ -1411,6 +1934,12 @@
 							KETERANGAN: "Jumlah Kedai dan Penginapan = 1",
 							KEGIATAN: "Pembangunan 1 Unit Penginapan",
 							NILAI: "0.01111111",
+							PUSAT: null,
+							PROV: "Dinas Pariwisata",
+							KAB: "Dinas Pariwisata",
+							DESA: "DD",
+							CSR: null,
+							LAINNYA: "Perorangan, Swasta",
 							ROW_CELL: 50,
 						},
 						{
@@ -1421,6 +1950,12 @@
 							KEGIATAN:
 								"Pembangunan/Pengadaan Jasa logistik / kantor Pos (Identifikasi yang tidak ada)",
 							NILAI: "0.01111111",
+							PUSAT: null,
+							PROV: null,
+							KAB: null,
+							DESA: "BUMDES",
+							CSR: null,
+							LAINNYA: "Kantor Pos, Swasta",
 							ROW_CELL: 51,
 						},
 						{
@@ -1430,6 +1965,12 @@
 							KETERANGAN: "Jumlah bank dan BPR > 1",
 							KEGIATAN: "-",
 							NILAI: "0",
+							PUSAT: null,
+							PROV: null,
+							KAB: null,
+							DESA: null,
+							CSR: null,
+							LAINNYA: "Perbankan",
 							ROW_CELL: 52,
 						},
 						{
@@ -1440,6 +1981,12 @@
 							KEGIATAN:
 								"Penambahan 1 jenis Fasilitas Kredit (KUR/KKPE/KUK/Kredit lainnya)(Identifikasi kekurangan akses kredit)",
 							NILAI: "0.00555556",
+							PUSAT: null,
+							PROV: null,
+							KAB: "DISPERINDAKOP UKM",
+							DESA: "BUMDES/ Koperasi",
+							CSR: null,
+							LAINNYA: "Bank, Swasta",
 							ROW_CELL: 53,
 						},
 						{
@@ -1449,6 +1996,12 @@
 							KETERANGAN: "Jumlah koperasi aktif dan BUMDESA > 1",
 							KEGIATAN: "-",
 							NILAI: "0",
+							PUSAT: null,
+							PROV: null,
+							KAB: "DISPERINDAKOP UKM",
+							DESA: "Desa",
+							CSR: "CSR",
+							LAINNYA: null,
 							ROW_CELL: 54,
 						},
 						{
@@ -1459,6 +2012,12 @@
 								"Transportasi Umum ada dengan trayek tetap",
 							KEGIATAN: "-",
 							NILAI: "0",
+							PUSAT: null,
+							PROV: null,
+							KAB: "DISHUB",
+							DESA: null,
+							CSR: null,
+							LAINNYA: null,
 							ROW_CELL: 55,
 						},
 						{
@@ -1469,6 +2028,12 @@
 								"Jalan di Desa dilalui oleh kendaraan bermotor roda empat atau lebih Sepanjang Tahun ",
 							KEGIATAN: "-",
 							NILAI: "0",
+							PUSAT: null,
+							PROV: null,
+							KAB: "PU",
+							DESA: "DD",
+							CSR: "CSR",
+							LAINNYA: null,
 							ROW_CELL: 56,
 						},
 						{
@@ -1479,14 +2044,31 @@
 								"Jenis permukaan jalan desa Aspal atau beton",
 							KEGIATAN: "-",
 							NILAI: "0",
+							PUSAT: null,
+							PROV: null,
+							KAB: "PU",
+							DESA: "DD",
+							CSR: "CSR",
+							LAINNYA: null,
 							ROW_CELL: 57,
 						},
 						{
 							NO: null,
 							INDIKATOR: "IKE 2024",
 							SKOR: 0.85,
+							KETERANGAN: null,
+							KEGIATAN: null,
+							NILAI: null,
+							PUSAT: null,
+							PROV: null,
+							KAB: null,
+							DESA: null,
+							CSR: null,
+							LAINNYA: null,
 							ROW_CELL: 58,
 						},
+
+						// IKL (3 items)
 						{
 							NO: 1,
 							INDIKATOR: "Skor Kualitas Lingkungan",
@@ -1495,6 +2077,12 @@
 								"Pencemaran (air, udara, tanah, limbah disungai) di desa [jumlah pencemaran/4] = 0",
 							KEGIATAN: "-",
 							NILAI: "0",
+							PUSAT: null,
+							PROV: "DLH",
+							KAB: "DLH, DINKES",
+							DESA: null,
+							CSR: null,
+							LAINNYA: null,
 							ROW_CELL: 59,
 						},
 						{
@@ -1505,6 +2093,12 @@
 								"Jenis bencana (longsor, banjir, kebakaran hutan) jenis bencana di desa = 0",
 							KEGIATAN: "-",
 							NILAI: "0",
+							PUSAT: null,
+							PROV: "DISHUT/KPH, BPDB",
+							KAB: "BPBD",
+							DESA: null,
+							CSR: null,
+							LAINNYA: null,
 							ROW_CELL: 60,
 						},
 						{
@@ -1512,31 +2106,45 @@
 							INDIKATOR: "Skor Tanggap Bencana",
 							SKOR: 5,
 							KETERANGAN:
-								"Fasilitas mitigasi/tanggap bencana (peringatan dini bencana alam, peringatan dini tsunami, perlengkapan keselamatan, jalur evakuasi) jumlah fasilitas mitigasi / tanggap bencana  = 3",
+								"Fasilitas mitigasi/tanggap bencana (peringatan dini bencana alam, peringatan dini tsunami, perlengkapan keselamatan, jalur evakuasi) jumlah fasilitas mitigasi / tanggap bencana  = 3",
 							KEGIATAN: "-",
 							NILAI: "0",
+							PUSAT: "BNPB, Kemendes",
+							PROV: "DISHUT/KPH, BPDB, DINSOS",
+							KAB: "DPBD, DINSOS",
+							DESA: "DD",
+							CSR: "CSR",
+							LAINNYA: null,
 							ROW_CELL: 61,
 						},
 						{
 							NO: null,
 							INDIKATOR: "IKL 2024",
 							SKOR: 1,
+							KETERANGAN: null,
+							KEGIATAN: null,
+							NILAI: null,
+							PUSAT: null,
+							PROV: null,
+							KAB: null,
+							DESA: null,
+							CSR: null,
+							LAINNYA: null,
 							ROW_CELL: 62,
 						},
 					],
+					IDENTITAS: [
+						{
+							nama_provinsi: "JAWA BARAT",
+							id_prov: "32",
+							id_kabupaten: "3207",
+							nama_kab_kota: "CIAMIS",
+							id_kecamatan: "PANUMBANGAN", // Mengganti dari data JSON
+							id_desa: "3207032008",
+							nama_desa: "SUKAKERTA", // Mengganti dari data JSON
+						},
+					],
 				};
-
-				// Ambil skor IKS, IKE, IKL dari data mentah
-				const iksScore =
-					rawData.ROW.find((r) => r.INDIKATOR === "IKS 2024")?.SKOR ||
-					0;
-				const ikeScore =
-					rawData.ROW.find((r) => r.INDIKATOR === "IKE 2024")?.SKOR ||
-					0;
-				const iklScore =
-					rawData.ROW.find((r) => r.INDIKATOR === "IKL 2024")?.SKOR ||
-					0;
-				const totalScore = iksScore + ikeScore + iklScore;
 
 				return {
 					// State UI
@@ -1544,71 +2152,91 @@
 					profilOpen: false,
 					dataOpen: false,
 					mobileMenuOpen: false,
-					activeTab: "iks",
+					openAccordion: "IKS", // Accordion penjelasan
+					openDetail: null, // Accordion tabel rincian
+					activeTab: "IKS", // State untuk Tab Rincian
 
-					// REVISI: Data Halaman Spesifik
+					// Data Mentah
+					idmData: idmData,
+
+					// --- DATA HALAMAN SPESIFIK (Getters) ---
+					get summary() {
+						return this.idmData.SUMMARIES;
+					},
+					get identity() {
+						// Menggunakan data Desa Sukakerta
+						return {
+							nama_provinsi: "JAWA BARAT",
+							nama_kab_kota: "CIAMIS",
+							nama_kecamatan: "PANUMBANGAN",
+							nama_desa: "SUKAKERTA",
+						};
+					},
+					get selisihSkor() {
+						return (
+							this.summary.SKOR_SAAT_INI -
+							parseFloat(this.summary.SKOR_MINIMAL)
+						);
+					},
+
+					// Skor IKS, IKE, IKL
+					get iksScore() {
+						return this.idmData.ROW.find(
+							(item) => item.INDIKATOR === "IKS 2024"
+						).SKOR;
+					},
+					get ikeScore() {
+						return this.idmData.ROW.find(
+							(item) => item.INDIKATOR === "IKE 2024"
+						).SKOR;
+					},
+					get iklScore() {
+						return this.idmData.ROW.find(
+							(item) => item.INDIKATOR === "IKL 2024"
+						).SKOR;
+					},
+
+					// Data Baris untuk Tabel Rincian
+					get iksRows() {
+						return this.idmData.ROW.slice(0, 35);
+					},
+					get ikeRows() {
+						return this.idmData.ROW.slice(36, 48);
+					},
+					get iklRows() {
+						return this.idmData.ROW.slice(49, 52);
+					},
+
 					pageTitle: "Indeks Desa Membangun (IDM)",
-					pageSubtitle: `Skor IDM Desa Sukakerta Tahun ${rawData.SUMMARIES.TAHUN}.`,
-
-					// Data Identitas (konsisten dengan project)
-					identitas: {
-						desa: "SUKAKERTA",
-						kecamatan: "PANUMBANGAN",
-						kabupaten: "CIAMIS",
-						provinsi: "JAWA BARAT",
+					get pageSubtitle() {
+						return `Data IDM Desa ${this.identity.nama_desa}, Kec. ${this.identity.nama_kecamatan}. Data Tahun ${this.summary.TAHUN}.`;
 					},
 
-					// Data Ringkasan (dari JSON)
-					summaries: {
-						tahun: rawData.SUMMARIES.TAHUN,
-						skor: rawData.SUMMARIES.SKOR_SAAT_INI.toFixed(4),
-						status: rawData.SUMMARIES.STATUS,
-						targetStatus: rawData.SUMMARIES.TARGET_STATUS,
-						skorMinimal: rawData.SUMMARIES.SKOR_MINIMAL,
-						selisih: (
-							rawData.SUMMARIES.SKOR_SAAT_INI -
-							parseFloat(rawData.SUMMARIES.SKOR_MINIMAL)
-						).toFixed(4),
-					},
-
-					// Data Chart (dari JSON & Gambar)
-					chartData: [
-						{
-							name: "IKS",
-							y: iksScore,
-							z: (iksScore / totalScore) * 100,
-							color: "#7e22ce",
-						}, // Ungu
-						{
-							name: "IKE",
-							y: ikeScore,
-							z: (ikeScore / totalScore) * 100,
-							color: "#DC2626",
-						}, // Merah
-						{
-							name: "IKL",
-							y: 1.0,
-							z: (iklScore / totalScore) * 100,
-							color: "#16a34a",
-						}, // Hijau
-					],
-
-					// Data Detail (dari JSON)
-					detailRows: {
-						iks: rawData.ROW.filter(
-							(r) => r.ROW_CELL >= 10 && r.ROW_CELL <= 44
-						),
-						ike: rawData.ROW.filter(
-							(r) => r.ROW_CELL >= 46 && r.ROW_CELL <= 57
-						),
-						ikl: rawData.ROW.filter(
-							(r) => r.ROW_CELL >= 59 && r.ROW_CELL <= 61
-						),
+					// --- FUNGSI HELPER ---
+					getSkorBadgeClass(skor, isHeader) {
+						let scoreNum = parseFloat(skor);
+						if (isHeader) {
+							// Untuk Header (IKS, IKE, IKL)
+							if (scoreNum >= 0.8156)
+								return "border-green-500 text-green-700"; // Mandiri
+							if (scoreNum >= 0.7072)
+								return "border-blue-500 text-blue-700"; // Maju
+							if (scoreNum >= 0.5989)
+								return "border-yellow-500 text-yellow-700"; // Berkembang
+							return "border-red-500 text-red-700"; // Tertinggal
+						} else {
+							// Untuk Skor Indikator (1-5)
+							if (scoreNum >= 4) return "text-green-600";
+							if (scoreNum === 3) return "text-yellow-600";
+							if (scoreNum < 3) return "text-red-600";
+							return "text-gray-600";
+						}
 					},
 
 					// --- Tema Global Highcharts ---
 					setHighchartsTheme() {
 						Highcharts.setOptions({
+							colors: ["#6366F1", "#EF4444", "#2E7D32"],
 							chart: {
 								style: {
 									fontFamily: "Poppins, sans-serif",
@@ -1633,8 +2261,15 @@
 									color: "#FFFFFF",
 								},
 							},
-							legend: {
-								itemStyle: { color: "#1f2937" },
+							plotOptions: {
+								pie: {
+									dataLabels: {
+										style: {
+											color: "#1F2937",
+											textOutline: "none",
+										},
+									},
+								},
 							},
 							credits: {
 								enabled: false,
@@ -1642,39 +2277,62 @@
 						});
 					},
 
-					// --- REVISI: Fungsi Highcharts untuk IDM ---
-					initIdmDonutChart() {
-						Highcharts.chart("idm-donut-chart", {
+					// --- Fungsi Highcharts untuk IDM ---
+					initIdmPieChart() {
+						// Bobot % dari gambar referensi Anda
+						const weights = {
+							IKS: 34.4,
+							IKE: 30.1,
+							IKL: 35.4,
+						};
+
+						const highchartsData = [
+							{
+								name: "IKS",
+								y: this.iksScore,
+								z: weights.IKS,
+							},
+							{
+								name: "IKE",
+								y: this.ikeScore,
+								z: weights.IKE,
+							},
+							{
+								name: "IKL",
+								y: this.iklScore,
+								z: weights.IKL,
+							},
+						];
+
+						Highcharts.chart("idm-pie-chart", {
 							chart: {
-								type: "variablepie", // Menggunakan variablepie untuk donut
+								type: "variablepie",
 							},
 							title: {
-								text: "Diagram Skor IDM Desa Sukakerta",
-							},
-							subtitle: {
-								text: "IKS (Indeks Ketahanan Sosial), IKE (Indeks Ketahanan Ekonomi), IKL (Indeks Ketahanan Lingkungan/Ekologi)",
+								text:
+									"Diagram Skor IDM Desa " +
+									this.identity.nama_desa,
+								align: "center",
 							},
 							tooltip: {
-								headerFormat: "",
-								// Format: IKS: 0.97 (34.4%)
+								headerFormat:
+									'<span style="font-size: 10px">{point.key}</span><br/>',
 								pointFormat:
-									'<span style="color:{point.color}">\u25CF</span> <b>{point.name}</b><br/>' +
-									"Skor: <b>{point.y}</b><br/>" +
-									"Persentase: <b>{point.z:.1f}%</b>",
+									"Skor: <b>{point.y:,.4f}</b><br>Bobot: <b>{point.z}%</b>",
 							},
 							plotOptions: {
 								variablepie: {
 									allowPointSelect: true,
 									cursor: "pointer",
 									borderRadius: 5,
-									innerSize: "60%",
+									innerSize: "30%",
 									dataLabels: {
 										enabled: true,
 										distance: 20,
-										format: "<b>{point.name}</b><br>{point.y} / {point.z:.1f} %",
+										format: "<b>{point.name}</b><br>{point.y:,.2f} / {point.z:.1f}%",
 										style: {
-											color: "#1f2937",
 											textOutline: "none",
+											textAlign: "center",
 										},
 									},
 									showInLegend: true,
@@ -1682,12 +2340,11 @@
 							},
 							series: [
 								{
-									name: "Skor",
-									minPointSize: 10,
-									innerSize: "60%",
+									name: "Indeks",
+									colorByPoint: true,
+									data: highchartsData,
 									zMin: 0,
-									name: "indeks",
-									data: this.chartData,
+									minPointSize: 10,
 								},
 							],
 						});
@@ -1725,10 +2382,6 @@
 							href: "pages/profil/sejarahDesa.html",
 						},
 						{
-							label: "IDM",
-							href: "pages/data/idm.html",
-						},
-						{
 							label: "Data Penduduk",
 							href: "pages/data/penduduk.html",
 						},
@@ -1759,6 +2412,10 @@
 						{
 							label: "Kelompok Umur",
 							href: "pages/data/kelompokUmur.html",
+						},
+						{
+							label: "IDM",
+							href: "pages/data/idm.html",
 						},
 						{
 							label: "Transparansi",
