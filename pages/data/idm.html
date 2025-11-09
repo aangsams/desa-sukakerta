@@ -498,136 +498,139 @@
 			<section class="py-16">
 				<div class="px-6 mx-auto max-w-7xl lg:px-8">
 					<div
-						class="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-5">
-						<div
-							class="p-6 text-white shadow-lg sm:col-span-2 lg:col-span-2 rounded-xl"
-							style="background-color: #7c3aed">
-							<div class="flex items-center justify-between">
-								<span class="text-sm font-medium opacity-80"
-									>Skor IDM Tahun
-									<span x-text="summary.TAHUN"></span
-								></span>
-								<svg
-									xmlns="http://www.w3.org/2000/svg"
-									viewBox="0 0 20 20"
-									fill="currentColor"
-									class="w-5 h-5 opacity-80">
-									<path
-										fill-rule="evenodd"
-										d="M18 10a8 8 0 1 1-16 0 8 8 0 0 1 16 0Zm-7-4a1 1 0 1 1-2 0 1 1 0 0 1 2 0ZM9 9a.75.75 0 0 0 0 1.5h.253a.25.25 0 0 1 .244.304l-.459 2.066A1.75 1.75 0 0 0 10.75 15h.5a.75.75 0 0 0 0-1.5h-.5a.25.25 0 0 1-.244-.304l.459-2.066A1.75 1.75 0 0 0 9.25 9H9Z"
-										clip-rule="evenodd" />
-								</svg>
-							</div>
-							<p
-								class="mt-2 text-4xl font-bold"
-								x-text="summary.SKOR_SAAT_INI.toFixed(5)"></p>
-							<p class="text-sm opacity-80">
-								Data Tahun <span x-text="summary.TAHUN"></span>
-							</p>
-						</div>
-
-						<div class="p-5 bg-white shadow-lg rounded-xl">
-							<div class="flex items-center justify-between">
-								<span class="text-sm font-medium text-gray-500"
-									>Status IDM</span
-								>
-								<svg
-									xmlns="http://www.w3.org/2000/svg"
-									viewBox="0 0 20 20"
-									fill="currentColor"
-									class="w-5 h-5 text-gray-400">
-									<path
-										fill-rule="evenodd"
-										d="M18 10a8 8 0 1 1-16 0 8 8 0 0 1 16 0Zm-7-4a1 1 0 1 1-2 0 1 1 0 0 1 2 0ZM9 9a.75.75 0 0 0 0 1.5h.253a.25.25 0 0 1 .244.304l-.459 2.066A1.75 1.75 0 0 0 10.75 15h.5a.75.75 0 0 0 0-1.5h-.5a.25.25 0 0 1-.244-.304l.459-2.066A1.75 1.75 0 0 0 9.25 9H9Z"
-										clip-rule="evenodd" />
-								</svg>
-							</div>
-							<p
-								class="mt-2 text-2xl font-bold text-primary"
-								x-text="summary.STATUS"></p>
-						</div>
-
-						<div class="p-5 bg-white shadow-lg rounded-xl">
-							<div class="flex items-center justify-between">
-								<span class="text-sm font-medium text-gray-500"
-									>Target Status</span
-								>
-								<svg
-									xmlns="http://www.w3.org/2000/svg"
-									viewBox="0 0 20 20"
-									fill="currentColor"
-									class="w-5 h-5 text-gray-400">
-									<path
-										fill-rule="evenodd"
-										d="M18 10a8 8 0 1 1-16 0 8 8 0 0 1 16 0Zm-7-4a1 1 0 1 1-2 0 1 1 0 0 1 2 0ZM9 9a.75.75 0 0 0 0 1.5h.253a.25.25 0 0 1 .244.304l-.459 2.066A1.75 1.75 0 0 0 10.75 15h.5a.75.75 0 0 0 0-1.5h-.5a.25.25 0 0 1-.244-.304l.459-2.066A1.75 1.75 0 0 0 9.25 9H9Z"
-										clip-rule="evenodd" />
-								</svg>
-							</div>
-							<p
-								class="mt-2 text-2xl font-bold text-textdark"
-								x-text="summary.TARGET_STATUS"></p>
-						</div>
-
-						<div class="p-5 bg-white shadow-lg rounded-xl">
-							<div class="flex items-center justify-between">
-								<span class="text-sm font-medium text-gray-500"
-									>Selisih Skor</span
-								>
-								<svg
-									xmlns="http://www.w3.org/2000/svg"
-									viewBox="0 0 20 20"
-									fill="currentColor"
-									class="w-5 h-5 text-gray-400">
-									<path
-										fill-rule="evenodd"
-										d="M18 10a8 8 0 1 1-16 0 8 8 0 0 1 16 0Zm-7-4a1 1 0 1 1-2 0 1 1 0 0 1 2 0ZM9 9a.75.75 0 0 0 0 1.5h.253a.25.25 0 0 1 .244.304l-.459 2.066A1.75 1.75 0 0 0 10.75 15h.5a.75.75 0 0 0 0-1.5h-.5a.25.25 0 0 1-.244-.304l.459-2.066A1.75 1.75 0 0 0 9.25 9H9Z"
-										clip-rule="evenodd" />
-								</svg>
-							</div>
-							<p
-								class="mt-2 text-2xl font-bold"
-								:class="selisihSkor >= 0 ? 'text-green-600' : 'text-red-600'"
-								x-text="selisihSkor.toFixed(5) + ' Poin'"></p>
-						</div>
-
-						<div
-							class="p-5 bg-white shadow-lg sm:col-span-2 lg:col-span-3 rounded-xl">
-							<div class="flex items-center justify-between">
-								<span class="text-sm font-medium text-gray-500"
-									>Skor Minimal</span
-								>
-								<svg
-									xmlns="http://www.w3.org/2000/svg"
-									viewBox="0 0 20 20"
-									fill="currentColor"
-									class="w-5 h-5 text-gray-400">
-									<path
-										fill-rule="evenodd"
-										d="M18 10a8 8 0 1 1-16 0 8 8 0 0 1 16 0Zm-7-4a1 1 0 1 1-2 0 1 1 0 0 1 2 0ZM9 9a.75.75 0 0 0 0 1.5h.253a.25.25 0 0 1 .244.304l-.459 2.066A1.75 1.75 0 0 0 10.75 15h.5a.75.75 0 0 0 0-1.5h-.5a.25.25 0 0 1-.244-.304l.459-2.066A1.75 1.75 0 0 0 9.25 9H9Z"
-										clip-rule="evenodd" />
-								</svg>
-							</div>
-							<p
-								class="mt-1 text-2xl font-bold text-textdark"
-								x-text="summary.SKOR_MINIMAL + ' Poin'"></p>
-							<p class="text-sm text-gray-500">
-								Skor minimal untuk mendapatkan status
-								<span
-									x-text="summary.TARGET_STATUS"
-									class="font-medium"></span
-								>.
-							</p>
-						</div>
+						class="w-full p-6 mx-auto bg-white shadow-lg rounded-xl md:p-8">
+						<div id="idm-pie-chart" style="height: 450px"></div>
 					</div>
 				</div>
 			</section>
 
-			<section class="pb-16 -mt-6">
+			<section class="pb-16 -mt-8">
 				<div class="px-6 mx-auto max-w-7xl lg:px-8">
 					<div class="grid grid-cols-1 gap-8 lg:grid-cols-3">
-						<div
-							class="p-6 bg-white shadow-lg lg:col-span-2 rounded-xl md:p-8">
-							<div id="idm-pie-chart" style="height: 400px"></div>
+						<div class="lg:col-span-2">
+							<div class="grid grid-cols-1 gap-5 sm:grid-cols-2">
+								<div
+									class="p-6 text-white shadow-lg bg-primary sm:col-span-2 rounded-xl">
+									<div
+										class="flex items-center justify-between">
+										<span
+											class="text-sm font-medium opacity-80"
+											>Skor IDM Tahun
+											<span x-text="summary.TAHUN"></span
+										></span>
+										<svg
+											xmlns="http://www.w3.org/2000/svg"
+											viewBox="0 0 20 20"
+											fill="currentColor"
+											class="w-5 h-5 opacity-80">
+											<path
+												fill-rule="evenodd"
+												d="M18 10a8 8 0 1 1-16 0 8 8 0 0 1 16 0Zm-7-4a1 1 0 1 1-2 0 1 1 0 0 1 2 0ZM9 9a.75.75 0 0 0 0 1.5h.253a.25.25 0 0 1 .244.304l-.459 2.066A1.75 1.75 0 0 0 10.75 15h.5a.75.75 0 0 0 0-1.5h-.5a.25.25 0 0 1-.244-.304l.459-2.066A1.75 1.75 0 0 0 9.25 9H9Z"
+												clip-rule="evenodd" />
+										</svg>
+									</div>
+									<p
+										class="mt-2 text-4xl font-bold"
+										x-text="summary.SKOR_SAAT_INI.toFixed(5)"></p>
+									<p class="text-sm opacity-80">
+										Data Tahun
+										<span x-text="summary.TAHUN"></span>
+									</p>
+								</div>
+
+								<div class="p-5 bg-white shadow-lg rounded-xl">
+									<div
+										class="flex items-center justify-between">
+										<span
+											class="text-sm font-medium text-gray-500"
+											>Status IDM</span
+										>
+										<svg
+											xmlns="http://www.w3.org/2000/svg"
+											viewBox="0 0 20 20"
+											fill="currentColor"
+											class="w-5 h-5 text-gray-400">
+											<path
+												fill-rule="evenodd"
+												d="M18 10a8 8 0 1 1-16 0 8 8 0 0 1 16 0Zm-7-4a1 1 0 1 1-2 0 1 1 0 0 1 2 0ZM9 9a.75.75 0 0 0 0 1.5h.253a.25.25 0 0 1 .244.304l-.459 2.066A1.75 1.75 0 0 0 10.75 15h.5a.75.75 0 0 0 0-1.5h-.5a.25.25 0 0 1-.244-.304l.459-2.066A1.75 1.75 0 0 0 9.25 9H9Z"
+												clip-rule="evenodd" />
+										</svg>
+									</div>
+									<p
+										class="mt-2 text-2xl font-bold text-primary"
+										x-text="summary.STATUS"></p>
+								</div>
+
+								<div class="p-5 bg-white shadow-lg rounded-xl">
+									<div
+										class="flex items-center justify-between">
+										<span
+											class="text-sm font-medium text-gray-500"
+											>Target Status</span
+										>
+										<svg
+											xmlns="http://www.w3.org/2000/svg"
+											viewBox="0 0 20 20"
+											fill="currentColor"
+											class="w-5 h-5 text-gray-400">
+											<path
+												fill-rule="evenodd"
+												d="M18 10a8 8 0 1 1-16 0 8 8 0 0 1 16 0Zm-7-4a1 1 0 1 1-2 0 1 1 0 0 1 2 0ZM9 9a.75.75 0 0 0 0 1.5h.253a.25.25 0 0 1 .244.304l-.459 2.066A1.75 1.75 0 0 0 10.75 15h.5a.75.75 0 0 0 0-1.5h-.5a.25.25 0 0 1-.244-.304l.459-2.066A1.75 1.75 0 0 0 9.25 9H9Z"
+												clip-rule="evenodd" />
+										</svg>
+									</div>
+									<p
+										class="mt-2 text-2xl font-bold text-textdark"
+										x-text="summary.TARGET_STATUS"></p>
+								</div>
+
+								<div class="p-5 bg-white shadow-lg rounded-xl">
+									<div
+										class="flex items-center justify-between">
+										<span
+											class="text-sm font-medium text-gray-500"
+											>Skor Minimal</span
+										>
+										<svg
+											xmlns="http://www.w3.org/2000/svg"
+											viewBox="0 0 20 20"
+											fill="currentColor"
+											class="w-5 h-5 text-gray-400">
+											<path
+												fill-rule="evenodd"
+												d="M18 10a8 8 0 1 1-16 0 8 8 0 0 1 16 0Zm-7-4a1 1 0 1 1-2 0 1 1 0 0 1 2 0ZM9 9a.75.75 0 0 0 0 1.5h.253a.25.25 0 0 1 .244.304l-.459 2.066A1.75 1.75 0 0 0 10.75 15h.5a.75.75 0 0 0 0-1.5h-.5a.25.25 0 0 1-.244-.304l.459-2.066A1.75 1.75 0 0 0 9.25 9H9Z"
+												clip-rule="evenodd" />
+										</svg>
+									</div>
+									<p
+										class="mt-1 text-2xl font-bold text-textdark"
+										x-text="summary.SKOR_MINIMAL + ' Poin'"></p>
+								</div>
+
+								<div class="p-5 bg-white shadow-lg rounded-xl">
+									<div
+										class="flex items-center justify-between">
+										<span
+											class="text-sm font-medium text-gray-500"
+											>Selisih Skor</span
+										>
+										<svg
+											xmlns="http://www.w3.org/2000/svg"
+											viewBox="0 0 20 20"
+											fill="currentColor"
+											class="w-5 h-5 text-gray-400">
+											<path
+												fill-rule="evenodd"
+												d="M18 10a8 8 0 1 1-16 0 8 8 0 0 1 16 0Zm-7-4a1 1 0 1 1-2 0 1 1 0 0 1 2 0ZM9 9a.75.75 0 0 0 0 1.5h.253a.25.25 0 0 1 .244.304l-.459 2.066A1.75 1.75 0 0 0 10.75 15h.5a.75.75 0 0 0 0-1.5h-.5a.25.25 0 0 1-.244-.304l.459-2.066A1.75 1.75 0 0 0 9.25 9H9Z"
+												clip-rule="evenodd" />
+										</svg>
+									</div>
+									<p
+										class="mt-1 text-2xl font-bold"
+										:class="selisihSkor >= 0 ? 'text-green-600' : 'text-red-600'"
+										x-text="selisihSkor.toFixed(5) + ' Poin'"></p>
+								</div>
+							</div>
 						</div>
 
 						<div class="lg:col-span-1">
@@ -811,9 +814,9 @@
 											Indeks Ketahanan Sosial (IKS)
 										</h3>
 										<p class="text-sm">
-											Indikator terkait Kesehatan,
-											Pendidikan, Modal Sosial, dan
-											Permukiman.
+											Total 35 Indikator terkait
+											Kesehatan, Pendidikan, Modal Sosial,
+											dan Permukiman.
 										</p>
 									</div>
 									<div class="divide-y divide-gray-200">
@@ -939,9 +942,9 @@
 											Indeks Ketahanan Ekonomi (IKE)
 										</h3>
 										<p class="text-sm">
-											Indikator terkait Perdagangan, Akses
-											Kredit, Logistik, dan Infrastruktur
-											Ekonomi.
+											Total 12 Indikator terkait
+											Perdagangan, Akses Kredit, Logistik,
+											dan Infrastruktur Ekonomi.
 										</p>
 									</div>
 									<div class="divide-y divide-gray-200">
@@ -1067,7 +1070,7 @@
 											Indeks Ketahanan Lingkungan (IKL)
 										</h3>
 										<p class="text-sm">
-											Indikator terkait Kualitas
+											Total 3 Indikator terkait Kualitas
 											Lingkungan, Bencana Alam, dan
 											Tanggap Bencana.
 										</p>
@@ -2139,9 +2142,9 @@
 							id_prov: "32",
 							id_kabupaten: "3207",
 							nama_kab_kota: "CIAMIS",
-							id_kecamatan: "PANUMBANGAN", // Mengganti dari data JSON
+							id_kecamatan: "PANUMBANGAN",
 							id_desa: "3207032008",
-							nama_desa: "SUKAKERTA", // Mengganti dari data JSON
+							nama_desa: "SUKAKERTA",
 						},
 					],
 				};
@@ -2236,7 +2239,12 @@
 					// --- Tema Global Highcharts ---
 					setHighchartsTheme() {
 						Highcharts.setOptions({
-							colors: ["#6366F1", "#EF4444", "#2E7D32"],
+							// Warna IKS (Biru), IKE (Merah), IKL (Hijau) - Sesuai gambar
+							colors: [
+								"#3B82F6", // Biru
+								"#EF4444", // Merah
+								"#2E7D32", // Hijau
+							],
 							chart: {
 								style: {
 									fontFamily: "Poppins, sans-serif",
