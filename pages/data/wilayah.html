@@ -1,0 +1,1680 @@
+<!DOCTYPE html>
+<html lang="id" class="scroll-smooth">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Desa Sukakerta | Data Wilayah Administratif</title>
+		<base href="../../" />
+		<script src="https://cdn.tailwindcss.com"></script>
+		<script
+			defer
+			src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+
+		<link
+			rel="stylesheet"
+			href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+		<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+		<script src="https://code.highcharts.com/highcharts.js"></script>
+		<script src="https://code.highcharts.com/modules/drilldown.js"></script>
+
+		<script
+			defer
+			src="https://cdn.jsdelivr.net/npm/@alpinejs/collapse@3.x.x/dist/cdn.min.js"></script>
+
+		<style type="text/tailwindcss">
+			[x-cloak] {
+				display: none !important;
+			}
+			/* Style kustom yang konsisten */
+			@layer utilities {
+				.text-primary {
+					color: #2e7d32;
+				}
+				.hover\:text-primary:hover {
+					color: #1b6d21;
+				}
+				.text-textdark {
+					color: #1f2937;
+				}
+				.bg-primary {
+					background-color: #2e7d32;
+				}
+				.border-accent {
+					border-color: #fbc02d;
+				}
+				.text-accent {
+					color: #fbc02d;
+				}
+			}
+		</style>
+	</head>
+
+	<body
+		class="font-sans text-gray-800 bg-gray-50"
+		x-data="pageData()"
+		x-init="
+            setHighchartsTheme(); 
+            initMap(); 
+            initWilayahColumnChart();
+        "
+		@scroll.window="sticky = (window.pageYOffset > 50)">
+		<header
+			:class="{ 'shadow-md bg-white/90 backdrop-blur-lg text-gray-700': sticky, 'text-white': !sticky}"
+			class="fixed top-0 left-0 z-50 w-full transition-all duration-300">
+			<div
+				class="flex items-center justify-between px-6 py-4 mx-auto max-w-7xl">
+				<a href="index.html" class="flex items-center gap-2">
+					<img
+						src="assets/img/logo.webp"
+						alt="Logo Desa"
+						class="w-10 h-10 rounded-full" />
+					<div class="flex flex-col leading-tight">
+						<span
+							class="text-lg font-semibold transition-colors"
+							:class="{'text-primary': sticky, 'text-white': !sticky}"
+							>Desa Sukakerta</span
+						>
+						<span class="text-xs"
+							>Kec. Panumbangan, Kab. Ciamis</span
+						>
+					</div>
+				</a>
+				<nav
+					class="hidden lg:flex items-center space-x-8 text-[15px] font-medium">
+					<a href="index.html" class="hover:text-primary">Beranda</a>
+					<div
+						@mouseenter="profilOpen = true"
+						@mouseleave="profilOpen = false"
+						class="relative">
+						<button
+							type="button"
+							class="flex items-center gap-1 transition hover:text-primary"
+							:class="{ 'text-primary': profilOpen }"
+							aria-haspopup="true"
+							:aria-expanded="profilOpen">
+							Profil Desa
+							<svg
+								class="w-4 h-4 mt-[2px] transition-transform duration-200"
+								:class="{ 'rotate-180': profilOpen }"
+								xmlns="http://www.w3.org/2000/svg"
+								fill="none"
+								viewBox="0 0 24 24"
+								stroke="currentColor">
+								<path
+									stroke-linecap="round"
+									stroke-linejoin="round"
+									stroke-width="2"
+									d="M19 9l-7 7-7-7" />
+							</svg>
+						</button>
+						<div
+							x-cloak
+							x-show="profilOpen"
+							x-transition.opacity.duration.150ms
+							class="absolute left-0 w-56 py-2 mt-3 bg-white border border-gray-200 rounded-lg shadow-md text-textdark"
+							role="menu">
+							<a
+								href="pages/profil/identitasDesa.html"
+								class="block px-4 py-2 hover:bg-gray-100"
+								>Identitas Desa</a
+							>
+							<a
+								href="pages/profil/visiMisi.html"
+								class="block px-4 py-2 hover:bg-gray-100"
+								>Visi & Misi</a
+							>
+							<a
+								href="pages/profil/strukturBPD.html"
+								class="block px-4 py-2 hover:bg-gray-100"
+								>BPD & Lembaga</a
+							>
+							<a
+								href="pages/profil/sejarahDesa.html"
+								class="block px-4 py-2 hover:bg-gray-100"
+								>Sejarah Desa</a
+							>
+						</div>
+					</div>
+					<div
+						@mouseenter="dataOpen = true"
+						@mouseleave="dataOpen = false"
+						class="relative">
+						<button
+							type="button"
+							class="flex items-center gap-1 transition hover:text-primary"
+							:class="{ 'text-primary': dataOpen }">
+							Data Desa
+							<svg
+								class="w-4 h-4 mt-[2px] transition-transform duration-200"
+								:class="{ 'rotate-180': dataOpen }"
+								xmlns="http://www.w3.org/2000/svg"
+								fill="none"
+								viewBox="0 0 24 24"
+								stroke="currentColor">
+								<path
+									stroke-linecap="round"
+									stroke-linejoin="round"
+									stroke-width="2"
+									d="M19 9l-7 7-7-7" />
+							</svg>
+						</button>
+						<div
+							x-cloak
+							x-show="dataOpen"
+							x-transition.opacity.duration.150ms
+							class="absolute left-0 w-64 py-2 mt-3 overflow-y-auto bg-white border border-gray-200 rounded-lg shadow-md text-textdark max-h-96">
+							<a
+								href="pages/data/penduduk.html"
+								class="block px-4 py-2 hover:bg-gray-100"
+								>Data Penduduk</a
+							>
+							<a
+								href="pages/data/wilayah.html"
+								class="block px-4 py-2 hover:bg-gray-100"
+								>Data Wilayah</a
+							>
+							<a
+								href="pages/data/pendidikan-kk.html"
+								class="block px-4 py-2 hover:bg-gray-100"
+								>Pendidikan (Total)</a
+							>
+							<a
+								href="pages/data/pendidikan-ditempuh.html"
+								class="block px-4 py-2 hover:bg-gray-100"
+								>Pendidikan (Ditempuh)</a
+							>
+							<a
+								href="pages/data/pekerjaan.html"
+								class="block px-4 py-2 hover:bg-gray-100"
+								>Pekerjaan</a
+							>
+							<a
+								href="#"
+								class="block px-4 py-2 text-gray-400 cursor-not-allowed"
+								>Agama</a
+							>
+							<a
+								href="#"
+								class="block px-4 py-2 text-gray-400 cursor-not-allowed"
+								>Jenis Kelamin</a
+							>
+							<a
+								href="#"
+								class="block px-4 py-2 text-gray-400 cursor-not-allowed"
+								>Kelompok Umur</a
+							>
+						</div>
+					</div>
+					<a href="pages/transparansi.html" class="hover:text-primary"
+						>Transparansi</a
+					>
+					<a href="pages/layanan.html" class="hover:text-primary"
+						>Layanan</a
+					>
+					<a href="pages/lapak.html" class="hover:text-primary"
+						>Lapak Desa</a
+					>
+					<a href="pages/galeri.html" class="hover:text-primary"
+						>Galeri</a
+					>
+				</nav>
+
+				<div @click.outside="mobileMenuOpen = false" class="lg:hidden">
+					<button
+						@click="mobileMenuOpen = !mobileMenuOpen"
+						class="focus:outline-none"
+						aria-label="Toggle menu"
+						:class="{'text-primary': sticky, 'text-white': !sticky}">
+						<svg
+							x-show="!mobileMenuOpen"
+							xmlns="http://www.w3.org/2000/svg"
+							class="w-6 h-6"
+							fill="none"
+							viewBox="0 0 24 24"
+							stroke="currentColor">
+							<path
+								stroke-linecap="round"
+								stroke-linejoin="round"
+								stroke-width="2"
+								d="M4 6h16M4 12h16m-7 6h7" />
+						</svg>
+						<svg
+							x-show="mobileMenuOpen"
+							x-cloak
+							xmlns="http://www.w3.org/2000/svg"
+							class="w-6 h-6"
+							fill="none"
+							viewBox="0 0 24 24"
+							stroke="currentColor">
+							<path
+								stroke-linecap="round"
+								stroke-linejoin="round"
+								stroke-width="2"
+								d="M6 18L18 6M6 6l12 12" />
+						</svg>
+					</button>
+					<nav
+						x-cloak
+						x-show="mobileMenuOpen"
+						x-transition:enter="transition ease-out duration-200"
+						x-transition:enter-start="opacity-0 transform -translate-y-4"
+						x-transition:enter-end="opacity-100 transform translate-y-0"
+						x-transition:leave="transition ease-in duration-150"
+						x-transition:leave-start="opacity-100 transform translate-y-0"
+						x-transition:leave-end="opacity-0 transform -translate-y-4"
+						class="absolute left-0 w-full bg-white border-t border-gray-200 shadow-lg top-full">
+						<ul
+							class="flex flex-col px-6 py-4 space-y-2 font-medium text-textdark">
+							<li>
+								<a
+									href="index.html"
+									class="block py-2 hover:text-primary"
+									>Beranda</a
+								>
+							</li>
+							<li x-data="{ open: false }">
+								<button
+									@click="open = !open"
+									class="flex items-center justify-between w-full py-2 hover:text-primary">
+									<span>Profil Desa</span>
+									<svg
+										:class="{ 'rotate-180': open }"
+										class="w-4 h-4 transition-transform transform"
+										xmlns="http://www.w3.org/2000/svg"
+										fill="none"
+										viewBox="0 0 24 24"
+										stroke="currentColor">
+										<path
+											stroke-linecap="round"
+											stroke-linejoin="round"
+											stroke-width="2"
+											d="M19 9l-7 7-7-7" />
+									</svg>
+								</button>
+								<ul
+									x-show="open"
+									x-transition
+									x-cloak
+									class="pl-3 ml-4 space-y-1 text-sm text-gray-700 border-l border-gray-200">
+									<li>
+										<a
+											href="pages/profil/identitasDesa.html"
+											class="block py-1 hover:text-primary"
+											>Identitas Desa</a
+										>
+									</li>
+									<li>
+										<a
+											href="pages/profil/visiMisi.html"
+											class="block py-1 hover:text-primary"
+											>Visi & Misi</a
+										>
+									</li>
+									<li>
+										<a
+											href="pages/profil/strukturBPD.html"
+											class="block py-1 hover:text-primary"
+											>BPD & Lembaga</a
+										>
+									</li>
+									<li>
+										<a
+											href="pages/profil/sejarahDesa.html"
+											class="block py-1 hover:text-primary"
+											>Sejarah Desa</a
+										>
+									</li>
+								</ul>
+							</li>
+							<li x-data="{ open: false }">
+								<button
+									@click="open = !open"
+									class="flex items-center justify-between w-full py-2 hover:text-primary">
+									<span>Data Desa</span>
+									<svg
+										:class="{ 'rotate-180': open }"
+										class="w-4 h-4 transition-transform transform"
+										xmlns="http://www.w3.org/2000/svg"
+										fill="none"
+										viewBox="0 0 24 24"
+										stroke="currentColor">
+										<path
+											stroke-linecap="round"
+											stroke-linejoin="round"
+											stroke-width="2"
+											d="M19 9l-7 7-7-7" />
+									</svg>
+								</button>
+								<ul
+									x-show="open"
+									x-transition
+									x-cloak
+									class="pl-3 ml-4 space-y-1 overflow-y-auto text-sm text-gray-700 border-l border-gray-200 max-h-64">
+									<a
+										href="pages/data/penduduk.html"
+										class="block px-4 py-2 hover:bg-gray-100"
+										>Data Penduduk</a
+									>
+									<a
+										href="pages/data/wilayah.html"
+										class="block px-4 py-2 hover:bg-gray-100"
+										>Data Wilayah</a
+									>
+									<a
+										href="pages/data/pendidikan-kk.html"
+										class="block px-4 py-2 hover:bg-gray-100"
+										>Pendidikan (Total)</a
+									>
+									<a
+										href="pages/data/pekerjaan.html"
+										class="block px-4 py-2 hover:bg-gray-100"
+										>Pekerjaan</a
+									>
+									<a
+										href="#"
+										class="block px-4 py-2 text-gray-400 cursor-not-allowed"
+										>Pendidikan (Ditempuh)</a
+									>
+								</ul>
+							</li>
+							<li>
+								<a
+									href="pages/transparansi.html"
+									class="block py-2 hover:text-primary"
+									>Transparansi</a
+								>
+							</li>
+							<li>
+								<a
+									href="pages/layanan.html"
+									class="block py-2 hover:text-primary"
+									>Layanan</a
+								>
+							</li>
+							<li>
+								<a
+									href="pages/lapak.html"
+									class="block py-2 hover:text-primary"
+									>Lapak Desa</a
+								>
+							</li>
+							<li>
+								<a
+									href="pages/galeri.html"
+									class="block py-2 hover:text-primary"
+									>Galeri</a
+								>
+							</li>
+						</ul>
+					</nav>
+				</div>
+			</div>
+		</header>
+
+		<main class="pt-24 bg-gray-50">
+			<section class="py-12 bg-white border-b border-gray-200">
+				<div class="px-6 mx-auto max-w-7xl">
+					<nav class="flex mb-2" aria-label="Breadcrumb">
+						<ol
+							class="inline-flex items-center space-x-1 text-sm text-gray-500 md:space-x-2">
+							<li class="inline-flex items-center">
+								<a
+									href="index.html"
+									class="inline-flex items-center transition-colors hover:text-primary">
+									<svg
+										class="w-4 h-4 mr-2"
+										fill="currentColor"
+										viewBox="0 0 20 20"
+										xmlns="http://www.w3.org/2000/svg">
+										<path
+											d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z"></path>
+									</svg>
+									Beranda
+								</a>
+							</li>
+							<li>
+								<div class="flex items-center">
+									<svg
+										class="w-3 h-3 text-gray-400"
+										fill="currentColor"
+										viewBox="0 0 20 20"
+										xmlns="http://www.w3.org/2000/svg">
+										<path
+											fill-rule="evenodd"
+											d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
+											clip-rule="evenodd"></path>
+									</svg>
+									<span class="ml-1 md:ml-2">Data Desa</span>
+								</div>
+							</li>
+							<li aria-current="page">
+								<div class="flex items-center">
+									<svg
+										class="w-3 h-3 text-gray-400"
+										fill="currentColor"
+										viewBox="0 0 20 20"
+										xmlns="http://www.w3.org/2000/svg">
+										<path
+											fill-rule="evenodd"
+											d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
+											clip-rule="evenodd"></path>
+									</svg>
+									<span
+										class="ml-1 font-medium text-gray-800 md:ml-2"
+										x-text="pageTitle"></span>
+								</div>
+							</li>
+						</ol>
+					</nav>
+					<h1
+						class="text-3xl font-bold text-primary md:text-4xl"
+						x-text="pageTitle"></h1>
+					<p
+						class="mt-2 text-lg text-gray-600"
+						x-text="pageSubtitle"></p>
+				</div>
+			</section>
+
+			<section class="py-16">
+				<div class="px-6 mx-auto max-w-7xl lg:px-8">
+					<div class="grid grid-cols-1 gap-8 lg:grid-cols-3">
+						<div
+							class="p-6 bg-white border border-gray-100 shadow-lg lg:col-span-2 rounded-xl">
+							<h3
+								class="mb-4 text-lg font-semibold text-textdark">
+								Peta Wilayah Dusun
+							</h3>
+							<p class="mb-4 text-sm text-gray-600">
+								Arahkan kursor atau klik pada wilayah dusun di
+								peta untuk melihat informasi detail.
+							</p>
+							<div
+								id="mapWilayah"
+								class="w-full h-[450px] rounded-lg z-10 bg-gray-200"></div>
+						</div>
+
+						<div class="lg:col-span-1">
+							<div class="space-y-4">
+								<h3 class="text-lg font-semibold text-textdark">
+									Ringkasan Wilayah
+								</h3>
+
+								<template
+									x-for="stat in statistikWilayah"
+									:key="stat.label">
+									<div
+										class="flex items-center p-4 space-x-4 transition-all bg-white shadow-lg rounded-xl hover:shadow-xl text-textdark">
+										<div
+											class="flex items-center justify-center flex-shrink-0 w-12 h-12 rounded-full"
+											:class="getCardIconClass(stat)">
+											<svg
+												class="w-7 h-7"
+												xmlns="http://www.w3.org/2000/svg"
+												fill="none"
+												viewBox="0 0 24 24"
+												stroke-width="1.5"
+												stroke="currentColor"
+												x-html="stat.icon"></svg>
+										</div>
+										<div class="flex-grow">
+											<p
+												class="text-base font-medium text-gray-700"
+												x-text="stat.label"></p>
+											<p
+												class="text-2xl font-bold text-gray-900"
+												x-text="stat.value"></p>
+										</div>
+									</div>
+								</template>
+							</div>
+						</div>
+					</div>
+				</div>
+			</section>
+
+			<section class="pb-16">
+				<div class="px-6 mx-auto max-w-7xl lg:px-8">
+					<div
+						class="overflow-hidden bg-white border border-gray-100 shadow-lg rounded-xl">
+						<h3
+							class="p-6 text-lg font-semibold border-b text-textdark">
+							Data Rincian Penduduk per Wilayah
+						</h3>
+
+						<div class="p-6 border-b border-gray-200">
+							<h4
+								class="mb-2 text-base font-semibold text-gray-700">
+								Visualisasi Data per Dusun
+							</h4>
+							<p class="mb-4 text-sm text-gray-600">
+								Grafik perbandingan jumlah Total Jiwa,
+								Laki-laki, Perempuan, dan Kepala Keluarga (KK)
+								di setiap dusun.
+							</p>
+							<div class="w-full h-96">
+								<div
+									id="wilayahGroupedChart"
+									class="w-full h-96"></div>
+							</div>
+						</div>
+
+						<div class="p-4 space-y-3 md:p-6 bg-gray-50">
+							<template
+								x-for="(dusun, dusunIndex) in dataDusun"
+								:key="dusun.nama">
+								<div
+									class="overflow-hidden border border-gray-200 rounded-lg shadow-sm">
+									<button
+										@click="toggleDusun(dusun.nama)"
+										class="flex flex-col w-full p-4 text-left transition md:flex-row md:items-center"
+										:class="openDusun === dusun.nama ? 'bg-green-100' : 'bg-white hover:bg-gray-50'">
+										<div class="flex-1">
+											<div
+												class="flex items-center gap-3">
+												<span
+													class="flex items-center justify-center w-8 h-8 text-sm font-bold text-white rounded-full bg-primary"
+													x-text="dusunIndex + 1">
+												</span>
+												<div>
+													<h4
+														class="text-lg font-semibold text-primary"
+														x-text="'Dusun ' + dusun.nama"></h4>
+													<p
+														class="text-xs text-gray-600"
+														x-text="'Kepala: ' + dusun.kadus"></p>
+												</div>
+											</div>
+										</div>
+										<div
+											class="grid flex-shrink-0 grid-cols-4 gap-4 mt-4 text-center md:mt-0 md:ml-8">
+											<div>
+												<span
+													class="text-xs text-gray-500"
+													>KK</span
+												>
+												<p
+													class="text-lg font-bold text-textdark"
+													x-text="dusun.kk"></p>
+											</div>
+											<div>
+												<span
+													class="text-xs text-gray-500"
+													>Total Jiwa</span
+												>
+												<p
+													class="text-lg font-bold text-textdark"
+													x-text="dusun.total"></p>
+											</div>
+											<div>
+												<span
+													class="text-xs text-gray-500"
+													>Laki-laki</span
+												>
+												<p
+													class="text-lg font-bold text-textdark"
+													x-text="dusun.l"></p>
+											</div>
+											<div>
+												<span
+													class="text-xs text-gray-500"
+													>Perempuan</span
+												>
+												<p
+													class="text-lg font-bold text-textdark"
+													x-text="dusun.p"></p>
+											</div>
+										</div>
+										<div
+											class="flex-shrink-0 hidden w-8 ml-6 text-gray-400 md:block">
+											<svg
+												xmlns="http://www.w3.org/2000/svg"
+												viewBox="0 0 20 20"
+												fill="currentColor"
+												class="w-5 h-5 transition-transform duration-300"
+												:class="openDusun === dusun.nama ? 'rotate-180' : ''">
+												<path
+													fill-rule="evenodd"
+													d="M5.22 8.22a.75.75 0 0 1 1.06 0L10 11.94l3.72-3.72a.75.75 0 1 1 1.06 1.06l-4.25 4.25a.75.75 0 0 1-1.06 0L5.22 9.28a.75.75 0 0 1 0-1.06Z"
+													clip-rule="evenodd" />
+											</svg>
+										</div>
+									</button>
+
+									<div
+										x-show="openDusun === dusun.nama"
+										x-collapse
+										class="p-4 space-y-2 bg-white border-t border-gray-200">
+										<template
+											x-for="(rw, rwIndex) in dusun.rw"
+											:key="rw.nama">
+											<div
+												class="overflow-hidden border border-gray-200 rounded-md">
+												<button
+													@click="toggleRW(dusun.nama + '-' + rw.nama)"
+													class="flex flex-col w-full p-3 text-left transition md:flex-row md:items-center"
+													:class="openRW === (dusun.nama + '-' + rw.nama) ? 'bg-gray-200' : 'bg-gray-100 hover:bg-gray-200'">
+													<div class="flex-1">
+														<div
+															class="flex items-center gap-3">
+															<span
+																class="flex items-center justify-center w-6 h-6 text-xs font-bold text-white bg-gray-500 rounded-full"
+																x-text="rwIndex + 1">
+															</span>
+															<div>
+																<h5
+																	class="font-semibold text-gray-800"
+																	x-text="rw.nama"></h5>
+																<p
+																	class="text-xs text-gray-600"
+																	x-text="'Ketua: ' + rw.ketua"></p>
+															</div>
+														</div>
+													</div>
+													<div
+														class="grid flex-shrink-0 grid-cols-4 gap-4 mt-3 text-center md:mt-0 md:ml-8">
+														<div>
+															<span
+																class="text-xs text-gray-500"
+																>KK</span
+															>
+															<p
+																class="font-semibold text-textdark"
+																x-text="rw.kk"></p>
+														</div>
+														<div>
+															<span
+																class="text-xs text-gray-500"
+																>Total</span
+															>
+															<p
+																class="font-semibold text-textdark"
+																x-text="rw.total"></p>
+														</div>
+														<div>
+															<span
+																class="text-xs text-gray-500"
+																>L</span
+															>
+															<p
+																class="font-semibold text-textdark"
+																x-text="rw.l"></p>
+														</div>
+														<div>
+															<span
+																class="text-xs text-gray-500"
+																>P</span
+															>
+															<p
+																class="font-semibold text-textdark"
+																x-text="rw.p"></p>
+														</div>
+													</div>
+													<div
+														class="flex-shrink-0 w-6 text-gray-400 md:ml-6">
+														<svg
+															xmlns="http://www.w3.org/2000/svg"
+															viewBox="0 0 20 20"
+															fill="currentColor"
+															class="w-5 h-5 transition-transform duration-300"
+															:class="openRW === (dusun.nama + '-' + rw.nama) ? 'rotate-180' : ''">
+															<path
+																fill-rule="evenodd"
+																d="M5.22 8.22a.75.75 0 0 1 1.06 0L10 11.94l3.72-3.72a.75.75 0 1 1 1.06 1.06l-4.25 4.25a.75.75 0 0 1-1.06 0L5.22 9.28a.75.75 0 0 1 0-1.06Z"
+																clip-rule="evenodd" />
+														</svg>
+													</div>
+												</button>
+
+												<div
+													x-show="openRW === (dusun.nama + '-' + rw.nama)"
+													x-collapse
+													class="border-t border-gray-200">
+													<table
+														class="min-w-full text-sm">
+														<thead
+															class="text-xs text-gray-700 bg-gray-50">
+															<tr>
+																<th
+																	class="px-4 py-2 text-center">
+																	No
+																</th>
+																<th
+																	class="px-4 py-2 text-left">
+																	Wilayah /
+																	Ketua
+																</th>
+																<th
+																	class="px-4 py-2 text-center">
+																	KK
+																</th>
+																<th
+																	class="px-4 py-2 text-center">
+																	Total
+																</th>
+																<th
+																	class="px-4 py-2 text-center">
+																	L
+																</th>
+																<th
+																	class="px-4 py-2 text-center">
+																	P
+																</th>
+															</tr>
+														</thead>
+														<tbody
+															class="bg-white divide-y divide-gray-100">
+															<template
+																x-for="(rt, rtIndex) in rw.rt"
+																:key="rt.nama">
+																<tr>
+																	<td
+																		class="px-4 py-2 text-center"
+																		x-text="rtIndex + 1"></td>
+																	<td
+																		class="px-4 py-2">
+																		<span
+																			class="font-medium text-gray-800"
+																			x-text="rt.nama"></span>
+																		<span
+																			class="block text-xs text-gray-500"
+																			x-text="'Ketua: ' + rt.ketua"></span>
+																	</td>
+																	<td
+																		class="px-4 py-2 text-center"
+																		x-text="rt.kk"></td>
+																	<td
+																		class="px-4 py-2 text-center"
+																		x-text="rt.total"></td>
+																	<td
+																		class="px-4 py-2 text-center"
+																		x-text="rt.l"></td>
+																	<td
+																		class="px-4 py-2 text-center"
+																		x-text="rt.p"></td>
+																</tr>
+															</template>
+														</tbody>
+													</table>
+												</div>
+											</div>
+										</template>
+									</div>
+								</div>
+							</template>
+
+							<div
+								class="flex flex-col p-4 mt-4 font-bold border-t-2 rounded-lg md:flex-row md:items-center bg-primary/10 border-primary text-primary">
+								<div class="flex-1">
+									<h4 class="text-xl font-bold text-primary">
+										TOTAL KESELURUHAN
+									</h4>
+								</div>
+								<div
+									class="grid flex-shrink-0 grid-cols-4 gap-4 mt-4 text-center md:mt-0 md:ml-8">
+									<div>
+										<span class="text-xs font-medium"
+											>KK</span
+										>
+										<p
+											class="text-2xl font-bold"
+											x-text="totalPenduduk.kk"></p>
+									</div>
+									<div>
+										<span class="text-xs font-medium"
+											>Total Jiwa</span
+										>
+										<p
+											class="text-2xl font-bold"
+											x-text="totalPenduduk.total"></p>
+									</div>
+									<div>
+										<span class="text-xs font-medium"
+											>Laki-laki</span
+										>
+										<p
+											class="text-2xl font-bold"
+											x-text="totalPenduduk.l"></p>
+									</div>
+									<div>
+										<span class="text-xs font-medium"
+											>Perempuan</span
+										>
+										<p
+											class="text-2xl font-bold"
+											x-text="totalPenduduk.p"></p>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</section>
+		</main>
+
+		<footer class="pt-16 pb-8 text-white bg-primary" x-data="footerData()">
+			<div class="px-6 mx-auto max-w-7xl md:px-10">
+				<div
+					class="grid grid-cols-1 gap-12 pb-10 border-b md:grid-cols-3 border-white/20">
+					<div>
+						<div class="flex items-center gap-4 mb-4">
+							<img
+								:src="identity.logoSrc"
+								alt="Logo Desa"
+								class="border-2 rounded-full w-14 h-14 border-white/70" />
+							<div>
+								<h2
+									class="text-2xl font-semibold"
+									x-text="identity.name"></h2>
+								<p
+									class="text-sm text-accent"
+									x-text="identity.tagline"></p>
+							</div>
+						</div>
+						<p
+							class="text-sm leading-relaxed text-gray-100"
+							x-text="identity.description"></p>
+					</div>
+
+					<div>
+						<h3 class="mb-4 text-xl font-semibold text-accent">
+							Navigasi Cepat
+						</h3>
+						<ul
+							class="gap-8 space-y-3 text-sm text-gray-100 columns-2">
+							<template
+								x-for="link in quickLinks"
+								:key="link.href">
+								<li>
+									<a
+										:href="link.href"
+										class="inline-block transition-colors hover:text-accent hover:underline underline-offset-4"
+										x-text="link.label">
+									</a>
+								</li>
+							</template>
+						</ul>
+					</div>
+
+					<div>
+						<h3 class="mb-4 text-xl font-semibold text-accent">
+							Kontak & Sosial
+						</h3>
+						<ul class="space-y-3 text-sm text-gray-100">
+							<template
+								x-for="item in contactInfo"
+								:key="item.text">
+								<li class="flex items-start gap-3">
+									<span
+										class="w-5 h-5 flex-shrink-0 mt-0.5 opacity-80"
+										x-html="item.icon"></span>
+									<a
+										:href="item.href"
+										class="transition-colors hover:text-accent"
+										x-text="item.text"></a>
+								</li>
+							</template>
+						</ul>
+						<div class="flex gap-3 mt-6">
+							<template
+								x-for="social in socialLinks"
+								:key="social.title">
+								<a
+									:href="social.href"
+									:title="social.title"
+									target="_blank"
+									rel="noopener noreferrer"
+									class="p-2 text-white transition-colors rounded-full bg-white/10 hover:bg-accent hover:text-primary">
+									<span
+										class="sr-only"
+										x-text="social.title"></span>
+									<div
+										class="w-5 h-5"
+										x-html="social.icon"></div>
+								</a>
+							</template>
+						</div>
+					</div>
+				</div>
+				<div class="pt-6 text-sm text-center text-gray-200" x-cloak>
+					©
+					<span x-text="copyright.year"></span>
+					<span x-text="copyright.text"></span>
+					<a
+						:href="copyright.developerLink"
+						target="_blank"
+						rel="noopener noreferrer"
+						class="font-medium transition-colors text-accent hover:text-white"
+						x-text="copyright.developerName"></a
+					>.
+				</div>
+			</div>
+		</footer>
+
+		<script>
+			// Data global untuk seluruh halaman
+			function pageData() {
+				return {
+					// State UI
+					sticky: false,
+					profilOpen: false,
+					dataOpen: false,
+					mobileMenuOpen: false,
+
+					// --- STATE BARU UNTUK ACCORDION ---
+					openDusun: null, // Menyimpan nama dusun yang aktif
+					openRW: null, // Menyimpan nama RW yang aktif (format: 'Dusun-RW')
+
+					// REVISI: Data Halaman Spesifik
+					pageTitle: "Data Wilayah Administratif",
+					pageSubtitle:
+						"Rincian wilayah administrasi Desa Sukakerta, mencakup total luas, jumlah dusun, RW, dan RT.",
+
+					// REVISI: Data STATISTIK WILAYAH (diubah formatnya)
+					get statistikWilayah() {
+						const totalDusun = this.dataDusun.length;
+						const totalRW = this.dataDusun.reduce(
+							(acc, dusun) => acc + dusun.rw.length,
+							0
+						);
+						const totalRT = this.dataDusun.reduce(
+							(acc, dusun) =>
+								acc +
+								dusun.rw.reduce(
+									(rwAcc, rw) => rwAcc + rw.rt.length,
+									0
+								),
+							0
+						);
+
+						return [
+							{
+								label: "Total Luas Wilayah",
+								value: "1.210 Ha",
+								icon: `<path stroke-linecap="round" stroke-linejoin="round" d="M3.75 21v-4.5m0 4.5h-1.5m1.5 0h1.5m-1.5 0v-4.5m0 4.5h1.5m-1.5 0h-1.5m3.75-9.75h1.5a.75.75 0 000-1.5h-1.5a.75.75 0 000 1.5zM3.75 12h1.5a.75.75 0 000-1.5h-1.5a.75.75 0 000 1.5zM3.75 6.75h1.5a.75.75 0 000-1.5h-1.5a.75.75 0 000 1.5zM3.75 9h1.5a.75.75 0 000-1.5h-1.5a.75.75 0 000 1.5zM6.75 21v-4.5m0 4.5h-1.5m1.5 0h1.5m-1.5 0V15M6.75 12h1.5a.75.75 0 000-1.5h-1.5a.75.75 0 000 1.5zM6.75 6.75h1.5a.75.75 0 000-1.5h-1.5a.75.75 0 000 1.5zM6.75 9h1.5a.75.75 0 000-1.5h-1.5a.75.75 0 000 1.5zm3-6.75h1.5a.75.75 0 000-1.5h-1.5a.75.75 0 000 1.5zM9.75 9h1.5a.75.75 0 000-1.5h-1.5a.75.75 0 000 1.5zm0 3h1.5a.75.75 0 000-1.5h-1.5a.75.75 0 000 1.5zm0 3.75h1.5a.75.75 0 000-1.5h-1.5a.75.75 0 000 1.5zm3-6.75h1.5a.75.75 0 000-1.5h-1.5a.75.75 0 000 1.5zm0 3h1.5a.75.75 0 000-1.5h-1.5a.75.75 0 000 1.5zm0 3.75h1.5a.75.75 0 000-1.5h-1.5a.75.75 0 000 1.5zm3-6.75h1.5a.75.75 0 000-1.5h-1.5a.75.75 0 000 1.5zm0 3h1.5a.75.75 0 000-1.5h-1.5a.75.75 0 000 1.5zm0 3.75h1.5a.75.75 0 000-1.5h-1.5a.75.75 0 000 1.5z" />`,
+								isHighlight: false,
+								color: "blue",
+							},
+							{
+								label: "Total Dusun",
+								value: totalDusun,
+								icon: `<path stroke-linecap="round" stroke-linejoin="round" d="M8.25 21v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21m0 0h4.5V3.545M12.75 21H8.25V10.888c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21zM8.25 10.888V6.111c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V10.888M12.75 6.111V3.545M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />`,
+								isHighlight: false,
+								color: "amber",
+							},
+							{
+								label: "Total RW",
+								value: totalRW,
+								icon: `<path stroke-linecap="round" stroke-linejoin="round" d="M10.5 6a7.5 7.5 0 100 15 7.5 7.5 0 000-15zM5.25 9H10.5m0 0H10.5m0 0V3m0 3V9m0 6v3m0-3v-3m0 0h5.25M10.5 9h-5.25" />`,
+								isHighlight: false,
+								color: "indigo",
+							},
+							{
+								label: "Total RT",
+								value: totalRT,
+								icon: `<path stroke-linecap="round" stroke-linejoin="round" d="M10.5 6a7.5 7.5 0 100 15 7.5 7.5 0 000-15zM5.25 9H10.5m0 0H10.5m0 0V3m0 3V9m0 6v3m0-3v-3m0 0h5.25M10.5 9h-5.25" />`,
+								isHighlight: false,
+								color: "purple",
+							},
+						];
+					},
+
+					// DATA HIERARKIS (Sesuai data Anda)
+					dataDusun: [
+						{
+							nama: "SUKAMANAH",
+							kadus: "EDI SETIAWAN",
+							kk: 336,
+							l: 528,
+							p: 514,
+							total: 1042,
+							rw: [
+								{
+									nama: "RW 1",
+									ketua: "KOMAR",
+									kk: 135,
+									l: 201,
+									p: 213,
+									total: 414,
+									rt: [
+										{
+											nama: "RT 1",
+											ketua: "GANI HIKMAT MAULANA",
+											kk: 61,
+											l: 93,
+											p: 89,
+											total: 182,
+										},
+										{
+											nama: "RT 2",
+											ketua: "DENI RAHMAN",
+											kk: 44,
+											l: 58,
+											p: 75,
+											total: 133,
+										},
+										{
+											nama: "RT 3",
+											ketua: "OTONG KADARUSMAN",
+											kk: 30,
+											l: 50,
+											p: 49,
+											total: 99,
+										},
+									],
+								},
+								{
+									nama: "RW 2",
+									ketua: "WAWAN RIDWAN",
+									kk: 201,
+									l: 327,
+									p: 301,
+									total: 628,
+									rt: [
+										{
+											nama: "RT 1",
+											ketua: "ANUR INSANUR",
+											kk: 45,
+											l: 74,
+											p: 66,
+											total: 140,
+										},
+										{
+											nama: "RT 2",
+											ketua: "ATE SUHERLAN",
+											kk: 47,
+											l: 71,
+											p: 80,
+											total: 151,
+										},
+										{
+											nama: "RT 3",
+											ketua: "IMAT ROHIMAT",
+											kk: 55,
+											l: 92,
+											p: 74,
+											total: 166,
+										},
+										{
+											nama: "RT 4",
+											ketua: "APID",
+											kk: 54,
+											l: 90,
+											p: 81,
+											total: 171,
+										},
+									],
+								},
+							],
+						},
+						{
+							nama: "SUKASARI",
+							kadus: "WAHYU",
+							kk: 301,
+							l: 478,
+							p: 459,
+							total: 937,
+							rw: [
+								{
+									nama: "RW 1",
+									ketua: "MAMAT SELAMAT SUBAGJA",
+									kk: 120,
+									l: 173,
+									p: 187,
+									total: 360,
+									rt: [
+										{
+											nama: "RT 1",
+											ketua: "NANA SUPRIATNA",
+											kk: 47,
+											l: 61,
+											p: 75,
+											total: 136,
+										},
+										{
+											nama: "RT 2",
+											ketua: "MURDIYATI",
+											kk: 40,
+											l: 63,
+											p: 62,
+											total: 125,
+										},
+										{
+											nama: "RT 3",
+											ketua: "UCU ROHIMAT",
+											kk: 33,
+											l: 49,
+											p: 50,
+											total: 99,
+										},
+									],
+								},
+								{
+									nama: "RW 2",
+									ketua: "ENANG",
+									kk: 181,
+									l: 305,
+									p: 272,
+									total: 577,
+									rt: [
+										{
+											nama: "RT 1",
+											ketua: "CUNCUN MANSUR",
+											kk: 31,
+											l: 43,
+											p: 52,
+											total: 95,
+										},
+										{
+											nama: "RT 2",
+											ketua: "ARIP SANTOSO",
+											kk: 36,
+											l: 65,
+											p: 49,
+											total: 114,
+										},
+										{
+											nama: "RT 3",
+											ketua: "WAWAN RIDWAN",
+											kk: 66,
+											l: 115,
+											p: 99,
+											total: 214,
+										},
+										{
+											nama: "RT 4",
+											ketua: "YADI INDRAWAN",
+											kk: 48,
+											l: 82,
+											p: 72,
+											total: 154,
+										},
+									],
+								},
+							],
+						},
+						{
+							nama: "CIDOYANG",
+							kadus: "YOSEP SEPTIAN GHUSMAN",
+							kk: 597,
+							l: 934,
+							p: 910,
+							total: 1844,
+							rw: [
+								{
+									nama: "RW 1",
+									ketua: "ATTO",
+									kk: 206,
+									l: 323,
+									p: 292,
+									total: 615,
+									rt: [
+										{
+											nama: "RT 1",
+											ketua: "ENJANG KUSAERI",
+											kk: 92,
+											l: 159,
+											p: 144,
+											total: 303,
+										},
+										{
+											nama: "RT 2",
+											ketua: "YAYAT RUHIYAT",
+											kk: 36,
+											l: 53,
+											p: 46,
+											total: 99,
+										},
+										{
+											nama: "RT 3",
+											ketua: "CUCU SANTIKA",
+											kk: 44,
+											l: 68,
+											p: 56,
+											total: 124,
+										},
+										{
+											nama: "RT 4",
+											ketua: "AI KOMARIAH",
+											kk: 34,
+											l: 43,
+											p: 46,
+											total: 89,
+										},
+									],
+								},
+								{
+									nama: "RW 2",
+									ketua: "NURLELA SARI",
+									kk: 180,
+									l: 258,
+									p: 290,
+									total: 548,
+									rt: [
+										{
+											nama: "RT 1",
+											ketua: "KARTIWAN MUHAMAD ROFI",
+											kk: 42,
+											l: 58,
+											p: 74,
+											total: 132,
+										},
+										{
+											nama: "RT 2",
+											ketua: "MASTUR",
+											kk: 55,
+											l: 87,
+											p: 92,
+											total: 179,
+										},
+										{
+											nama: "RT 3",
+											ketua: "SITI ROHIMAH",
+											kk: 40,
+											l: 55,
+											p: 62,
+											total: 117,
+										},
+										{
+											nama: "RT 4",
+											ketua: "IIN KUSTINI",
+											kk: 43,
+											l: 58,
+											p: 62,
+											total: 120,
+										},
+									],
+								},
+								{
+									nama: "RW 3",
+									ketua: "MANSUR RUSMANA",
+									kk: 208,
+									l: 347,
+									p: 326,
+									total: 673,
+									rt: [
+										{
+											nama: "RT 1",
+											ketua: "AI NIA KUSNIATI",
+											kk: 39,
+											l: 53,
+											p: 62,
+											total: 115,
+										},
+										{
+											nama: "RT 2",
+											ketua: "DEDE ADING KURNIAWAN",
+											kk: 48,
+											l: 82,
+											p: 66,
+											total: 148,
+										},
+										{
+											nama: "RT 3",
+											ketua: "WAWAN KURNIA",
+											kk: 42,
+											l: 70,
+											p: 71,
+											total: 141,
+										},
+										{
+											nama: "RT 4",
+											ketua: "UCU SAMSU",
+											kk: 79,
+											l: 142,
+											p: 127,
+											total: 269,
+										},
+									],
+								},
+							],
+						},
+					],
+
+					// Data TOTAL (Sesuai data Anda)
+					totalPenduduk: {
+						kk: 1234,
+						l: 1940,
+						p: 1883,
+						total: 3823,
+					},
+
+					// Data Peta
+					mapData: {
+						center: [-7.145544, 108.213709],
+						zoom: 14,
+						urlGeoJSON: "assets/data/wilayah_dusun.geojson",
+						colors: {
+							SUKAMANAH: "#2E7D32", // Hijau
+							SUKASARI: "#FBC02D", // Kuning
+							CIDOYANG: "#0288D1", // Biru
+						},
+					},
+
+					// --- REVISI BARU: Helper untuk styling Card ---
+					getCardIconClass(stat) {
+						if (stat.isHighlight)
+							return "bg-white bg-opacity-25 text-white";
+
+						const colors = {
+							blue: "bg-blue-100 text-blue-700",
+							yellow: "bg-yellow-100 text-yellow-700",
+							indigo: "bg-indigo-100 text-indigo-700",
+							purple: "bg-purple-100 text-purple-700",
+						};
+						return (
+							colors[stat.color] || "bg-gray-100 text-gray-700"
+						);
+					},
+
+					// --- FUNGSI ACCORDION ---
+					toggleDusun(namaDusun) {
+						this.openDusun =
+							this.openDusun === namaDusun ? null : namaDusun;
+					},
+					toggleRW(namaRWUnik) {
+						this.openRW =
+							this.openRW === namaRWUnik ? null : namaRWUnik;
+					},
+
+					// --- FUNGSI PETA LEAFLET ---
+					initMap() {
+						const mapEl = document.getElementById("mapWilayah");
+						if (!mapEl) return;
+
+						const map = L.map("mapWilayah").setView(
+							this.mapData.center,
+							this.mapData.zoom
+						);
+
+						L.tileLayer(
+							"https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+							{
+								attribution:
+									'© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+								maxZoom: 19,
+							}
+						).addTo(map);
+
+						const styleDusun = (feature) => {
+							const namaDusun = feature.properties.NAMOBJ;
+							const color =
+								this.mapData.colors[namaDusun.toUpperCase()] ||
+								"#9E9E9E";
+							return {
+								color: color,
+								weight: 2,
+								opacity: 1,
+								fillColor: color,
+								fillOpacity: 0.2,
+							};
+						};
+
+						const geoJSONUrl = new URL(
+							this.mapData.urlGeoJSON,
+							document.baseURI
+						).href;
+
+						fetch(geoJSONUrl)
+							.then((response) => {
+								if (!response.ok) {
+									throw new Error(
+										`Network response was not ok: ${response.statusText}`
+									);
+								}
+								return response.json();
+							})
+							.then((data) => {
+								L.geoJSON(data, {
+									style: styleDusun,
+									onEachFeature: (feature, layer) => {
+										const namaDusun =
+											feature.properties.NAMOBJ;
+										const dusunData = this.dataDusun.find(
+											(d) =>
+												d.nama.toUpperCase() ===
+												namaDusun.toUpperCase()
+										);
+
+										if (dusunData) {
+											layer.bindTooltip(
+												`
+                            <div class="font-sans">
+                              <strong class="text-base text-primary">${dusunData.nama}</strong>
+                              <hr class="my-1">
+                              <p class="text-xs text-gray-700">Kepala: ${dusunData.kadus}</p>
+                              <p class="text-xs text-gray-700">Total KK: <span class="font-bold">${dusunData.kk}</span></p>
+                              <p class="text-xs text-gray-700">Total Jiwa: <span class="font-bold">${dusunData.total}</span></p>
+                            </div>
+                          `,
+												{ sticky: true }
+											);
+										} else {
+											layer.bindTooltip(
+												`<strong class="text-primary">${namaDusun}</strong>`
+											);
+										}
+									},
+								}).addTo(map);
+							})
+							.catch((err) => {
+								console.error(
+									"Error: Gagal memuat file GeoJSON.",
+									err
+								);
+								console.warn(
+									"Pastikan file '" +
+										this.mapData.urlGeoJSON +
+										"' ada di folder yang benar."
+								);
+							});
+					},
+
+					// --- REVISI: Tema Global Highcharts ---
+					setHighchartsTheme() {
+						Highcharts.setOptions({
+							colors: [
+								"#2E7D32", // primary
+								"#3B82F6", // Blue
+								"#EC4899", // Pink
+								"#FBC02D", // accent yellow
+								"#5E35B1", // deep purple
+								"#43A047", // green light
+								"#FFB300", // amber
+								"#1E88E5", // blue light
+							],
+							chart: {
+								style: {
+									fontFamily: "Poppins, sans-serif",
+								},
+								backgroundColor: "transparent",
+							},
+							title: {
+								style: {
+									color: "#1f2937",
+									fontSize: "1.125rem",
+									fontWeight: "600",
+								},
+							},
+							subtitle: {
+								style: {
+									color: "#4B5563",
+								},
+							},
+							tooltip: {
+								backgroundColor: "#1F2937",
+								style: {
+									color: "#FFFFFF",
+								},
+							},
+							legend: {
+								itemStyle: {
+									color: "#374151", // gray-700
+								},
+								itemHoverStyle: {
+									color: "#000000",
+								},
+							},
+							credits: {
+								enabled: false,
+							},
+						});
+					},
+
+					// --- REVISI: Fungsi Chart (Highcharts) ---
+					initWilayahColumnChart() {
+						const ctxEl = document.getElementById(
+							"wilayahGroupedChart"
+						);
+						if (!ctxEl) return;
+
+						const categories = this.dataDusun.map((d) => d.nama);
+						const seriesData = [
+							{
+								name: "Total Jiwa",
+								data: this.dataDusun.map((d) => d.total),
+							},
+							{
+								name: "Laki-laki",
+								data: this.dataDusun.map((d) => d.l),
+							},
+							{
+								name: "Perempuan",
+								data: this.dataDusun.map((d) => d.p),
+							},
+							{
+								name: "Kepala Keluarga (KK)",
+								data: this.dataDusun.map((d) => d.kk),
+							},
+						];
+
+						Highcharts.chart("wilayahGroupedChart", {
+							chart: {
+								type: "column",
+							},
+							title: {
+								text: "Populasi per Dusun",
+								align: "left",
+							},
+							xAxis: {
+								categories: categories,
+								crosshair: true,
+							},
+							yAxis: {
+								min: 0,
+								title: {
+									text: "Jumlah Jiwa / KK",
+								},
+							},
+							tooltip: {
+								headerFormat:
+									'<span style="font-size:10px">{point.key}</span><table>',
+								pointFormat:
+									'<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
+									'<td style="padding:0"><b>{point.y:,.0f}</b></td></tr>',
+								footerFormat: "</table>",
+								shared: true,
+								useHTML: true,
+							},
+							plotOptions: {
+								column: {
+									pointPadding: 0.2,
+									borderWidth: 0,
+								},
+							},
+							series: seriesData,
+						});
+					},
+				};
+			}
+
+			// Data khusus untuk komponen footer
+			function footerData() {
+				return {
+					identity: {
+						logoSrc: "assets/img/logo.webp",
+						name: "Desa Sukakerta",
+						tagline: "Kec. Panumbangan, Kab. Ciamis",
+						description:
+							"Desa Sukakerta merupakan desa yang terus berkembang melalui inovasi pelayanan publik, transparansi keuangan, dan potensi lokal yang berdaya saing.",
+					},
+					quickLinks: [
+						{ label: "Beranda", href: "index.html" },
+						{
+							label: "Identitas",
+							href: "pages/profil/identitasDesa.html",
+						},
+						{
+							label: "Visi & Misi",
+							href: "pages/profil/visiMisi.html",
+						},
+						{
+							label: "Struktur BPD",
+							href: "pages/profil/strukturBPD.html",
+						},
+						{
+							label: "Sejarah",
+							href: "pages/profil/sejarahDesa.html",
+						},
+						{
+							label: "Data Penduduk",
+							href: "pages/data/penduduk.html",
+						},
+						{
+							label: "Data Wilayah",
+							href: "pages/data/wilayah.html",
+						},
+						{
+							label: "Transparansi",
+							href: "pages/transparansi.html",
+						},
+						{ label: "Layanan", href: "pages/layanan.html" },
+						{ label: "Lapak", href: "pages/lapak.html" },
+						{ label: "Galeri", href: "pages/galeri.html" },
+					],
+					contactInfo: [
+						{
+							icon: `<svg fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M9.69 18.933l.003.001C9.89 19.02 10 19 10 19s.11.02.308-.066l.002-.001.006-.003.018-.008a5.741 5.741 0 00.281-.14c.186-.096.446-.24.757-.433.62-.384 1.445-.966 2.274-1.765C15.302 14.988 17 12.493 17 9A7 7 0 103 9c0 3.492 1.698 5.988 3.355 7.584a13.733 13.733 0 002.273 1.765 11.842 11.842 0 00.757.433c.126.05.209.09.28.14l.018.008.006.003zM10 11.25a2.25 2.25 0 100-4.5 2.25 2.25 0 000 4.5z" clip-rule="evenodd"></path></svg>`,
+							text: "Jl. Raya Sukakerta No.10, Panumbangan, Ciamis, Jawa Barat",
+							href: "https://maps.google.com/?q=Desa+Sukakerta+Panumbangan+Ciamis",
+						},
+						{
+							icon: `<svg fill="currentColor" viewBox="0 0 20 20"><path d="M2 3.5A1.5 1.5 0 013.5 2h1.148c.16 0 .315.025.462.074l2.54.847a.5.5 0 01.33.633Request.InvalidNumberA 7.0 7.0 0 00-.72 4.04c.09.43.52.72.96.65.07-.01.139-.02.208-.03a.5.5 0 01.58.6c-1.14 3.867-3.867 6.594-7.733 7.734a.5.5 0 01-.6-.58c.01-.07.02-.138.03-.207.07-.44-.22-.87-.65-.96a7.0 7.0 0 00-4.04.72.5.5 0 01-.633-.33L2.074 5.11A1.5 1.5 0 013.5 2H2z"></path></svg>`,
+							text: "(0265) 123456",
+							href: "tel:+62265123456",
+						},
+						{
+							icon: `<svg fill="currentColor" viewBox="0 0 20 20"><path d="M3 4a2 2 0 00-2 2v1.161l8.441 4.221a1.25 1.25 0 001.118 0L19 7.162V6a2 2 0 00-2-2H3z"></path><path d="M19 8.839l-7.77 3.885a2.75 2.75 0 01-2.46 0L1 8.839V14a2 2 0 002 2h14a2 2 0 002-2V8.839z"></path></svg>`,
+							text: "info@desasukakerta.go.id",
+							href: "mailto:info@desasukakerta.go.id",
+						},
+					],
+					socialLinks: [
+						{
+							title: "Facebook",
+							href: "#",
+							icon: `<svg fill="currentColor" viewBox="0 0 24 24"><path d="M22.675 0h-21.35C.597 0 0 .597 0 1.325v21.351C0 23.403.597 24 1.325 24h11.483v-9.294H9.692V11.09h3.116V8.413c0-3.1 1.893-4.788 4.659-4.788 1.325 0 2.463.099 2.795.143v3.24l-1.919.001c-1.504 0-1.796.715-1.796 1.763v2.314h3.59l-.467 3.616h-3.123V24h6.116C23.403 24 24 23.403 24 22.676V1.325C24 .597 23.403 0 22.675 0z"></path></svg>`,
+						},
+						{
+							title: "Instagram",
+							href: "#",
+							icon: `<svg fill="currentColor" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 1.366.062 2.633.35 3.608 1.326.975.975 1.264 2.243 1.326 3.608.058 1.266.07 1.645.07 4.85s-.012 3.584-.07 4.85c-.062 1.366-.35 2.633-1.326 3.608-.975-.975-2.243 1.264-3.608 1.326-1.266.058-1.645.07-4.85.07s-3.584-.012-4.85-.07c-1.366-.062-2.633-.35-3.608-1.326-.975-.975-1.264-2.243-1.326-3.608C2.175 15.647 2.163 15.268 2.163 12s.012-3.584.07-4.85c.062-1.366.35-2.633 1.326-3.608.975-.975 2.243-1.264 3.608-1.326C8.416 2.175 8.796 2.163 12 2.163zm0 1.684c-3.17 0-3.548.012-4.796.07-1.067.05-1.652.23-2.037.385-.513.2-.877.438-1.262.823-.385.385-.623.749-.823 1.262-.155.385-.335.97-.385 2.037-.058 1.248-.07 1.626-.07 4.796s.012 3.548.07 4.796c.05 1.067.23 1.652.385 2.037.2.513.438.877.a823 1.262.385.385.749.623 1.262.823.385.155.97.335 2.037.385 1.248.058 1.626.07 4.796.07s3.548-.012 4.796-.07c1.067-.05 1.652-.23 2.037-.385.513-.2.877.438 1.262.823.385-.385.623-.749.823-1.262.155-.385.335-.97-.385-2.037.058-1.248.07-1.626.07-4.796s-.012-3.548-.07-4.796c-.05-1.067-.23-1.652-.385-2.037-.2-.513-.438-.877-.823-1.262-.385-.385-.749-.623-1.262.823-.385-.155-.97.335-2.037-.385-1.248-.058-1.626-.07-4.796-.07zm0 3.838a5.999 5.999 0 1 1 0 11.998 5.999 5.999 0 0 1 0-11.998zm0 9.9a3.9 3.9 0 1 0 0-7.8 3.9 3.9 0 0 0 0 7.8zm6.406-10.845a1.44 1.44 0 1 1 0-2.88 1.44 1.44 0 0 1 0 2.88z"></path></svg>`,
+						},
+					],
+					copyright: {
+						year: new Date().getFullYear(),
+						text: "Desa Sukakerta. Dikembangkan oleh",
+						developerName: "Hans Dev",
+						developerLink: "#", // Ganti dengan link Anda
+					},
+				};
+			}
+
+			// Inisialisasi Alpine
+			document.addEventListener("alpine:init", () => {
+				Alpine.data("pageData", pageData);
+				Alpine.data("footerData", footerData);
+			});
+		</script>
+	</body>
+</html>
