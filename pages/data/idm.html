@@ -1,0 +1,1816 @@
+<!DOCTYPE html>
+<html lang="id" class="scroll-smooth">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Desa Sukakerta | Indeks Desa Membangun (IDM)</title>
+		<base href="../../" />
+		<script src="https://cdn.tailwindcss.com"></script>
+		<script
+			defer
+			src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+
+		<script src="https://code.highcharts.com/highcharts.js"></script>
+		<script src="https://code.highcharts.com/modules/variable-pie.js"></script>
+
+		<script
+			defer
+			src="https://cdn.jsdelivr.net/npm/@alpinejs/collapse@3.x.x/dist/cdn.min.js"></script>
+
+		<style type="text/tailwindcss">
+			[x-cloak] {
+				display: none !important;
+			}
+			/* Style kustom yang konsisten */
+			@layer utilities {
+				.text-primary {
+					color: #2e7d32;
+				}
+				.hover\:text-primary:hover {
+					color: #1b6d21;
+				}
+				.text-textdark {
+					color: #1f2937;
+				}
+				.bg-primary {
+					background-color: #2e7d32;
+				}
+				/* REVISI: Menambahkan warna ungu IDM */
+				.bg-idm-purple {
+					background-color: #7e22ce;
+				}
+				.text-idm-purple {
+					color: #7e22ce;
+				}
+				.border-accent {
+					border-color: #fbc02d;
+				}
+				.text-accent {
+					color: #fbc02d;
+				}
+			}
+
+			/* Style kustom untuk dot-pattern di card */
+			.dot-pattern {
+				background-image: radial-gradient(
+					circle,
+					rgba(255, 255, 255, 0.1) 1px,
+					transparent 1.5px
+				);
+				background-size: 10px 10px;
+			}
+		</style>
+	</head>
+
+	<body
+		class="font-sans text-gray-800 bg-gray-50"
+		x-data="pageData()"
+		x-init="
+            setHighchartsTheme(); 
+            initIdmDonutChart();
+        "
+		@scroll.window="sticky = (window.pageYOffset > 50)">
+		<header
+			:class="{ 'shadow-md bg-white/90 backdrop-blur-lg text-gray-700': sticky, 'text-white': !sticky}"
+			class="fixed top-0 left-0 z-50 w-full transition-all duration-300">
+			<div
+				class="flex items-center justify-between px-6 py-4 mx-auto max-w-7xl">
+				<a href="index.html" class="flex items-center gap-2">
+					<img
+						src="assets/img/logo.webp"
+						alt="Logo Desa"
+						class="w-10 h-10 rounded-full" />
+					<div class="flex flex-col leading-tight">
+						<span
+							class="text-lg font-semibold transition-colors"
+							:class="{'text-primary': sticky, 'text-white': !sticky}"
+							>Desa Sukakerta</span
+						>
+						<span class="text-xs"
+							>Kec. Panumbangan, Kab. Ciamis</span
+						>
+					</div>
+				</a>
+				<nav
+					class="hidden lg:flex items-center space-x-8 text-[15px] font-medium">
+					<a href="index.html" class="hover:text-primary">Beranda</a>
+					<div
+						@mouseenter="profilOpen = true"
+						@mouseleave="profilOpen = false"
+						class="relative">
+						<button
+							type="button"
+							class="flex items-center gap-1 transition hover:text-primary"
+							:class="{ 'text-primary': profilOpen }"
+							aria-haspopup="true"
+							:aria-expanded="profilOpen">
+							Profil Desa
+							<svg
+								class="w-4 h-4 mt-[2px] transition-transform duration-200"
+								:class="{ 'rotate-180': profilOpen }"
+								xmlns="http://www.w3.org/2000/svg"
+								fill="none"
+								viewBox="0 0 24 24"
+								stroke="currentColor">
+								<path
+									stroke-linecap="round"
+									stroke-linejoin="round"
+									stroke-width="2"
+									d="M19 9l-7 7-7-7" />
+							</svg>
+						</button>
+						<div
+							x-cloak
+							x-show="profilOpen"
+							x-transition.opacity.duration.150ms
+							class="absolute left-0 w-56 py-2 mt-3 bg-white border border-gray-200 rounded-lg shadow-md text-textdark"
+							role="menu">
+							<a
+								href="pages/profil/identitasDesa.html"
+								class="block px-4 py-2 hover:bg-gray-100"
+								>Identitas Desa</a
+							>
+							<a
+								href="pages/profil/visiMisi.html"
+								class="block px-4 py-2 hover:bg-gray-100"
+								>Visi & Misi</a
+							>
+							<a
+								href="pages/profil/strukturBPD.html"
+								class="block px-4 py-2 hover:bg-gray-100"
+								>BPD & Lembaga</a
+							>
+							<a
+								href="pages/profil/sejarahDesa.html"
+								class="block px-4 py-2 hover:bg-gray-100"
+								>Sejarah Desa</a
+							>
+						</div>
+					</div>
+					<div
+						@mouseenter="dataOpen = true"
+						@mouseleave="dataOpen = false"
+						class="relative">
+						<button
+							type="button"
+							class="flex items-center gap-1 transition hover:text-primary"
+							:class="{ 'text-primary': dataOpen }">
+							Data Desa
+							<svg
+								class="w-4 h-4 mt-[2px] transition-transform duration-200"
+								:class="{ 'rotate-180': dataOpen }"
+								xmlns="http://www.w3.org/2000/svg"
+								fill="none"
+								viewBox="0 0 24 24"
+								stroke="currentColor">
+								<path
+									stroke-linecap="round"
+									stroke-linejoin="round"
+									stroke-width="2"
+									d="M19 9l-7 7-7-7" />
+							</svg>
+						</button>
+						<div
+							x-cloak
+							x-show="dataOpen"
+							x-transition.opacity.duration.150ms
+							class="absolute left-0 w-64 py-2 mt-3 overflow-y-auto bg-white border border-gray-200 rounded-lg shadow-md text-textdark max-h-96">
+							<a
+								href="pages/data/idm.html"
+								class="block px-4 py-2 text-gray-400 cursor-not-allowed"
+								>Indeks Desa Membangun (IDM)</a
+							>
+							<a
+								href="pages/data/penduduk.html"
+								class="block px-4 py-2 hover:bg-gray-100"
+								>Data Penduduk</a
+							>
+							<a
+								href="pages/data/wilayah.html"
+								class="block px-4 py-2 hover:bg-gray-100"
+								>Data Wilayah</a
+							>
+							<a
+								href="pages/data/pendidikan-kk.html"
+								class="block px-4 py-2 hover:bg-gray-100"
+								>Pendidikan (Total)</a
+							>
+							<a
+								href="pages/data/pekerjaan.html"
+								class="block px-4 py-2 hover:bg-gray-100"
+								>Pekerjaan</a
+							>
+							<a
+								href="pages/data/pendidikan-ditempuh.html"
+								class="block px-4 py-2 hover:bg-gray-100"
+								>Pendidikan (Ditempuh)</a
+							>
+							<a
+								href="pages/data/agama.html"
+								class="block px-4 py-2 hover:bg-gray-100"
+								>Agama</a
+							>
+							<a
+								href="pages/data/jenisKelamin.html"
+								class="block px-4 py-2 hover:bg-gray-100"
+								>Jenis Kelamin</a
+							>
+							<a
+								href="pages/data/kelompokUmur.html"
+								class="block px-4 py-2 hover:bg-gray-100"
+								>Kelompok Umur</a
+							>
+						</div>
+					</div>
+					<a href="pages/transparansi.html" class="hover:text-primary"
+						>Transparansi</a
+					>
+					<a href="pages/layanan.html" class="hover:text-primary"
+						>Layanan</a
+					>
+					<a href="pages/lapak.html" class="hover:text-primary"
+						>Lapak Desa</a
+					>
+					<a href="pages/galeri.html" class="hover:text-primary"
+						>Galeri</a
+					>
+				</nav>
+
+				<div @click.outside="mobileMenuOpen = false" class="lg:hidden">
+					<button
+						@click="mobileMenuOpen = !mobileMenuOpen"
+						class="focus:outline-none"
+						aria-label="Toggle menu"
+						:class="{'text-primary': sticky, 'text-white': !sticky}">
+						<svg
+							x-show="!mobileMenuOpen"
+							xmlns="http://www.w3.org/2000/svg"
+							class="w-6 h-6"
+							fill="none"
+							viewBox="0 0 24 24"
+							stroke="currentColor">
+							<path
+								stroke-linecap="round"
+								stroke-linejoin="round"
+								stroke-width="2"
+								d="M4 6h16M4 12h16m-7 6h7" />
+						</svg>
+						<svg
+							x-show="mobileMenuOpen"
+							x-cloak
+							xmlns="http://www.w3.org/2000/svg"
+							class="w-6 h-6"
+							fill="none"
+							viewBox="0 0 24 24"
+							stroke="currentColor">
+							<path
+								stroke-linecap="round"
+								stroke-linejoin="round"
+								stroke-width="2"
+								d="M6 18L18 6M6 6l12 12" />
+						</svg>
+					</button>
+					<nav
+						x-cloak
+						x-show="mobileMenuOpen"
+						x-transition:enter="transition ease-out duration-200"
+						x-transition:enter-start="opacity-0 transform -translate-y-4"
+						x-transition:enter-end="opacity-100 transform translate-y-0"
+						x-transition:leave="transition ease-in duration-150"
+						x-transition:leave-start="opacity-100 transform translate-y-0"
+						x-transition:leave-end="opacity-0 transform -translate-y-4"
+						class="absolute left-0 w-full bg-white border-t border-gray-200 shadow-lg top-full">
+						<ul
+							class="flex flex-col px-6 py-4 space-y-2 font-medium text-textdark">
+							<li>
+								<a
+									href="index.html"
+									class="block py-2 hover:text-primary"
+									>Beranda</a
+								>
+							</li>
+							<li x-data="{ open: false }">
+								<button
+									@click="open = !open"
+									class="flex items-center justify-between w-full py-2 hover:text-primary">
+									<span>Profil Desa</span>
+									<svg
+										:class="{ 'rotate-180': open }"
+										class="w-4 h-4 transition-transform transform"
+										xmlns="http://www.w3.org/2000/svg"
+										fill="none"
+										viewBox="0 0 24 24"
+										stroke="currentColor">
+										<path
+											stroke-linecap="round"
+											stroke-linejoin="round"
+											stroke-width="2"
+											d="M19 9l-7 7-7-7" />
+									</svg>
+								</button>
+								<ul
+									x-show="open"
+									x-transition
+									x-cloak
+									class="pl-3 ml-4 space-y-1 text-sm text-gray-700 border-l border-gray-200">
+									<li>
+										<a
+											href="pages/profil/identitasDesa.html"
+											class="block py-1 hover:text-primary"
+											>Identitas Desa</a
+										>
+									</li>
+									<li>
+										<a
+											href="pages/profil/visiMisi.html"
+											class="block py-1 hover:text-primary"
+											>Visi & Misi</a
+										>
+									</li>
+									<li>
+										<a
+											href="pages/profil/strukturBPD.html"
+											class="block py-1 hover:text-primary"
+											>BPD & Lembaga</a
+										>
+									</li>
+									<li>
+										<a
+											href="pages/profil/sejarahDesa.html"
+											class="block py-1 hover:text-primary"
+											>Sejarah Desa</a
+										>
+									</li>
+								</ul>
+							</li>
+							<li x-data="{ open: false }">
+								<button
+									@click="open = !open"
+									class="flex items-center justify-between w-full py-2 hover:text-primary">
+									<span>Data Desa</span>
+									<svg
+										:class="{ 'rotate-180': open }"
+										class="w-4 h-4 transition-transform transform"
+										xmlns="http://www.w3.org/2000/svg"
+										fill="none"
+										viewBox="0 0 24 24"
+										stroke="currentColor">
+										<path
+											stroke-linecap="round"
+											stroke-linejoin="round"
+											stroke-width="2"
+											d="M19 9l-7 7-7-7" />
+									</svg>
+								</button>
+								<ul
+									x-show="open"
+									x-transition
+									x-cloak
+									class="pl-3 ml-4 space-y-1 overflow-y-auto text-sm text-gray-700 border-l border-gray-200 max-h-64">
+									<a
+										href="pages/data/idm.html"
+										class="block px-4 py-2 text-gray-400 cursor-not-allowed"
+										>IDM</a
+									>
+									<a
+										href="pages/data/penduduk.html"
+										class="block px-4 py-2 hover:bg-gray-100"
+										>Data Penduduk</a
+									>
+									<a
+										href="pages/data/wilayah.html"
+										class="block px-4 py-2 hover:bg-gray-100"
+										>Data Wilayah</a
+									>
+									<a
+										href="pages/data/pendidikan-kk.html"
+										class="block px-4 py-2 hover:bg-gray-100"
+										>Pendidikan (Total)</a
+									>
+									<a
+										href="pages/data/pekerjaan.html"
+										class="block px-4 py-2 hover:bg-gray-100"
+										>Pekerjaan</a
+									>
+									<a
+										href="pages/data/pendidikan-ditempuh.html"
+										class="block px-4 py-2 hover:bg-gray-100"
+										>Pendidikan (Ditempuh)</a
+									>
+									<a
+										href="pages/data/agama.html"
+										class="block px-4 py-2 hover:bg-gray-100"
+										>Agama</a
+									>
+									<a
+										href="pages/data/jenisKelamin.html"
+										class="block px-4 py-2 hover:bg-gray-100"
+										>Jenis Kelamin</a
+									>
+									<a
+										href="pages/data/kelompokUmur.html"
+										class="block px-4 py-2 hover:bg-gray-100"
+										>Kelompok Umur</a
+									>
+								</ul>
+							</li>
+							<li>
+								<a
+									href="pages/transparansi.html"
+									class="block py-2 hover:text-primary"
+									>Transparansi</a
+								>
+							</li>
+							<li>
+								<a
+									href="pages/layanan.html"
+									class="block py-2 hover:text-primary"
+									>Layanan</a
+								>
+							</li>
+							<li>
+								<a
+									href="pages/lapak.html"
+									class="block py-2 hover:text-primary"
+									>Lapak Desa</a
+								>
+							</li>
+							<li>
+								<a
+									href="pages/galeri.html"
+									class="block py-2 hover:text-primary"
+									>Galeri</a
+								>
+							</li>
+						</ul>
+					</nav>
+				</div>
+			</div>
+		</header>
+
+		<main class="pt-24 bg-gray-50">
+			<section class="py-12 bg-white border-b border-gray-200">
+				<div class="px-6 mx-auto max-w-7xl">
+					<nav class="flex mb-2" aria-label="Breadcrumb">
+						<ol
+							class="inline-flex items-center space-x-1 text-sm text-gray-500 md:space-x-2">
+							<li class="inline-flex items-center">
+								<a
+									href="index.html"
+									class="inline-flex items-center transition-colors hover:text-primary">
+									<svg
+										class="w-4 h-4 mr-2"
+										fill="currentColor"
+										viewBox="0 0 20 20"
+										xmlns="http://www.w3.org/2000/svg">
+										<path
+											d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z"></path>
+									</svg>
+									Beranda
+								</a>
+							</li>
+							<li>
+								<div class="flex items-center">
+									<svg
+										class="w-3 h-3 text-gray-400"
+										fill="currentColor"
+										viewBox="0 0 20 20"
+										xmlns="http://www.w3.org/2000/svg">
+										<path
+											fill-rule="evenodd"
+											d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
+											clip-rule="evenodd"></path>
+									</svg>
+									<span class="ml-1 md:ml-2">Data Desa</span>
+								</div>
+							</li>
+							<li aria-current="page">
+								<div class="flex items-center">
+									<svg
+										class="w-3 h-3 text-gray-400"
+										fill="currentColor"
+										viewBox="0 0 20 20"
+										xmlns="http://www.w3.org/2000/svg">
+										<path
+											fill-rule="evenodd"
+											d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
+											clip-rule="evenodd"></path>
+									</svg>
+									<span
+										class="ml-1 font-medium text-gray-800 md:ml-2"
+										x-text="pageTitle"></span>
+								</div>
+							</li>
+						</ol>
+					</nav>
+					<h1
+						class="text-3xl font-bold text-primary md:text-4xl"
+						x-text="pageTitle"></h1>
+					<p
+						class="mt-2 text-lg text-gray-600"
+						x-text="pageSubtitle"></p>
+				</div>
+			</section>
+
+			<section class="py-16">
+				<div class="px-6 mx-auto max-w-7xl lg:px-8">
+					<div class="grid grid-cols-1 gap-6 md:grid-cols-3">
+						<div class="space-y-6">
+							<div
+								class="relative p-6 overflow-hidden text-white shadow-lg bg-idm-purple rounded-xl dot-pattern">
+								<h3
+									class="text-lg font-medium text-purple-200"
+									x-text="summaries.tahun + ' Skor IDM'"></h3>
+								<p
+									class="mt-1 text-5xl font-bold"
+									x-text="summaries.skor"></p>
+								<p
+									class="mt-1 text-purple-200"
+									x-text="'Data Tahun ' + summaries.tahun"></p>
+								<svg
+									class="absolute w-20 h-20 -right-4 -bottom-4 text-white/10"
+									xmlns="http://www.w3.org/2000/svg"
+									fill="none"
+									viewBox="0 0 24 24"
+									stroke-width="1.5"
+									stroke="currentColor">
+									<path
+										stroke-linecap="round"
+										stroke-linejoin="round"
+										d="M2.25 18 9 11.25l4.306 4.306a11.95 11.95 0 0 1 5.814-5.518l2.74-1.22m0 0-5.94-2.281m5.94 2.28-2.28 5.941" />
+								</svg>
+							</div>
+							<div class="p-6 bg-white shadow-lg rounded-xl">
+								<h3 class="font-medium text-gray-500">
+									Skor Minimal
+								</h3>
+								<p
+									class="mt-1 text-3xl font-bold text-textdark"
+									x-text="summaries.skorMinimal"></p>
+								<p class="mt-1 text-sm text-gray-600">
+									Skor minimal untuk mendapatkan status
+									mandiri.
+								</p>
+							</div>
+						</div>
+
+						<div class="space-y-6">
+							<div class="p-6 bg-white shadow-lg rounded-xl">
+								<h3 class="font-medium text-gray-500">
+									Status IDM
+								</h3>
+								<p
+									class="mt-1 text-3xl font-bold text-primary"
+									x-text="summaries.status"></p>
+							</div>
+							<div class="p-6 bg-white shadow-lg rounded-xl">
+								<h3 class="font-medium text-gray-500">
+									Selisih Skor
+								</h3>
+								<p
+									class="mt-1 text-3xl font-bold text-textdark"
+									x-text="summaries.selisih"></p>
+								<p class="mt-1 text-sm text-gray-600">
+									Selisih skor yang harus diraih.
+								</p>
+							</div>
+						</div>
+
+						<div class="space-y-6">
+							<div class="p-6 bg-white shadow-lg rounded-xl">
+								<h3 class="font-medium text-gray-500">
+									Target Desa Dewasari
+								</h3>
+								<p
+									class="mt-1 text-3xl font-bold text-primary"
+									x-text="summaries.targetStatus"></p>
+							</div>
+							<div class="p-6 bg-white shadow-lg rounded-xl">
+								<h3 class="mb-3 font-semibold text-textdark">
+									Identitas Desa
+								</h3>
+								<dl class="text-sm">
+									<div class="flex justify-between py-1">
+										<dt class="text-gray-500">Desa</dt>
+										<dd
+											class="font-medium text-gray-800"
+											x-text="identitas.desa"></dd>
+									</div>
+									<div class="flex justify-between py-1">
+										<dt class="text-gray-500">Kecamatan</dt>
+										<dd
+											class="font-medium text-gray-800"
+											x-text="identitas.kecamatan"></dd>
+									</div>
+									<div class="flex justify-between py-1">
+										<dt class="text-gray-500">Kabupaten</dt>
+										<dd
+											class="font-medium text-gray-800"
+											x-text="identitas.kabupaten"></dd>
+									</div>
+									<div class="flex justify-between py-1">
+										<dt class="text-gray-500">Provinsi</dt>
+										<dd
+											class="font-medium text-gray-800"
+											x-text="identitas.provinsi"></dd>
+									</div>
+								</dl>
+							</div>
+						</div>
+					</div>
+				</div>
+			</section>
+
+			<section class="pb-16 -mt-8">
+				<div class="px-6 mx-auto max-w-7xl lg:px-8">
+					<div class="grid grid-cols-1 gap-6 lg:grid-cols-3">
+						<div
+							class="p-6 bg-white shadow-lg lg:col-span-2 rounded-xl">
+							<div id="idm-donut-chart" class="w-full h-96"></div>
+						</div>
+
+						<div class="lg:col-span-1">
+							<div class="space-y-4" x-data="{ open: 'iks' }">
+								<div class="bg-white shadow-lg rounded-xl">
+									<button
+										@click="open = (open === 'iks' ? '' : 'iks')"
+										class="flex items-center justify-between w-full p-5">
+										<span
+											class="text-lg font-semibold text-idm-purple"
+											>Apa itu Indeks Ketahanan Sosial
+											(IKS)?</span
+										>
+										<svg
+											xmlns="http://www.w3.org/2000/svg"
+											viewBox="0 0 20 20"
+											fill="currentColor"
+											class="w-5 h-5 transition-transform"
+											:class="open === 'iks' ? 'rotate-180' : ''">
+											<path
+												fill-rule="evenodd"
+												d="M5.22 8.22a.75.75 0 0 1 1.06 0L10 11.94l3.72-3.72a.75.75 0 1 1 1.06 1.06l-4.25 4.25a.75.75 0 0 1-1.06 0L5.22 9.28a.75.75 0 0 1 0-1.06Z"
+												clip-rule="evenodd" />
+										</svg>
+									</button>
+									<div
+										x-show="open === 'iks'"
+										x-collapse
+										class="px-5 pb-5 text-gray-700">
+										<p class="text-sm leading-relaxed">
+											Indeks Ketahanan Sosial terdiri dari
+											Dimensi Modal Sosial (indikator
+											solidarias sosial, memiliki
+											toleransi, rasa aman penduduk,
+											kesejahteraan Sosial); Dimensi
+											Kesehatan (indikator pelayanan
+											kesehatan, keberdayaan masyarakat,
+											dan jaminan kesehatan); Dimensi
+											Pendidikan (indikator akses ke
+											pendidikan dasar dan menengah, akses
+											ke pendidikan non formal dan akses
+											ke pengetahuan); dan Dimensi
+											Permukiman (indikator akses ke air
+											bersih, akses ke sanitasi, akses ke
+											listrik, dan akses ke informasi dan
+											komunikasi).
+										</p>
+									</div>
+								</div>
+								<div class="bg-white shadow-lg rounded-xl">
+									<button
+										@click="open = (open === 'ike' ? '' : 'ike')"
+										class="flex items-center justify-between w-full p-5">
+										<span
+											class="text-lg font-semibold text-red-600"
+											>Apa itu Indeks Ketahanan Ekonomi
+											(IKE)?</span
+										>
+										<svg
+											xmlns="http://www.w3.org/2000/svg"
+											viewBox="0 0 20 20"
+											fill="currentColor"
+											class="w-5 h-5 transition-transform"
+											:class="open === 'ike' ? 'rotate-180' : ''">
+											<path
+												fill-rule="evenodd"
+												d="M5.22 8.22a.75.75 0 0 1 1.06 0L10 11.94l3.72-3.72a.75.75 0 1 1 1.06 1.06l-4.25 4.25a.75.75 0 0 1-1.06 0L5.22 9.28a.75.75 0 0 1 0-1.06Z"
+												clip-rule="evenodd" />
+										</svg>
+									</button>
+									<div
+										x-show="open === 'ike'"
+										x-collapse
+										class="px-5 pb-5 text-gray-700">
+										<p class="text-sm leading-relaxed">
+											Indeks Ketahanan Ekonomi terdiri
+											dari Dimensi Ekonomi (indikator
+											keragaman produksi, tersedia pusat
+											pelayanan, akses logistik, akses
+											kredit, lembaga ekonomi, dan
+											keterbukaan wilayah).
+										</p>
+									</div>
+								</div>
+								<div class="bg-white shadow-lg rounded-xl">
+									<button
+										@click="open = (open === 'ikl' ? '' : 'ikl')"
+										class="flex items-center justify-between w-full p-5">
+										<span
+											class="text-lg font-semibold text-green-700"
+											>Apa itu Indeks Ketahanan Lingkungan
+											(IKL)?</span
+										>
+										<svg
+											xmlns="http://www.w3.org/2000/svg"
+											viewBox="0 0 20 20"
+											fill="currentColor"
+											class="w-5 h-5 transition-transform"
+											:class="open === 'ikl' ? 'rotate-180' : ''">
+											<path
+												fill-rule="evenodd"
+												d="M5.22 8.22a.75.75 0 0 1 1.06 0L10 11.94l3.72-3.72a.75.75 0 1 1 1.06 1.06l-4.25 4.25a.75.75 0 0 1-1.06 0L5.22 9.28a.75.75 0 0 1 0-1.06Z"
+												clip-rule="evenodd" />
+										</svg>
+									</button>
+									<div
+										x-show="open === 'ikl'"
+										x-collapse
+										class="px-5 pb-5 text-gray-700">
+										<p class="text-sm leading-relaxed">
+											Indeks Ketahanan Lingkungan/Ekologi
+											terdiri dari Dimensi Ekologi
+											(indikator kualitas lingkungan dan
+											potensi/rawan bencana).
+										</p>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</section>
+
+			<section class="pb-16">
+				<div class="px-6 mx-auto max-w-7xl lg:px-8">
+					<div
+						class_name="bg-white shadow-lg rounded-xl"
+						x-data="{ activeTab: 'iks' }">
+						<div class="p-6 border-b border-gray-200">
+							<h2 class="text-xl font-semibold text-textdark">
+								Rincian Indikator IDM 2024
+							</h2>
+							<p class="mt-1 text-sm text-gray-600">
+								Daftar lengkap indikator, skor, dan rekomendasi
+								kegiatan untuk peningkatan status desa.
+							</p>
+							<div class="mt-6">
+								<nav
+									class="flex -mb-[1px] border-b border-gray-200"
+									aria-label="Tabs">
+									<button
+										@click="activeTab = 'iks'"
+										:class="activeTab === 'iks' ? 'border-idm-purple text-idm-purple' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'"
+										class="w-1/3 py-3 font-medium text-center border-b-2">
+										IKS (Sosial)
+									</button>
+									<button
+										@click="activeTab = 'ike'"
+										:class="activeTab === 'ike' ? 'border-red-600 text-red-600' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'"
+										class="w-1/3 py-3 font-medium text-center border-b-2">
+										IKE (Ekonomi)
+									</button>
+									<button
+										@click="activeTab = 'ikl'"
+										:class="activeTab === 'ikl' ? 'border-primary text-primary' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'"
+										class="w-1/3 py-3 font-medium text-center border-b-2">
+										IKL (Lingkungan)
+									</button>
+								</nav>
+							</div>
+						</div>
+
+						<div class="p-4 md:p-6">
+							<div x-show="activeTab === 'iks'" class="space-y-4">
+								<template
+									x-for="row in detailRows.iks"
+									:key="row.NO">
+									<div
+										class="p-4 border rounded-lg"
+										:class="row.SKOR < 5 ? 'bg-yellow-50 border-yellow-200' : 'bg-white border-gray-200'">
+										<div
+											class="flex flex-col md:flex-row md:items-center md:justify-between">
+											<div
+												class="flex items-center gap-4">
+												<span
+													class="flex items-center justify-center flex-shrink-0 w-10 h-10 text-lg font-bold text-white rounded-full"
+													:class="row.SKOR < 5 ? 'bg-yellow-500' : 'bg-primary'"
+													x-text="row.SKOR"></span>
+												<div>
+													<h4
+														class="font-semibold text-textdark"
+														x-text="row.INDIKATOR"></h4>
+													<p
+														class="text-sm text-gray-600"
+														x-text="row.KETERANGAN"></p>
+												</div>
+											</div>
+											<div
+												x-show="row.KEGIATAN !== '-'"
+												class="mt-3 md:mt-0 md:ml-6 md:w-1/3">
+												<p
+													class="text-sm font-semibold text-yellow-800">
+													Rekomendasi Kegiatan:
+												</p>
+												<p
+													class="text-sm text-yellow-700"
+													x-text="row.KEGIATAN"></p>
+											</div>
+										</div>
+									</div>
+								</template>
+							</div>
+							<div x-show="activeTab === 'ike'" class="space-y-4">
+								<template
+									x-for="row in detailRows.ike"
+									:key="row.NO">
+									<div
+										class="p-4 border rounded-lg"
+										:class="row.SKOR < 5 ? 'bg-yellow-50 border-yellow-200' : 'bg-white border-gray-200'">
+										<div
+											class="flex flex-col md:flex-row md:items-center md:justify-between">
+											<div
+												class="flex items-center gap-4">
+												<span
+													class="flex items-center justify-center flex-shrink-0 w-10 h-10 text-lg font-bold text-white rounded-full"
+													:class="row.SKOR < 5 ? 'bg-yellow-500' : 'bg-primary'"
+													x-text="row.SKOR"></span>
+												<div>
+													<h4
+														class="font-semibold text-textdark"
+														x-text="row.INDIKATOR"></h4>
+													<p
+														class="text-sm text-gray-600"
+														x-text="row.KETERANGAN"></p>
+												</div>
+											</div>
+											<div
+												x-show="row.KEGIATAN !== '-'"
+												class="mt-3 md:mt-0 md:ml-6 md:w-1/3">
+												<p
+													class="text-sm font-semibold text-yellow-800">
+													Rekomendasi Kegiatan:
+												</p>
+												<p
+													class="text-sm text-yellow-700"
+													x-text="row.KEGIATAN"></p>
+											</div>
+										</div>
+									</div>
+								</template>
+							</div>
+							<div x-show="activeTab === 'ikl'" class="space-y-4">
+								<template
+									x-for="row in detailRows.ikl"
+									:key="row.NO">
+									<div
+										class="p-4 border rounded-lg"
+										:class="row.SKOR < 5 ? 'bg-yellow-50 border-yellow-200' : 'bg-white border-gray-200'">
+										<div
+											class="flex flex-col md:flex-row md:items-center md:justify-between">
+											<div
+												class="flex items-center gap-4">
+												<span
+													class="flex items-center justify-center flex-shrink-0 w-10 h-10 text-lg font-bold text-white rounded-full"
+													:class="row.SKOR < 5 ? 'bg-yellow-500' : 'bg-primary'"
+													x-text="row.SKOR"></span>
+												<div>
+													<h4
+														class="font-semibold text-textdark"
+														x-text="row.INDIKATOR"></h4>
+													<p
+														class="text-sm text-gray-600"
+														x-text="row.KETERANGAN"></p>
+												</div>
+											</div>
+											<div
+												x-show="row.KEGIATAN !== '-'"
+												class="mt-3 md:mt-0 md:ml-6 md:w-1/3">
+												<p
+													class="text-sm font-semibold text-yellow-800">
+													Rekomendasi Kegiatan:
+												</p>
+												<p
+													class="text-sm text-yellow-700"
+													x-text="row.KEGIATAN"></p>
+											</div>
+										</div>
+									</div>
+								</template>
+							</div>
+						</div>
+					</div>
+				</div>
+			</section>
+		</main>
+
+		<footer class="pt-16 pb-8 text-white bg-primary" x-data="footerData()">
+			<div class="px-6 mx-auto max-w-7xl md:px-10">
+				<div
+					class="grid grid-cols-1 gap-12 pb-10 border-b md:grid-cols-3 border-white/20">
+					<div>
+						<div class="flex items-center gap-4 mb-4">
+							<img
+								:src="identity.logoSrc"
+								alt="Logo Desa"
+								class="border-2 rounded-full w-14 h-14 border-white/70" />
+							<div>
+								<h2
+									class="text-2xl font-semibold"
+									x-text="identity.name"></h2>
+								<p
+									class="text-sm text-accent"
+									x-text="identity.tagline"></p>
+							</div>
+						</div>
+						<p
+							class="text-sm leading-relaxed text-gray-100"
+							x-text="identity.description"></p>
+					</div>
+
+					<div>
+						<h3 class="mb-4 text-xl font-semibold text-accent">
+							Navigasi Cepat
+						</h3>
+						<ul
+							class="gap-8 space-y-3 text-sm text-gray-100 columns-2">
+							<template
+								x-for="link in quickLinks"
+								:key="link.href">
+								<li>
+									<a
+										:href="link.href"
+										class="inline-block transition-colors hover:text-accent hover:underline underline-offset-4"
+										x-text="link.label">
+									</a>
+								</li>
+							</template>
+						</ul>
+					</div>
+
+					<div>
+						<h3 class="mb-4 text-xl font-semibold text-accent">
+							Kontak & Sosial
+						</h3>
+						<ul class="space-y-3 text-sm text-gray-100">
+							<template
+								x-for="item in contactInfo"
+								:key="item.text">
+								<li class="flex items-start gap-3">
+									<span
+										class="w-5 h-5 flex-shrink-0 mt-0.5 opacity-80"
+										x-html="item.icon"></span>
+									<a
+										:href="item.href"
+										class="transition-colors hover:text-accent"
+										x-text="item.text"></a>
+								</li>
+							</template>
+						</ul>
+						<div class="flex gap-3 mt-6">
+							<template
+								x-for="social in socialLinks"
+								:key="social.title">
+								<a
+									:href="social.href"
+									:title="social.title"
+									target="_blank"
+									rel="noopener noreferrer"
+									class="p-2 text-white transition-colors rounded-full bg-white/10 hover:bg-accent hover:text-primary">
+									<span
+										class="sr-only"
+										x-text="social.title"></span>
+									<div
+										class="w-5 h-5"
+										x-html="social.icon"></div>
+								</a>
+							</template>
+						</div>
+					</div>
+				</div>
+				<div class="pt-6 text-sm text-center text-gray-200" x-cloak>
+					©
+					<span x-text="copyright.year"></span>
+					<span x-text="copyright.text"></span>
+					<a
+						:href="copyright.developerLink"
+						target="_blank"
+						rel="noopener noreferrer"
+						class="font-medium transition-colors text-accent hover:text-white"
+						x-text="copyright.developerName"></a
+					>.
+				</div>
+			</div>
+		</footer>
+
+		<script>
+			// Data global untuk seluruh halaman
+			function pageData() {
+				// Ambil data mentah dari JSON yang disediakan
+				const rawData = {
+					SUMMARIES: {
+						SKOR_SAAT_INI: 0.94047619047619,
+						STATUS: "MANDIRI",
+						TARGET_STATUS: "MANDIRI",
+						SKOR_MINIMAL: "0.8156",
+						PENAMBAHAN: -0.12487619047619003,
+						TAHUN: 2024,
+					},
+					ROW: [
+						{
+							NO: 1,
+							INDIKATOR: "Skor Akses Sarkes",
+							SKOR: 5,
+							KETERANGAN: "Waktu tempuh dari ≤ 30  Menit",
+							KEGIATAN: "-",
+							NILAI: "0",
+							ROW_CELL: 10,
+						},
+						{
+							NO: 2,
+							INDIKATOR: "Skor Dokter",
+							SKOR: 5,
+							KETERANGAN: "Jumlah dokter ≥ 1 orang",
+							KEGIATAN: "-",
+							NILAI: "0",
+							ROW_CELL: 11,
+						},
+						{
+							NO: 3,
+							INDIKATOR: "Skor Bidan ",
+							SKOR: 5,
+							KETERANGAN: "Jumlah bidan ≥ 1 orang",
+							KEGIATAN: "-",
+							NILAI: "0",
+							ROW_CELL: 12,
+						},
+						{
+							NO: 4,
+							INDIKATOR: "Skor Nakes Lain",
+							SKOR: 5,
+							KETERANGAN:
+								"Jumlah tenaga kesehatan lainnya ≥ 5 orang",
+							KEGIATAN: "-",
+							NILAI: "0",
+							ROW_CELL: 13,
+						},
+						{
+							NO: 5,
+							INDIKATOR: "Skor Tingkat Kepesertaan BPJS",
+							SKOR: 2,
+							KETERANGAN:
+								"Jumlah peserta BPJS/jumlah penduduk antara 0,1 s.d 0,25",
+							KEGIATAN:
+								"Fasilitasi kepesertaan BPJS warga Desa hingga > 75%",
+							NILAI: "0.00571429",
+							ROW_CELL: 14,
+						},
+						{
+							NO: 6,
+							INDIKATOR: "Skor Akses Poskesdes",
+							SKOR: 5,
+							KETERANGAN:
+								"Jarak tempuh menuju Poskesdes = 500 Meter",
+							KEGIATAN: "-",
+							NILAI: "0",
+							ROW_CELL: 15,
+						},
+						{
+							NO: 7,
+							INDIKATOR: "Skor Aktivitas Posyandu",
+							SKOR: 5,
+							KETERANGAN:
+								"Jumlah Posyandu aktif 1 bulan sekali/ Jumlah Posyandu > 0,75",
+							KEGIATAN: "-",
+							NILAI: "0",
+							ROW_CELL: 16,
+						},
+						{
+							NO: 8,
+							INDIKATOR: "Skor Akses SD/MI",
+							SKOR: 5,
+							KETERANGAN:
+								"Jarak tempuh menuju SD atau MI = 3000 Meter",
+							KEGIATAN: "-",
+							NILAI: "0",
+							ROW_CELL: 17,
+						},
+						{
+							NO: 9,
+							INDIKATOR: "Skor Akses SMP/MTS",
+							SKOR: 5,
+							KETERANGAN:
+								"Jarak tempuh menuju SMP atau MTs ≤ 6000 Meter",
+							KEGIATAN: "-",
+							NILAI: "0",
+							ROW_CELL: 18,
+						},
+						{
+							NO: 10,
+							INDIKATOR: "Skor Akses SMA/SMK",
+							SKOR: 5,
+							KETERANGAN:
+								"Jarak tempuh menuju SMU atau SMK ≤ 6000 Meter",
+							KEGIATAN: "-",
+							NILAI: "0",
+							ROW_CELL: 19,
+						},
+						{
+							NO: 11,
+							INDIKATOR: "Skor Ketersediaan PAUD",
+							SKOR: 5,
+							KETERANGAN: "Jumlah PAUD ≥ 1 ",
+							KEGIATAN: "-",
+							NILAI: "0",
+							ROW_CELL: 20,
+						},
+						{
+							NO: 12,
+							INDIKATOR: "Skor Ketersediaan PKBM/ Paket ABC",
+							SKOR: 5,
+							KETERANGAN: "Jumlah PKBM atau Paket ABC ≥ 1 ",
+							KEGIATAN: "-",
+							NILAI: "0",
+							ROW_CELL: 21,
+						},
+						{
+							NO: 13,
+							INDIKATOR: "Skor Ketersediaan Kursus",
+							SKOR: 5,
+							KETERANGAN:
+								"Jumlah Pusat Keterampilan atau Kursus ≥ 1 ",
+							KEGIATAN: "-",
+							NILAI: "0",
+							ROW_CELL: 22,
+						},
+						{
+							NO: 14,
+							INDIKATOR:
+								"Skor Ketersediaan Taman Baca/ Perpus Desa",
+							SKOR: 5,
+							KETERANGAN:
+								"Taman Bacaan Masyarakat atau perpustakaan Desa tersedia ",
+							KEGIATAN: "-",
+							NILAI: "0",
+							ROW_CELL: 23,
+						},
+						{
+							NO: 15,
+							INDIKATOR: "Skor Kebiasaan Goryong",
+							SKOR: 5,
+							KETERANGAN: "Terdapat Kebiasaan Gotong Royong",
+							KEGIATAN: "-",
+							NILAI: "0",
+							ROW_CELL: 24,
+						},
+						{
+							NO: 16,
+							INDIKATOR: "Skor Frekuensi Goryong",
+							SKOR: 5,
+							KETERANGAN: "Frekuensi Gotong Royong > 2",
+							KEGIATAN: "-",
+							NILAI: "0",
+							ROW_CELL: 25,
+						},
+						{
+							NO: 17,
+							INDIKATOR: "Skor Ketersediaan Ruang Publik",
+							SKOR: 5,
+							KETERANGAN: "Ruang Publik terdapat didesa",
+							KEGIATAN: "-",
+							NILAI: "0",
+							ROW_CELL: 26,
+						},
+						{
+							NO: 18,
+							INDIKATOR: "Skor Kelompok OR",
+							SKOR: 5,
+							KETERANGAN: "Jumlah kelompok kegiatan olahraga > 7",
+							KEGIATAN: "-",
+							NILAI: "0",
+							ROW_CELL: 27,
+						},
+						{
+							NO: 19,
+							INDIKATOR: "Skor Kegiatan OR",
+							SKOR: 5,
+							KETERANGAN: "Jumlah kegiatan olahraga > 7",
+							KEGIATAN: "-",
+							NILAI: "0",
+							ROW_CELL: 28,
+						},
+						{
+							NO: 20,
+							INDIKATOR: "Skor Keragaman Agama",
+							SKOR: 5,
+							KETERANGAN: "Jumlah Jenis Agama di Desa > 1",
+							KEGIATAN: "-",
+							NILAI: "0",
+							ROW_CELL: 29,
+						},
+						{
+							NO: 21,
+							INDIKATOR: "Skor Keragaman Bahasa",
+							SKOR: 5,
+							KETERANGAN:
+								"Jumlah Bahasa yang digunakan sehari-hari > 1",
+							KEGIATAN: "-",
+							NILAI: "0",
+							ROW_CELL: 30,
+						},
+						{
+							NO: 22,
+							INDIKATOR: "Skor Keragaman Komunikasi",
+							SKOR: 5,
+							KETERANGAN: "Warga Desa terdiri dari Suku > 1",
+							KEGIATAN: "-",
+							NILAI: "0",
+							ROW_CELL: 31,
+						},
+						{
+							NO: 23,
+							INDIKATOR: "Skor Poskamling",
+							SKOR: 5,
+							KETERANGAN: "Terdapat Pos Keamanan  di Desa",
+							KEGIATAN: "-",
+							NILAI: "0",
+							ROW_CELL: 32,
+						},
+						{
+							NO: 24,
+							INDIKATOR: "Skor Siskamling",
+							SKOR: 5,
+							KETERANGAN:
+								"Terdapat Sistem Keamanan Lingkungan warga di Desa",
+							KEGIATAN: "-",
+							NILAI: "0",
+							ROW_CELL: 33,
+						},
+						{
+							NO: 25,
+							INDIKATOR: "Skor Konflik",
+							SKOR: 5,
+							KETERANGAN:
+								"Tidak terdapat atau tidak ada Konflik di Desa",
+							KEGIATAN: "-",
+							NILAI: "0",
+							ROW_CELL: 34,
+						},
+						{
+							NO: 26,
+							INDIKATOR: "Skor PMKS",
+							SKOR: 5,
+							KETERANGAN: "Jumlah PMKS  tidak ada atau 0 ",
+							KEGIATAN: "-",
+							NILAI: "0",
+							ROW_CELL: 35,
+						},
+						{
+							NO: 27,
+							INDIKATOR: "Skor SLB",
+							SKOR: 3,
+							KETERANGAN: "Jumlah Skor SLB antara 4 s.d 5",
+							KEGIATAN: "Penanganan SLB",
+							NILAI: "0.00380952",
+							ROW_CELL: 36,
+						},
+						{
+							NO: 28,
+							INDIKATOR: "Skor Akses Listrik",
+							SKOR: 5,
+							KETERANGAN:
+								"(Jumlah Keluarga Memakai listrik + non Listrik/Jumlah keluarga memakai listrik) ≥ 0,9 )",
+							KEGIATAN: "-",
+							NILAI: "0",
+							ROW_CELL: 37,
+						},
+						{
+							NO: 29,
+							INDIKATOR: "Skor Sinyal Tlp",
+							SKOR: 5,
+							KETERANGAN: "Sinyal telepon seluler di Desa Kuat",
+							KEGIATAN: "-",
+							NILAI: "0",
+							ROW_CELL: 38,
+						},
+						{
+							NO: 30,
+							INDIKATOR: "Skor Internet Kantor Desa",
+							SKOR: 5,
+							KETERANGAN:
+								"Terdapat fasilitas internet di kantor Desa ",
+							KEGIATAN: "-",
+							NILAI: "0",
+							ROW_CELL: 39,
+						},
+						{
+							NO: 31,
+							INDIKATOR: "Skor Akses Internet Warga",
+							SKOR: 5,
+							KETERANGAN: "Terdapat Akses internet warga di Desa",
+							KEGIATAN: "-",
+							NILAI: "0",
+							ROW_CELL: 40,
+						},
+						{
+							NO: 32,
+							INDIKATOR: "Skor Akses Jamban",
+							SKOR: 5,
+							KETERANGAN: "Warga Desa BAB di Jamban Sendiri",
+							KEGIATAN: "-",
+							NILAI: "0",
+							ROW_CELL: 41,
+						},
+						{
+							NO: 33,
+							INDIKATOR: "Skor Sampah",
+							SKOR: 5,
+							KETERANGAN:
+								"Warga desa membuang sampah di Tempat Sampah kemudian diangkut",
+							KEGIATAN: "-",
+							NILAI: "0",
+							ROW_CELL: 42,
+						},
+						{
+							NO: 34,
+							INDIKATOR: "Skor Air Minum",
+							SKOR: 5,
+							KETERANGAN:
+								"Sumber air minum berasal dari PAM, Air Ledeng tanpa Meteran",
+							KEGIATAN: "-",
+							NILAI: "0",
+							ROW_CELL: 43,
+						},
+						{
+							NO: 35,
+							INDIKATOR: "Skor Air Mandi & Cuci",
+							SKOR: 5,
+							KETERANGAN:
+								"Sumber air mandi dan cuci berasal dari PAM, Air Ledeng tanpa Meteran",
+							KEGIATAN: "-",
+							NILAI: "0",
+							ROW_CELL: 44,
+						},
+						{
+							NO: null,
+							INDIKATOR: "IKS 2024",
+							SKOR: 0.97142857142857,
+							ROW_CELL: 45,
+						},
+						{
+							NO: 1,
+							INDIKATOR: "Skor Keragaman Produksi",
+							SKOR: 5,
+							KETERANGAN:
+								"Jumlah Industri Mikro/ Jumlah KK ≥ 0,004",
+							KEGIATAN: "-",
+							NILAI: "0",
+							ROW_CELL: 46,
+						},
+						{
+							NO: 2,
+							INDIKATOR: "Skor Pertokoan",
+							SKOR: 5,
+							KETERANGAN:
+								"Jarak ke kelompok pertokoan terdekat ≤ 7 KM",
+							KEGIATAN: "-",
+							NILAI: "0",
+							ROW_CELL: 47,
+						},
+						{
+							NO: 3,
+							INDIKATOR: "Skor Pasar",
+							SKOR: 1,
+							KETERANGAN: "(Total KK/jumlah pasar(permanen)) = 0",
+							KEGIATAN: "Pembangunan Pasar Permanen",
+							NILAI: "0.02222222",
+							ROW_CELL: 48,
+						},
+						{
+							NO: 4,
+							INDIKATOR: "Skor Toko/ Warung Kelontong",
+							SKOR: 5,
+							KETERANGAN: "Jumlah Toko dan warung kelontong > 3",
+							KEGIATAN: "-",
+							NILAI: "0",
+							ROW_CELL: 49,
+						},
+						{
+							NO: 5,
+							INDIKATOR: "Skor Kedai & Penginapan",
+							SKOR: 3,
+							KETERANGAN: "Jumlah Kedai dan Penginapan = 1",
+							KEGIATAN: "Pembangunan 1 Unit Penginapan",
+							NILAI: "0.01111111",
+							ROW_CELL: 50,
+						},
+						{
+							NO: 6,
+							INDIKATOR: "Skor POS & Logistik",
+							SKOR: 3,
+							KETERANGAN: "Jumlah pos dan jasa logistik = 1",
+							KEGIATAN:
+								"Pembangunan/Pengadaan Jasa logistik / kantor Pos (Identifikasi yang tidak ada)",
+							NILAI: "0.01111111",
+							ROW_CELL: 51,
+						},
+						{
+							NO: 7,
+							INDIKATOR: "Skor Bank & BPR",
+							SKOR: 5,
+							KETERANGAN: "Jumlah bank dan BPR > 1",
+							KEGIATAN: "-",
+							NILAI: "0",
+							ROW_CELL: 52,
+						},
+						{
+							NO: 8,
+							INDIKATOR: "Skor Kredit",
+							SKOR: 4,
+							KETERANGAN: "Jumlah fasilitas kredit = 3",
+							KEGIATAN:
+								"Penambahan 1 jenis Fasilitas Kredit (KUR/KKPE/KUK/Kredit lainnya)(Identifikasi kekurangan akses kredit)",
+							NILAI: "0.00555556",
+							ROW_CELL: 53,
+						},
+						{
+							NO: 9,
+							INDIKATOR: "Skor Lembaga Ekonomi",
+							SKOR: 5,
+							KETERANGAN: "Jumlah koperasi aktif dan BUMDESA > 1",
+							KEGIATAN: "-",
+							NILAI: "0",
+							ROW_CELL: 54,
+						},
+						{
+							NO: 10,
+							INDIKATOR: "Skor Moda Transportasi Umum",
+							SKOR: 5,
+							KETERANGAN:
+								"Transportasi Umum ada dengan trayek tetap",
+							KEGIATAN: "-",
+							NILAI: "0",
+							ROW_CELL: 55,
+						},
+						{
+							NO: 11,
+							INDIKATOR: "Skor Keterbukaan Wilayah",
+							SKOR: 5,
+							KETERANGAN:
+								"Jalan di Desa dilalui oleh kendaraan bermotor roda empat atau lebih Sepanjang Tahun ",
+							KEGIATAN: "-",
+							NILAI: "0",
+							ROW_CELL: 56,
+						},
+						{
+							NO: 12,
+							INDIKATOR: "Skor Kualitas Jalan",
+							SKOR: 5,
+							KETERANGAN:
+								"Jenis permukaan jalan desa Aspal atau beton",
+							KEGIATAN: "-",
+							NILAI: "0",
+							ROW_CELL: 57,
+						},
+						{
+							NO: null,
+							INDIKATOR: "IKE 2024",
+							SKOR: 0.85,
+							ROW_CELL: 58,
+						},
+						{
+							NO: 1,
+							INDIKATOR: "Skor Kualitas Lingkungan",
+							SKOR: 5,
+							KETERANGAN:
+								"Pencemaran (air, udara, tanah, limbah disungai) di desa [jumlah pencemaran/4] = 0",
+							KEGIATAN: "-",
+							NILAI: "0",
+							ROW_CELL: 59,
+						},
+						{
+							NO: 2,
+							INDIKATOR: "Skor Rawan Bencana",
+							SKOR: 5,
+							KETERANGAN:
+								"Jenis bencana (longsor, banjir, kebakaran hutan) jenis bencana di desa = 0",
+							KEGIATAN: "-",
+							NILAI: "0",
+							ROW_CELL: 60,
+						},
+						{
+							NO: 3,
+							INDIKATOR: "Skor Tanggap Bencana",
+							SKOR: 5,
+							KETERANGAN:
+								"Fasilitas mitigasi/tanggap bencana (peringatan dini bencana alam, peringatan dini tsunami, perlengkapan keselamatan, jalur evakuasi) jumlah fasilitas mitigasi / tanggap bencana  = 3",
+							KEGIATAN: "-",
+							NILAI: "0",
+							ROW_CELL: 61,
+						},
+						{
+							NO: null,
+							INDIKATOR: "IKL 2024",
+							SKOR: 1,
+							ROW_CELL: 62,
+						},
+					],
+				};
+
+				// Ambil skor IKS, IKE, IKL dari data mentah
+				const iksScore =
+					rawData.ROW.find((r) => r.INDIKATOR === "IKS 2024")?.SKOR ||
+					0;
+				const ikeScore =
+					rawData.ROW.find((r) => r.INDIKATOR === "IKE 2024")?.SKOR ||
+					0;
+				const iklScore =
+					rawData.ROW.find((r) => r.INDIKATOR === "IKL 2024")?.SKOR ||
+					0;
+				const totalScore = iksScore + ikeScore + iklScore;
+
+				return {
+					// State UI
+					sticky: false,
+					profilOpen: false,
+					dataOpen: false,
+					mobileMenuOpen: false,
+					activeTab: "iks",
+
+					// REVISI: Data Halaman Spesifik
+					pageTitle: "Indeks Desa Membangun (IDM)",
+					pageSubtitle: `Skor IDM Desa Sukakerta Tahun ${rawData.SUMMARIES.TAHUN}.`,
+
+					// Data Identitas (konsisten dengan project)
+					identitas: {
+						desa: "SUKAKERTA",
+						kecamatan: "PANUMBANGAN",
+						kabupaten: "CIAMIS",
+						provinsi: "JAWA BARAT",
+					},
+
+					// Data Ringkasan (dari JSON)
+					summaries: {
+						tahun: rawData.SUMMARIES.TAHUN,
+						skor: rawData.SUMMARIES.SKOR_SAAT_INI.toFixed(4),
+						status: rawData.SUMMARIES.STATUS,
+						targetStatus: rawData.SUMMARIES.TARGET_STATUS,
+						skorMinimal: rawData.SUMMARIES.SKOR_MINIMAL,
+						selisih: (
+							rawData.SUMMARIES.SKOR_SAAT_INI -
+							parseFloat(rawData.SUMMARIES.SKOR_MINIMAL)
+						).toFixed(4),
+					},
+
+					// Data Chart (dari JSON & Gambar)
+					chartData: [
+						{
+							name: "IKS",
+							y: iksScore,
+							z: (iksScore / totalScore) * 100,
+							color: "#7e22ce",
+						}, // Ungu
+						{
+							name: "IKE",
+							y: ikeScore,
+							z: (ikeScore / totalScore) * 100,
+							color: "#DC2626",
+						}, // Merah
+						{
+							name: "IKL",
+							y: 1.0,
+							z: (iklScore / totalScore) * 100,
+							color: "#16a34a",
+						}, // Hijau
+					],
+
+					// Data Detail (dari JSON)
+					detailRows: {
+						iks: rawData.ROW.filter(
+							(r) => r.ROW_CELL >= 10 && r.ROW_CELL <= 44
+						),
+						ike: rawData.ROW.filter(
+							(r) => r.ROW_CELL >= 46 && r.ROW_CELL <= 57
+						),
+						ikl: rawData.ROW.filter(
+							(r) => r.ROW_CELL >= 59 && r.ROW_CELL <= 61
+						),
+					},
+
+					// --- Tema Global Highcharts ---
+					setHighchartsTheme() {
+						Highcharts.setOptions({
+							chart: {
+								style: {
+									fontFamily: "Poppins, sans-serif",
+								},
+								backgroundColor: "transparent",
+							},
+							title: {
+								style: {
+									color: "#1f2937",
+									fontSize: "1.25rem",
+									fontWeight: "600",
+								},
+							},
+							subtitle: {
+								style: {
+									color: "#4B5563",
+								},
+							},
+							tooltip: {
+								backgroundColor: "#1F2937",
+								style: {
+									color: "#FFFFFF",
+								},
+							},
+							legend: {
+								itemStyle: { color: "#1f2937" },
+							},
+							credits: {
+								enabled: false,
+							},
+						});
+					},
+
+					// --- REVISI: Fungsi Highcharts untuk IDM ---
+					initIdmDonutChart() {
+						Highcharts.chart("idm-donut-chart", {
+							chart: {
+								type: "variablepie", // Menggunakan variablepie untuk donut
+							},
+							title: {
+								text: "Diagram Skor IDM Desa Sukakerta",
+							},
+							subtitle: {
+								text: "IKS (Indeks Ketahanan Sosial), IKE (Indeks Ketahanan Ekonomi), IKL (Indeks Ketahanan Lingkungan/Ekologi)",
+							},
+							tooltip: {
+								headerFormat: "",
+								// Format: IKS: 0.97 (34.4%)
+								pointFormat:
+									'<span style="color:{point.color}">\u25CF</span> <b>{point.name}</b><br/>' +
+									"Skor: <b>{point.y}</b><br/>" +
+									"Persentase: <b>{point.z:.1f}%</b>",
+							},
+							plotOptions: {
+								variablepie: {
+									allowPointSelect: true,
+									cursor: "pointer",
+									borderRadius: 5,
+									innerSize: "60%",
+									dataLabels: {
+										enabled: true,
+										distance: 20,
+										format: "<b>{point.name}</b><br>{point.y} / {point.z:.1f} %",
+										style: {
+											color: "#1f2937",
+											textOutline: "none",
+										},
+									},
+									showInLegend: true,
+								},
+							},
+							series: [
+								{
+									name: "Skor",
+									minPointSize: 10,
+									innerSize: "60%",
+									zMin: 0,
+									name: "indeks",
+									data: this.chartData,
+								},
+							],
+						});
+					},
+				};
+			}
+
+			// Data khusus untuk komponen footer
+			function footerData() {
+				return {
+					identity: {
+						logoSrc: "assets/img/logo.webp",
+						name: "Desa Sukakerta",
+						tagline: "Kec. Panumbangan, Kab. Ciamis",
+						description:
+							"Desa Sukakerta merupakan desa yang terus berkembang melalui inovasi pelayanan publik, transparansi keuangan, dan potensi lokal yang berdaya saing.",
+					},
+					// REVISI: Quicklinks diperbarui
+					quickLinks: [
+						{ label: "Beranda", href: "index.html" },
+						{
+							label: "Identitas",
+							href: "pages/profil/identitasDesa.html",
+						},
+						{
+							label: "Visi & Misi",
+							href: "pages/profil/visiMisi.html",
+						},
+						{
+							label: "Struktur BPD",
+							href: "pages/profil/strukturBPD.html",
+						},
+						{
+							label: "Sejarah",
+							href: "pages/profil/sejarahDesa.html",
+						},
+						{
+							label: "IDM",
+							href: "pages/data/idm.html",
+						},
+						{
+							label: "Data Penduduk",
+							href: "pages/data/penduduk.html",
+						},
+						{
+							label: "Data Wilayah",
+							href: "pages/data/wilayah.html",
+						},
+						{
+							label: "Pendidikan (Total)",
+							href: "pages/data/pendidikan-kk.html",
+						},
+						{
+							label: "Pendidikan (Ditempuh)",
+							href: "pages/data/pendidikan-ditempuh.html",
+						},
+						{
+							label: "Pekerjaan",
+							href: "pages/data/pekerjaan.html",
+						},
+						{
+							label: "Agama",
+							href: "pages/data/agama.html",
+						},
+						{
+							label: "Jenis Kelamin",
+							href: "pages/data/jenisKelamin.html",
+						},
+						{
+							label: "Kelompok Umur",
+							href: "pages/data/kelompokUmur.html",
+						},
+						{
+							label: "Transparansi",
+							href: "pages/transparansi.html",
+						},
+						{ label: "Layanan", href: "pages/layanan.html" },
+						{ label: "Lapak", href: "pages/lapak.html" },
+						{ label: "Galeri", href: "pages/galeri.html" },
+					],
+					contactInfo: [
+						{
+							icon: `<svg fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M9.69 18.933l.003.001C9.89 19.02 10 19 10 19s.11.02.308-.066l.002-.001.006-.003.018-.008a5.741 5.741 0 00.281-.14c.186-.096.446-.24.757-.433.62-.384 1.445-.966 2.274-1.765C15.302 14.988 17 12.493 17 9A7 7 0 103 9c0 3.492 1.698 5.988 3.355 7.584a13.733 13.733 0 002.273 1.765 11.842 11.842 0 00.757.433c.126.05.209.09.28.14l.018.008.006.003zM10 11.25a2.25 2.25 0 100-4.5 2.25 2.25 0 000 4.5z" clip-rule="evenodd"></path></svg>`,
+							text: "Jl. Raya Sukakerta No.10, Panumbangan, Ciamis, Jawa Barat",
+							href: "https://maps.google.com/?q=Desa+Sukakerta+Panumbangan+Ciamis",
+						},
+						{
+							icon: `<svg fill="currentColor" viewBox="0 0 20 20"><path d="M2 3.5A1.5 1.5 0 013.5 2h1.148c.16 0 .315.025.462.074l2.54.847a.5.5 0 01.33.633Request.InvalidNumberA 7.0 7.0 0 00-.72 4.04c.09.43.52.72.96.65.07-.01.139-.02.208-.03a.5.5 0 01.58.6c-1.14 3.867-3.867 6.594-7.733 7.734a.5.5 0 01-.6-.58c.01-.07.02-.138.03-.207.07-.44-.22-.87-.65-.96a7.0 7.0 0 00-4.04.72.5.5 0 01-.633-.33L2.074 5.11A1.5 1.5 0 013.5 2H2z"></path></svg>`,
+							text: "(0265) 123456",
+							href: "tel:+62265123456",
+						},
+						{
+							icon: `<svg fill="currentColor" viewBox="0 0 20 20"><path d="M3 4a2 2 0 00-2 2v1.161l8.441 4.221a1.25 1.25 0 001.118 0L19 7.162V6a2 2 0 00-2-2H3z"></path><path d="M19 8.839l-7.77 3.885a2.75 2.75 0 01-2.46 0L1 8.839V14a2 2 0 002 2h14a2 2 0 002-2V8.839z"></path></svg>`,
+							text: "info@desasukakerta.go.id",
+							href: "mailto:info@desasukakerta.go.id",
+						},
+					],
+					socialLinks: [
+						{
+							title: "Facebook",
+							href: "#",
+							icon: `<svg fill="currentColor" viewBox="0 0 24 24"><path d="M22.675 0h-21.35C.597 0 0 .597 0 1.325v21.351C0 23.403.597 24 1.325 24h11.483v-9.294H9.692V11.09h3.116V8.413c0-3.1 1.893-4.788 4.659-4.788 1.325 0 2.463.099 2.795.143v3.24l-1.919.001c-1.504 0-1.796.715-1.796 1.763v2.314h3.59l-.467 3.616h-3.123V24h6.116C23.403 24 24 23.403 24 22.676V1.325C24 .597 23.403 0 22.675 0z"></path></svg>`,
+						},
+						{
+							title: "Instagram",
+							href: "#",
+							icon: `<svg fill="currentColor" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 1.366.062 2.633.35 3.608 1.326.975.975 1.264 2.243 1.326 3.608.058 1.266.07 1.645.07 4.85s-.012 3.584-.07 4.85c-.062 1.366-.35 2.633-1.326 3.608-.975-.975-2.243 1.264-3.608 1.326-1.266.058-1.645.07-4.85.07s-3.584-.012-4.85-.07c-1.366-.062-2.633-.35-3.608-1.326-.975-.975-1.264-2.243-1.326-3.608C2.175 15.647 2.163 15.268 2.163 12s.012-3.584.07-4.85c.062-1.366.35-2.633 1.326-3.608.975-.975 2.243-1.264 3.608-1.326C8.416 2.175 8.796 2.163 12 2.163zm0 1.684c-3.17 0-3.548.012-4.796.07-1.067.05-1.652.23-2.037.385-.513.2-.877.438-1.262.823-.385.385-.623.749-.823 1.262-.155.385-.335.97-.385 2.037-.058 1.248-.07 1.626-.07 4.796s.012 3.548.07 4.796c.05 1.067.23 1.652.385 2.037.2.513.438.877.a823 1.262.385.385.749.623 1.262.823.385.155.97.335 2.037.385 1.248.058 1.626.07 4.796.07s3.548-.012 4.796-.07c1.067-.05 1.652-.23 2.037-.385.513-.2.877.438 1.262.823.385-.385.623-.749.823-1.262.155-.385.335-.97-.385-2.037.058-1.248.07-1.626.07-4.796s-.012-3.548-.07-4.796c-.05-1.067-.23-1.652-.385-2.037-.2-.513-.438-.877-.823-1.262-.385-.385-.749-.623-1.262.823-.385-.155-.97.335-2.037-.385-1.248-.058-1.626-.07-4.796-.07zm0 3.838a5.999 5.999 0 1 1 0 11.998 5.999 5.999 0 0 1 0-11.998zm0 9.9a3.9 3.9 0 1 0 0-7.8 3.9 3.9 0 0 0 0 7.8zm6.406-10.845a1.44 1.44 0 1 1 0-2.88 1.44 1.44 0 0 1 0 2.88z"></path></svg>`,
+						},
+					],
+					copyright: {
+						year: new Date().getFullYear(),
+						text: "Desa Sukakerta. Dikembangkan oleh",
+						developerName: "Hans Dev",
+						developerLink: "#",
+					},
+				};
+			}
+
+			// Inisialisasi Alpine
+			document.addEventListener("alpine:init", () => {
+				Alpine.data("pageData", pageData);
+				Alpine.data("footerData", footerData);
+			});
+		</script>
+	</body>
+</html>

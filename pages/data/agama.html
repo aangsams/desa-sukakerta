@@ -3,7 +3,7 @@
 	<head>
 		<meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-		<title>Desa Sukakerta | Data Penduduk</title>
+		<title>Desa Sukakerta | Data Agama Penduduk</title>
 		<base href="../../" />
 		<script src="https://cdn.tailwindcss.com"></script>
 		<script
@@ -44,11 +44,7 @@
 	<body
 		class="font-sans text-gray-800 bg-gray-50"
 		x-data="pageData()"
-		x-init="
-            setHighchartsTheme();
-            initGenderPieChart(); 
-            initAgeColumnChart();
-        "
+		x-init="setHighchartsTheme(); initAgamaChart();"
 		@scroll.window="sticky = (window.pageYOffset > 50)">
 		<header
 			:class="{ 'shadow-md bg-white/90 backdrop-blur-lg text-gray-700': sticky, 'text-white': !sticky}"
@@ -484,142 +480,110 @@
 
 			<section class="py-16">
 				<div class="px-6 mx-auto max-w-7xl lg:px-8">
-					<div class="grid grid-cols-1 gap-8 lg:grid-cols-2">
-						<div
-							class="grid grid-cols-1 gap-8 lg:col-span-2 md:grid-cols-2">
-							<div
-								class="p-6 bg-white border border-gray-100 shadow-lg rounded-xl">
-								<div
-									id="genderPieChart"
-									class="relative w-full h-80"></div>
-							</div>
+					<div
+						class="w-full p-6 mx-auto bg-white shadow-lg rounded-xl md:p-8">
+						<div id="agama-pie-chart" style="height: 500px"></div>
+					</div>
+				</div>
+			</section>
 
+			<section class="pb-16 -mt-8">
+				<div
+					class="px-6 mx-auto space-y-6 max-w-7xl lg:px-8"
+					x-data="{ total: getTotalPenduduk() }">
+					<h2
+						class="mb-6 text-2xl font-bold text-center text-textdark">
+						Rincian Statistik Agama
+					</h2>
+
+					<template
+						x-for="stat in statistikAgama.filter(s => s.isHighlight)"
+						:key="stat.label">
+						<div
+							class="flex items-center max-w-4xl p-4 mx-auto space-x-4 transition-all shadow-lg rounded-xl hover:shadow-xl"
+							:class="stat.isHighlight ? 'bg-primary text-white' : 'bg-white text-textdark'">
 							<div
-								class="p-6 bg-white border border-gray-100 shadow-lg rounded-xl">
-								<div
-									id="ageColumnChart"
-									class="relative w-full h-80"></div>
+								class="flex items-center justify-center flex-shrink-0 w-12 h-12 rounded-full"
+								:class="getCardIconClass(stat)">
+								<svg
+									class="w-7 h-7"
+									xmlns="http://www.w3.org/2000/svg"
+									fill="none"
+									viewBox="0 0 24 24"
+									stroke-width="1.5"
+									stroke="currentColor"
+									x-html="stat.icon"></svg>
+							</div>
+							<div class="flex-grow">
+								<p
+									class="text-base font-medium"
+									:class="stat.isHighlight ? 'text-green-100' : 'text-gray-700'"
+									x-text="stat.label"></p>
+								<p
+									class="text-2xl font-bold"
+									:class="stat.isHighlight ? 'text-white' : 'text-gray-900'"
+									x-text="stat.value.toLocaleString('id-ID') + ' ' + stat.unit"></p>
+							</div>
+							<div
+								class="flex-shrink-0 w-32 text-right"
+								x-show="stat.timestamp">
+								<p class="text-sm font-medium text-green-100">
+									Data Per
+								</p>
+								<p
+									class="text-xs text-green-100"
+									x-text="stat.timestamp"></p>
 							</div>
 						</div>
+					</template>
 
-						<div class="lg:col-span-2">
+					<div
+						class="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
+						<template
+							x-for="stat in statistikAgama.filter(s => !s.isHighlight)"
+							:key="stat.label">
 							<div
-								class="space-y-4"
-								x-data="{ total: getTotalPenduduk() }">
-								<h3 class="text-lg font-semibold text-textdark">
-									Ringkasan Data Penduduk
-								</h3>
-
-								<template
-									x-for="stat in statistikPenduduk.filter(s => s.isHighlight)"
-									:key="stat.label">
+								class="flex flex-col justify-between h-full p-5 transition-all bg-white shadow-lg rounded-xl hover:shadow-xl text-textdark">
+								<div class="flex items-start space-x-3">
 									<div
-										class="flex items-center max-w-4xl p-4 mx-auto space-x-4 transition-all shadow-lg rounded-xl hover:shadow-xl"
-										:class="stat.isHighlight ? 'bg-primary text-white' : 'bg-white text-textdark'">
-										<div
-											class="flex items-center justify-center flex-shrink-0 w-12 h-12 rounded-full"
-											:class="getCardIconClass(stat)">
-											<svg
-												class="w-7 h-7"
-												xmlns="http://www.w3.org/2000/svg"
-												fill="none"
-												viewBox="0 0 24 24"
-												stroke-width="1.5"
-												stroke="currentColor"
-												x-html="stat.icon"></svg>
-										</div>
-										<div class="flex-grow">
-											<p
-												class="text-base font-medium"
-												:class="stat.isHighlight ? 'text-green-100' : 'text-gray-700'"
-												x-text="stat.label"></p>
-											<p
-												class="text-2xl font-bold"
-												:class="stat.isHighlight ? 'text-white' : 'text-gray-900'"
-												x-text="stat.value + ' ' + stat.unit"></p>
-										</div>
-										<div
-											class="flex-shrink-0 w-32 text-right"
-											x-show="stat.timestamp">
-											<p
-												class="text-sm font-medium text-green-100">
-												Data Per
-											</p>
-											<p
-												class="text-xs text-green-100"
-												x-text="stat.timestamp"></p>
-										</div>
+										class="flex items-center justify-center flex-shrink-0 w-10 h-10 rounded-full"
+										:class="getCardIconClass(stat)">
+										<svg
+											class="w-6 h-6"
+											xmlns="http://www.w3.org/2000/svg"
+											fill="none"
+											viewBox="0 0 24 24"
+											stroke-width="1.5"
+											stroke="currentColor"
+											x-html="stat.icon"></svg>
 									</div>
-								</template>
-
-								<div
-									class="grid grid-cols-1 gap-6 md:grid-cols-3 lg:grid-cols-3 max-w-7xl">
-									<template
-										x-for="stat in statistikPenduduk.filter(s => !s.isHighlight)"
-										:key="stat.label">
-										<div
-											class="flex flex-col justify-between h-full p-5 transition-all bg-white shadow-lg rounded-xl hover:shadow-xl text-textdark">
-											<div
-												class="flex items-start space-x-3">
-												<div
-													class="flex items-center justify-center flex-shrink-0 w-10 h-10 rounded-full"
-													:class="getCardIconClass(stat)">
-													<svg
-														class="w-6 h-6"
-														xmlns="http://www.w3.org/2000/svg"
-														fill="none"
-														viewBox="0 0 24 24"
-														stroke-width="1.5"
-														stroke="currentColor"
-														x-html="stat.icon"></svg>
-												</div>
-												<p
-													class="font-medium text-gray-700"
-													x-text="stat.label"></p>
-											</div>
-
-											<div
-												class="flex items-end justify-between mt-4">
-												<p
-													class="text-3xl font-bold text-gray-900"
-													x-text="stat.value"></p>
-
-												<div
-													class="flex-shrink-0 w-24 text-right">
-													<p
-														class="mb-1 text-base font-bold"
-														:class="getCardProgressClass(stat)"
-														x-text="calculatePercentage(stat.value, total)"></p>
-													<div
-														class="w-full bg-gray-200 rounded-full h-2.5">
-														<div
-															class="h-2.5 rounded-full"
-															:class="getProgressBarClass(stat)"
-															:style="`width: ${calculatePercentage(stat.value, total)}`"></div>
-													</div>
-												</div>
-											</div>
-										</div>
-									</template>
+									<p
+										class="font-medium text-gray-700"
+										x-text="stat.label"></p>
 								</div>
 
-								<a
-									href="pages/data/wilayah.html"
-									class="inline-flex items-center justify-center w-full gap-2 px-4 py-3 mt-2 font-medium text-white transition-colors rounded-lg shadow-lg bg-primary hover:bg-primary/90">
-									Lihat Rincian per Wilayah
-									<svg
-										xmlns="http://www.w3.org/2000/svg"
-										viewBox="0 0 20 20"
-										fill="currentColor"
-										class="w-5 h-5">
-										<path
-											fill-rule="evenodd"
-											d="M3 10a.75.75 0 0 1 .75-.75h10.638L10.23 5.29a.75.75 0 1 1 1.04-1.08l5.5 5.25a.75.75 0 0 1 0 1.08l-5.5 5.25a.75.75 0 1 1-1.04-1.08l4.158-3.96H3.75A.75.75 0 0 1 3 10Z"
-											clip-rule="evenodd" />
-									</svg>
-								</a>
+								<div
+									class="flex items-end justify-between mt-4">
+									<p
+										class="text-3xl font-bold text-gray-900"
+										x-text="stat.value.toLocaleString('id-ID')"></p>
+
+									<div class="flex-shrink-0 w-24 text-right">
+										<p
+											class="mb-1 text-base font-bold"
+											:class="getCardProgressClass(stat)"
+											x-text="calculatePercentage(stat.value, total)"></p>
+										<div
+											class="w-full bg-gray-200 rounded-full h-2.5">
+											<div
+												class="h-2.5 rounded-full"
+												:class="getProgressBarClass(stat)"
+												:style="`width: ${calculatePercentage(stat.value, total)}`"></div>
+										</div>
+									</div>
+								</div>
 							</div>
-						</div>
+						</template>
 					</div>
 				</div>
 			</section>
@@ -734,120 +698,127 @@
 					dataOpen: false,
 					mobileMenuOpen: false,
 
-					// Data Halaman Spesifik
-					pageTitle: "Data Penduduk",
+					// REVISI: Data Halaman Spesifik
+					pageTitle: "Data Agama Penduduk",
 					pageSubtitle:
-						"Ringkasan data kependudukan total Desa Sukakerta.",
+						"Distribusi agama dari total 3.823 penduduk di Desa Sukakerta.",
 
-					// Data TOTAL (Satu Sumber Kebenaran)
-					totalPenduduk: {
-						kk: 1234,
-						l: 1940,
-						p: 1883,
-						total: 3823,
-					},
-
-					// Data Kelompok Umur
-					dataKelompokUmur: {
-						labels: [
-							"Balita (0-5)",
-							"Anak (6-17)",
-							"Produktif (18-55)",
-							"Lansia (56+)",
-						],
-						data: [350, 800, 1950, 723],
-					},
-
-					statistikPenduduk: [
+					// REVISI: Data baru berdasarkan tabel Agama
+					statistikAgama: [
 						{
 							label: "Total Penduduk",
-							value: 3823, // Angka murni
+							value: 3823,
 							unit: "Jiwa",
-							icon: `<path stroke-linecap="round" stroke-linejoin="round" d="M15 19.128a9.38 9.38 0 0 0 2.625.372 9.337 9.337 0 0 0 4.121-.952 4.125 4.125 0 0 0-7.533-2.493m-3.663 3.664A9.337 9.337 0 0 1 12 11.37a9.337 9.337 0 0 1-3.663 3.664m0 0A9.337 9.337 0 0 1 12 7.63a9.337 9.337 0 0 1 3.663 3.664m0 0A9.337 9.337 0 0 0 12 18.37a9.337 9.337 0 0 0 3.663-3.664m-6.331 0a9.337 9.337 0 0 1-3.663-3.664m0 0A9.337 9.337 0 0 0 12 7.63a9.337 9.337 0 0 0-3.663 3.664m0 0a9.337 9.337 0 0 1-3.663-3.664" />`,
+							timestamp: "3 Nov 2025",
 							isHighlight: true,
-							timestamp: "9 Nov 2025 18:40 WIB",
+							icon: `<path stroke-linecap="round" stroke-linejoin="round" d="M15 19.128a9.38 9.38 0 0 0 2.625.372 9.337 9.337 0 0 0 4.121-.952 4.125 4.125 0 0 0-7.533-2.493m-3.663 3.664A9.337 9.337 0 0 1 12 11.37a9.337 9.337 0 0 1-3.663 3.664m0 0A9.337 9.337 0 0 1 12 7.63a9.337 9.337 0 0 1 3.663 3.664m0 0A9.337 9.337 0 0 0 12 18.37a9.337 9.337 0 0 0 3.663-3.664m-6.331 0a9.337 9.337 0 0 1-3.663-3.664m0 0A9.337 9.337 0 0 0 12 7.63a9.337 9.337 0 0 0-3.663 3.664m0 0a9.337 9.337 0 0 1-3.663-3.664" />`,
 							color: "primary",
 						},
 						{
-							label: "Total Laki-laki",
-							value: 1940, // Angka murni
+							label: "ISLAM",
+							value: 3823,
 							unit: "Jiwa",
-							icon: `<path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z" />`,
 							isHighlight: false,
+							// Menggunakan ikon netral 'users'
+							icon: `<path stroke-linecap="round" stroke-linejoin="round" d="M15 19.128a9.38 9.38 0 0 0 2.625.372 9.337 9.337 0 0 0 4.121-.952 4.125 4.125 0 0 0-7.533-2.493M15 19.128v-.003c0-1.113-.285-2.16-.786-3.07M15 19.128v.106A12.318 12.318 0 0 1 8.624 21c-2.331 0-4.512-.645-6.374-1.766l-.001-.109a6.375 6.375 0 0 1 11.964-3.07M12 6.375a3.375 3.375 0 1 1-6.75 0 3.375 3.375 0 0 1 6.75 0Z" />`,
 							color: "blue",
 						},
 						{
-							label: "Total Perempuan",
-							value: 1883, // Angka murni
+							label: "KRISTEN",
+							value: 0,
 							unit: "Jiwa",
-							icon: `<path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z" />`,
 							isHighlight: false,
-							color: "pink",
+							icon: `<path stroke-linecap="round" stroke-linejoin="round" d="M15 19.128a9.38 9.38 0 0 0 2.625.372 9.337 9.337 0 0 0 4.121-.952 4.125 4.125 0 0 0-7.533-2.493M15 19.128v-.003c0-1.113-.285-2.16-.786-3.07M15 19.128v.106A12.318 12.318 0 0 1 8.624 21c-2.331 0-4.512-.645-6.374-1.766l-.001-.109a6.375 6.375 0 0 1 11.964-3.07M12 6.375a3.375 3.375 0 1 1-6.75 0 3.375 3.375 0 0 1 6.75 0Z" />`,
+							color: "gray",
 						},
 						{
-							label: "Total Kepala Keluarga",
-							value: 1234, // Angka murni
-							unit: "KK",
-							icon: `<path stroke-linecap="round" stroke-linejoin="round" d="M8.25 21v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21m0 0h4.5M3.938 21a9.001 9.001 0 1 0 18 0 9.001 9.001 0 0 0-18 0Z" />`,
+							label: "PROTESTAN",
+							value: 0,
+							unit: "Jiwa",
 							isHighlight: false,
-							color: "amber",
+							icon: `<path stroke-linecap="round" stroke-linejoin="round" d="M15 19.128a9.38 9.38 0 0 0 2.625.372 9.337 9.337 0 0 0 4.121-.952 4.125 4.125 0 0 0-7.533-2.493M15 19.128v-.003c0-1.113-.285-2.16-.786-3.07M15 19.128v.106A12.318 12.318 0 0 1 8.624 21c-2.331 0-4.512-.645-6.374-1.766l-.001-.109a6.375 6.375 0 0 1 11.964-3.07M12 6.375a3.375 3.375 0 1 1-6.75 0 3.375 3.375 0 0 1 6.75 0Z" />`,
+							color: "gray",
+						},
+						{
+							label: "KATOLIK",
+							value: 0,
+							unit: "Jiwa",
+							isHighlight: false,
+							icon: `<path stroke-linecap="round" stroke-linejoin="round" d="M15 19.128a9.38 9.38 0 0 0 2.625.372 9.337 9.337 0 0 0 4.121-.952 4.125 4.125 0 0 0-7.533-2.493M15 19.128v-.003c0-1.113-.285-2.16-.786-3.07M15 19.128v.106A12.318 12.318 0 0 1 8.624 21c-2.331 0-4.512-.645-6.374-1.766l-.001-.109a6.375 6.375 0 0 1 11.964-3.07M12 6.375a3.375 3.375 0 1 1-6.75 0 3.375 3.375 0 0 1 6.75 0Z" />`,
+							color: "gray",
+						},
+						{
+							label: "HINDU",
+							value: 0,
+							unit: "Jiwa",
+							isHighlight: false,
+							icon: `<path stroke-linecap="round" stroke-linejoin="round" d="M15 19.128a9.38 9.38 0 0 0 2.625.372 9.337 9.337 0 0 0 4.121-.952 4.125 4.125 0 0 0-7.533-2.493M15 19.128v-.003c0-1.113-.285-2.16-.786-3.07M15 19.128v.106A12.318 12.318 0 0 1 8.624 21c-2.331 0-4.512-.645-6.374-1.766l-.001-.109a6.375 6.375 0 0 1 11.964-3.07M12 6.375a3.375 3.375 0 1 1-6.75 0 3.375 3.375 0 0 1 6.75 0Z" />`,
+							color: "gray",
+						},
+						{
+							label: "BUDHA",
+							value: 0,
+							unit: "Jiwa",
+							isHighlight: false,
+							icon: `<path stroke-linecap="round" stroke-linejoin="round" d="M15 19.128a9.38 9.38 0 0 0 2.625.372 9.337 9.337 0 0 0 4.121-.952 4.125 4.125 0 0 0-7.533-2.493M15 19.128v-.003c0-1.113-.285-2.16-.786-3.07M15 19.128v.106A12.318 12.318 0 0 1 8.624 21c-2.331 0-4.512-.645-6.374-1.766l-.001-.109a6.375 6.375 0 0 1 11.964-3.07M12 6.375a3.375 3.375 0 1 1-6.75 0 3.375 3.375 0 0 1 6.75 0Z" />`,
+							color: "gray",
+						},
+
+						{
+							label: "KONGHUCU",
+							value: 0,
+							unit: "Jiwa",
+							isHighlight: false,
+							icon: `<path stroke-linecap="round" stroke-linejoin="round" d="M15 19.128a9.38 9.38 0 0 0 2.625.372 9.337 9.337 0 0 0 4.121-.952 4.125 4.125 0 0 0-7.533-2.493M15 19.128v-.003c0-1.113-.285-2.16-.786-3.07M15 19.128v.106A12.318 12.318 0 0 1 8.624 21c-2.331 0-4.512-.645-6.374-1.766l-.001-.109a6.375 6.375 0 0 1 11.964-3.07M12 6.375a3.375 3.375 0 1 1-6.75 0 3.375 3.375 0 0 1 6.75 0Z" />`,
+							color: "gray",
+						},
+						{
+							label: "BELUM MENGISI",
+							value: 0,
+							unit: "Jiwa",
+							isHighlight: false,
+							icon: `<path stroke-linecap="round" stroke-linejoin="round" d="m9.75 9.75 4.5 4.5m0-4.5-4.5 4.5M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />`,
+							color: "gray",
 						},
 					],
 
-					// 1. Mendapatkan total (hanya dari item non-KK, yaitu L+P)
+					// --- FUNGSI HELPER (Sama seperti template) ---
 					getTotalPenduduk() {
-						const totalStat = this.statistikPenduduk.find(
+						const totalStat = this.statistikAgama.find(
 							(s) => s.isHighlight
 						);
 						return totalStat ? totalStat.value : 0;
 					},
-
-					// 2. Menghitung persentase
 					calculatePercentage(value, total) {
 						if (total === 0) return "0.0%";
-						// Khusus untuk KK, persentase tidak relevan,
-						// jadi kita tidak tampilkan
-						if (value === 1234) return "";
-						return ((value / total) * 100).toFixed(1) + "%";
+						const val = value;
+						return ((val / total) * 100).toFixed(1) + "%";
 					},
-
-					// 3. Styling Ikon
 					getCardIconClass(stat) {
 						if (stat.isHighlight)
 							return "bg-white bg-opacity-25 text-white";
 
 						const colors = {
 							blue: "bg-blue-100 text-blue-600",
-							pink: "bg-pink-100 text-pink-600",
-							amber: "bg-amber-100 text-amber-600",
+							gray: "bg-gray-200 text-gray-600",
 						};
 						return (
 							colors[stat.color] || "bg-gray-100 text-gray-700"
 						);
 					},
-
-					// 4. Styling Teks Persentase
 					getCardProgressClass(stat) {
 						if (stat.isHighlight) return "";
 						const colors = {
 							blue: "text-blue-500",
-							pink: "text-pink-500",
-							amber: "text-amber-500",
+							gray: "text-gray-500",
 						};
 						return colors[stat.color] || "text-gray-500";
 					},
-
-					// 5. Styling Progress Bar
 					getProgressBarClass(stat) {
 						if (stat.isHighlight) return "";
-						// Sembunyikan progress bar untuk KK
-						if (stat.label === "Total Kepala Keluarga")
-							return "bg-transparent";
-
 						const colors = {
 							blue: "bg-blue-500",
-							pink: "bg-pink-500",
-							amber: "bg-amber-500",
+							gray: "bg-gray-500",
 						};
 						return colors[stat.color] || "bg-gray-500";
 					},
@@ -857,13 +828,11 @@
 						Highcharts.setOptions({
 							colors: [
 								"#2E7D32", // primary
-								"#0288D1", // accent blue
-								"#FBC02D", // accent yellow
-								"#D32F2F", // error
-								"#5E35B1", // deep purple
-								"#43A047", // green light
-								"#FFB300", // amber
-								"#1E88E5", // blue light
+								"#FBC02D", // secondary
+								"#0288D1", // accent
+								"#9E9E9E", // gray
+								"#D32F2F",
+								"#5E35B1",
 							],
 							chart: {
 								style: {
@@ -873,31 +842,23 @@
 							},
 							title: {
 								style: {
-									color: "#1f2937", // text-textdark
-									fontSize: "1.125rem", // text-lg
+									color: "#1f2937",
+									fontSize: "1.25rem",
 									fontWeight: "600",
 								},
 							},
 							subtitle: {
 								style: {
-									color: "#4B5563", // gray-600
+									color: "#4B5563",
 								},
 							},
 							tooltip: {
-								backgroundColor: "#1F2937", // text-textdark
+								backgroundColor: "#1F2937",
 								style: {
 									color: "#FFFFFF",
 								},
 							},
 							plotOptions: {
-								series: {
-									dataLabels: {
-										style: {
-											color: "#1F2937",
-											textOutline: "none",
-										},
-									},
-								},
 								pie: {
 									dataLabels: {
 										style: {
@@ -913,43 +874,41 @@
 						});
 					},
 
-					// --- Fungsi Pie Chart (Highcharts) ---
-					initGenderPieChart() {
-						const data = [
-							{
-								name: "Laki-laki",
-								y: this.totalPenduduk.l,
-								selected:
-									this.totalPenduduk.l > this.totalPenduduk.p,
-								sliced:
-									this.totalPenduduk.l > this.totalPenduduk.p,
-								color: "rgba(59, 130, 246, 0.8)", // Biru
-							},
-							{
-								name: "Perempuan",
-								y: this.totalPenduduk.p,
-								selected:
-									this.totalPenduduk.p > this.totalPenduduk.l,
-								sliced:
-									this.totalPenduduk.p > this.totalPenduduk.l,
-								color: "rgba(236, 72, 153, 0.8)", // Pink
-							},
-						];
+					// --- REVISI: Fungsi Highcharts untuk AGAMA ---
+					initAgamaChart() {
+						const totalPenduduk = this.getTotalPenduduk();
+						const chartData = this.statistikAgama.filter(
+							(item) => !item.isHighlight
+						);
 
-						Highcharts.chart("genderPieChart", {
+						const highchartsData = chartData.map((item) => {
+							return {
+								name: item.label,
+								y: item.value,
+								// Sorot slice terbesar
+								sliced: item.value === totalPenduduk,
+								selected: item.value === totalPenduduk,
+							};
+						});
+
+						Highcharts.chart("agama-pie-chart", {
+							// ID Unik
 							chart: {
 								type: "pie",
 							},
 							title: {
-								text: "Grafik Jenis Kelamin",
+								text: "Proporsi Agama Penduduk",
+								align: "center",
 							},
 							subtitle: {
-								text: `Total: ${this.totalPenduduk.total} Jiwa`,
+								text:
+									"Data Per 3 November 2025. Total Penduduk: " +
+									totalPenduduk.toLocaleString("id-ID"),
+								align: "center",
 							},
 							tooltip: {
 								pointFormat:
-									'<span style="color:{point.color}">\u25CF</span> {series.name}: ' +
-									"<b>{point.y:,.0f} ({point.percentage:.1f}%)</b>",
+									"Jumlah: <b>{point.y:,.0f}</b> ({point.percentage:.1f}%)",
 							},
 							plotOptions: {
 								pie: {
@@ -959,94 +918,42 @@
 									dataLabels: [
 										{
 											enabled: true,
-											distance: 15,
-											format: "{point.name}",
+											distance: 20,
+											format: "<b>{point.name}</b>",
+											style: { textOutline: "none" },
+											filter: {
+												// Hanya tampilkan label > 0
+												operator: ">",
+												property: "y",
+												value: 0,
+											},
 										},
 										{
 											enabled: true,
-											distance: "-30%",
-											filter: {
-												property: "percentage",
-												operator: ">",
-												value: 5,
-											},
+											distance: "-40%",
 											format: "{point.percentage:.1f}%",
 											style: {
-												fontSize: "0.9em",
-												color: "white",
+												fontSize: "1.2em",
 												textOutline: "none",
+												opacity: 0.9,
+												color: "white",
+											},
+											filter: {
+												// Hanya tampilkan % > 10%
+												operator: ">",
+												property: "percentage",
+												value: 10,
 											},
 										},
 									],
+									showInLegend: false, // Tidak perlu legenda, datanya jelas
 								},
 							},
 							series: [
 								{
 									name: "Jumlah",
-									colorByPoint: false,
-									data: data,
-								},
-							],
-						});
-					},
-
-					// --- Fungsi Column Chart (Highcharts) ---
-					initAgeColumnChart() {
-						const chartData = this.dataKelompokUmur.labels.map(
-							(label, index) => {
-								return {
-									name: label,
-									y: this.dataKelompokUmur.data[index],
-								};
-							}
-						);
-
-						Highcharts.chart("ageColumnChart", {
-							chart: {
-								type: "column",
-							},
-							title: {
-								text: "Grafik Kelompok Umur",
-							},
-							subtitle: {
-								text: `Total: ${this.totalPenduduk.total} Jiwa`,
-							},
-							xAxis: {
-								type: "category",
-								title: {
-									text: "Kelompok Umur",
-								},
-							},
-							yAxis: {
-								title: {
-									text: "Jumlah Jiwa",
-								},
-							},
-							legend: {
-								enabled: false,
-							},
-							tooltip: {
-								pointFormat:
-									'<span style="color:{point.color}">\u25CF</span> {point.name}: ' +
-									"<b>{point.y:,.0f} Jiwa</b>",
-							},
-							plotOptions: {
-								column: {
 									colorByPoint: true,
-									borderWidth: 0,
-									dataLabels: {
-										enabled: true,
-										format: "{point.y:,.0f}",
-										style: {
-											fontSize: "0.8em",
-										},
-									},
-								},
-							},
-							series: [
-								{
-									name: "Jumlah Penduduk",
-									data: chartData,
+									data: highchartsData,
 								},
 							],
 						});
@@ -1064,6 +971,7 @@
 						description:
 							"Desa Sukakerta merupakan desa yang terus berkembang melalui inovasi pelayanan publik, transparansi keuangan, dan potensi lokal yang berdaya saing.",
 					},
+					// REVISI: Quicklinks diperbarui
 					quickLinks: [
 						{ label: "Beranda", href: "index.html" },
 						{
@@ -1089,6 +997,26 @@
 						{
 							label: "Data Wilayah",
 							href: "pages/data/wilayah.html",
+						},
+						{
+							label: "Pendidikan (Total)",
+							href: "pages/data/pendidikan-kk.html",
+						},
+						{
+							label: "Pendidikan (Ditempuh)",
+							href: "pages/data/pendidikan-ditempuh.html",
+						},
+						{
+							label: "Pekerjaan",
+							href: "pages/data/pekerjaan.html",
+						},
+						{
+							label: "Agama",
+							href: "pages/data/agama.html",
+						},
+						{
+							label: "Kelompok Umur",
+							href: "#",
 						},
 						{
 							label: "Transparansi",
@@ -1131,7 +1059,7 @@
 						year: new Date().getFullYear(),
 						text: "Desa Sukakerta. Dikembangkan oleh",
 						developerName: "Hans Dev",
-						developerLink: "#", // Ganti dengan link Anda
+						developerLink: "#",
 					},
 				};
 			}

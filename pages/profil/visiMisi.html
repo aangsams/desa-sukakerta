@@ -49,19 +49,10 @@
 		</style>
 	</head>
 
-	<!-- 
-    IMPROVEMENT: Menggunakan 'pageData()' 
-    untuk menyimpan semua data halaman ini.
-  -->
 	<body
 		class="font-sans text-gray-800"
 		x-data="pageData()"
 		@scroll.window="sticky = (window.pageYOffset > 50)">
-		<!-- 
-      IMPROVEMENT: Header Dinamis Penuh
-      Menggunakan header yang sama persis dari identitasDesa.html 
-      untuk fungsionalitas menu dropdown dan mobile yang konsisten.
-    -->
 		<header
 			:class="{ 'shadow-md bg-white/90 backdrop-blur-lg text-gray-700': sticky, 'text-white': !sticky}"
 			class="fixed top-0 left-0 z-50 w-full transition-all duration-300">
@@ -166,16 +157,46 @@
 							x-cloak
 							x-show="dataOpen"
 							x-transition.opacity.duration.150ms
-							class="absolute left-0 w-56 py-2 mt-3 bg-white border border-gray-200 rounded-lg shadow-md text-textdark">
+							class="absolute left-0 w-64 py-2 mt-3 overflow-y-auto bg-white border border-gray-200 rounded-lg shadow-md text-textdark max-h-96">
 							<a
-								href="pages/data/statistik.html"
+								href="pages/data/penduduk.html"
 								class="block px-4 py-2 hover:bg-gray-100"
-								>Statistik Penduduk</a
+								>Data Penduduk</a
 							>
 							<a
-								href="pages/data/sdgs.html"
+								href="pages/data/wilayah.html"
 								class="block px-4 py-2 hover:bg-gray-100"
-								>Skor SDGs</a
+								>Data Wilayah</a
+							>
+							<a
+								href="pages/data/pendidikan-kk.html"
+								class="block px-4 py-2 hover:bg-gray-100"
+								>Pendidikan (Total)</a
+							>
+							<a
+								href="pages/data/pekerjaan.html"
+								class="block px-4 py-2 hover:bg-gray-100"
+								>Pekerjaan</a
+							>
+							<a
+								href="pages/data/pendidikan-ditempuh.html"
+								class="block px-4 py-2 hover:bg-gray-100"
+								>Pendidikan (Ditempuh)</a
+							>
+							<a
+								href="pages/data/agama.html"
+								class="block px-4 py-2 hover:bg-gray-100"
+								>Agama</a
+							>
+							<a
+								href="pages/data/jenisKelamin.html"
+								class="block px-4 py-2 hover:bg-gray-100"
+								>Jenis Kelamin</a
+							>
+							<a
+								href="pages/data/kelompokUmur.html"
+								class="block px-4 py-2 text-gray-400 cursor-not-allowed"
+								>Kelompok Umur</a
 							>
 						</div>
 					</div>
@@ -192,6 +213,7 @@
 						>Galeri</a
 					>
 				</nav>
+
 				<div @click.outside="mobileMenuOpen = false" class="lg:hidden">
 					<button
 						@click="mobileMenuOpen = !mobileMenuOpen"
@@ -201,7 +223,7 @@
 						<svg
 							x-show="!mobileMenuOpen"
 							xmlns="http://www.w3.org/2000/svg"
-							class="h-7 w-7"
+							class="w-6 h-6"
 							fill="none"
 							viewBox="0 0 24 24"
 							stroke="currentColor">
@@ -209,13 +231,13 @@
 								stroke-linecap="round"
 								stroke-linejoin="round"
 								stroke-width="2"
-								d="M4 6h16M4 12h16M4 18h16" />
+								d="M4 6h16M4 12h16m-7 6h7" />
 						</svg>
 						<svg
 							x-show="mobileMenuOpen"
 							x-cloak
 							xmlns="http://www.w3.org/2000/svg"
-							class="h-7 w-7"
+							class="w-6 h-6"
 							fill="none"
 							viewBox="0 0 24 24"
 							stroke="currentColor">
@@ -322,21 +344,47 @@
 									x-show="open"
 									x-transition
 									x-cloak
-									class="pl-3 ml-4 space-y-1 text-sm text-gray-700 border-l border-gray-200">
-									<li>
-										<a
-											href="pages/data/statistik.html"
-											class="block py-1 hover:text-primary"
-											>Statistik Penduduk</a
-										>
-									</li>
-									<li>
-										<a
-											href="pages/data/sdgs.html"
-											class="block py-1 hover:text-primary"
-											>Skor SDGs</a
-										>
-									</li>
+									class="pl-3 ml-4 space-y-1 overflow-y-auto text-sm text-gray-700 border-l border-gray-200 max-h-64">
+									<a
+										href="pages/data/penduduk.html"
+										class="block px-4 py-2 hover:bg-gray-100"
+										>Data Penduduk</a
+									>
+									<a
+										href="pages/data/wilayah.html"
+										class="block px-4 py-2 hover:bg-gray-100"
+										>Data Wilayah</a
+									>
+									<a
+										href="pages/data/pendidikan-kk.html"
+										class="block px-4 py-2 hover:bg-gray-100"
+										>Pendidikan (Total)</a
+									>
+									<a
+										href="pages/data/pekerjaan.html"
+										class="block px-4 py-2 hover:bg-gray-100"
+										>Pekerjaan</a
+									>
+									<a
+										href="pages/data/pendidikan-ditempuh.html"
+										class="block px-4 py-2 hover:bg-gray-100"
+										>Pendidikan (Ditempuh)</a
+									>
+									<a
+										href="pages/data/agama.html"
+										class="block px-4 py-2 hover:bg-gray-100"
+										>Agama</a
+									>
+									<a
+										href="pages/data/jenisKelamin.html"
+										class="block px-4 py-2 hover:bg-gray-100"
+										>Jenis Kelamin</a
+									>
+									<a
+										href="pages/data/kelompokUmur.html"
+										class="block px-4 py-2 text-gray-400 cursor-not-allowed"
+										>Kelompok Umur</a
+									>
 								</ul>
 							</li>
 							<li>
@@ -373,15 +421,7 @@
 			</div>
 		</header>
 
-		<!-- 
-      IMPROVEMENT: Menggunakan 'pt-24' dan 'bg-gray-50'
-      untuk konsistensi layout dengan halaman identitas.
-    -->
 		<main class="pt-24 bg-gray-50">
-			<!-- 
-        IMPROVEMENT: Header Halaman (Breadcrumb)
-        Ditambahkan untuk konsistensi navigasi.
-      -->
 			<section class="py-12 bg-white border-b border-gray-200">
 				<div class="px-6 mx-auto max-w-7xl">
 					<nav class="flex mb-2" aria-label="Breadcrumb">
