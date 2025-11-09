@@ -1,0 +1,1134 @@
+<!DOCTYPE html>
+<html lang="id" class="scroll-smooth">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<!-- REVISI: Judul Halaman -->
+		<title>Desa Sukakerta | Lapak Desa</title>
+		<base href="../../" />
+		<script src="https://cdn.tailwindcss.com"></script>
+		<script
+			defer
+			src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+
+		<!-- 
+            REVISI: Highcharts tidak diperlukan di halaman ini
+        -->
+
+		<style type="text/tailwindcss">
+			[x-cloak] {
+				display: none !important;
+			}
+			/* Style kustom yang konsisten */
+			@layer utilities {
+				.text-primary {
+					color: #2e7d32;
+				}
+				.hover\:text-primary:hover {
+					color: #1b6d21;
+				}
+				.text-textdark {
+					color: #1f2937;
+				}
+				.bg-primary {
+					background-color: #2e7d32;
+				}
+				.border-accent {
+					border-color: #fbc02d;
+				}
+				.text-accent {
+					color: #fbc02d;
+				}
+			}
+		</style>
+	</head>
+
+	<body
+		class="font-sans text-gray-800 bg-gray-50"
+		x-data="pageData()"
+		@scroll.window="sticky = (window.pageYOffset > 50)">
+		<!-- 
+            ============================================================
+            HEADER (KONSISTEN)
+            ============================================================
+        -->
+		<header
+			:class="{ 'shadow-md bg-white/90 backdrop-blur-lg text-gray-700': sticky, 'text-white': !sticky}"
+			class="fixed top-0 left-0 z-50 w-full transition-all duration-300">
+			<div
+				class="flex items-center justify-between px-6 py-4 mx-auto max-w-7xl">
+				<a href="index.html" class="flex items-center gap-2">
+					<img
+						src="assets/img/logo.webp"
+						alt="Logo Desa"
+						class="w-10 h-10 rounded-full" />
+					<div class="flex flex-col leading-tight">
+						<span
+							class="text-lg font-semibold transition-colors"
+							:class="{'text-primary': sticky, 'text-white': !sticky}"
+							>Desa Sukakerta</span
+						>
+						<span class="text-xs"
+							>Kec. Panumbangan, Kab. Ciamis</span
+						>
+					</div>
+				</a>
+				<nav
+					class="hidden lg:flex items-center space-x-8 text-[15px] font-medium">
+					<a href="index.html" class="hover:text-primary">Beranda</a>
+					<div
+						@mouseenter="profilOpen = true"
+						@mouseleave="profilOpen = false"
+						class="relative">
+						<button
+							type="button"
+							class="flex items-center gap-1 transition hover:text-primary"
+							:class="{ 'text-primary': profilOpen }"
+							aria-haspopup="true"
+							:aria-expanded="profilOpen">
+							Profil Desa
+							<svg
+								class="w-4 h-4 mt-[2px] transition-transform duration-200"
+								:class="{ 'rotate-180': profilOpen }"
+								xmlns="http://www.w3.org/2000/svg"
+								fill="none"
+								viewBox="0 0 24 24"
+								stroke="currentColor">
+								<path
+									stroke-linecap="round"
+									stroke-linejoin="round"
+									stroke-width="2"
+									d="M19 9l-7 7-7-7" />
+							</svg>
+						</button>
+						<div
+							x-cloak
+							x-show="profilOpen"
+							x-transition.opacity.duration.150ms
+							class="absolute left-0 w-56 py-2 mt-3 bg-white border border-gray-200 rounded-lg shadow-md text-textdark"
+							role="menu">
+							<a
+								href="pages/profil/identitasDesa.html"
+								class="block px-4 py-2 hover:bg-gray-100"
+								>Identitas Desa</a
+							>
+							<a
+								href="pages/profil/visiMisi.html"
+								class="block px-4 py-2 hover:bg-gray-100"
+								>Visi & Misi</a
+							>
+							<a
+								href="pages/profil/strukturBPD.html"
+								class="block px-4 py-2 hover:bg-gray-100"
+								>BPD & Lembaga</a
+							>
+							<a
+								href="pages/profil/sejarahDesa.html"
+								class="block px-4 py-2 hover:bg-gray-100"
+								>Sejarah Desa</a
+							>
+						</div>
+					</div>
+					<div
+						@mouseenter="dataOpen = true"
+						@mouseleave="dataOpen = false"
+						class="relative">
+						<button
+							type="button"
+							class="flex items-center gap-1 transition hover:text-primary"
+							:class="{ 'text-primary': dataOpen }">
+							Data Desa
+							<svg
+								class="w-4 h-4 mt-[2px] transition-transform duration-200"
+								:class="{ 'rotate-180': dataOpen }"
+								xmlns="http://www.w3.org/2000/svg"
+								fill="none"
+								viewBox="0 0 24 24"
+								stroke="currentColor">
+								<path
+									stroke-linecap="round"
+									stroke-linejoin="round"
+									stroke-width="2"
+									d="M19 9l-7 7-7-7" />
+							</svg>
+						</button>
+						<!-- Menu Dropdown Diperbarui -->
+						<div
+							x-cloak
+							x-show="dataOpen"
+							x-transition.opacity.duration.150ms
+							class="absolute left-0 w-64 py-2 mt-3 overflow-y-auto bg-white border border-gray-200 rounded-lg shadow-md text-textdark max-h-96">
+							<a
+								href="pages/data/penduduk.html"
+								class="block px-4 py-2 hover:bg-gray-100"
+								>Data Penduduk</a
+							>
+							<a
+								href="pages/data/wilayah.html"
+								class="block px-4 py-2 hover:bg-gray-100"
+								>Data Wilayah</a
+							>
+							<a
+								href="pages/data/pendidikan-kk.html"
+								class="block px-4 py-2 hover:bg-gray-100"
+								>Pendidikan (Total)</a
+							>
+							<a
+								href="pages/data/pekerjaan.html"
+								class="block px-4 py-2 hover:bg-gray-100"
+								>Pekerjaan</a
+							>
+							<a
+								href="pages/data/pendidikan-ditempuh.html"
+								class="block px-4 py-2 hover:bg-gray-100"
+								>Pendidikan (Ditempuh)</a
+							>
+							<a
+								href="pages/data/agama.html"
+								class="block px-4 py-2 hover:bg-gray-100"
+								>Agama</a
+							>
+							<a
+								href="pages/data/jenisKelamin.html"
+								class="block px-4 py-2 hover:bg-gray-100"
+								>Jenis Kelamin</a
+							>
+							<a
+								href="pages/data/kelompokUmur.html"
+								class="block px-4 py-2 hover:bg-gray-100"
+								>Kelompok Umur</a
+							>
+							<a
+								href="pages/data/idm.html"
+								class="block px-4 py-2 hover:bg-gray-100"
+								>Indeks Desa Membangun</a
+							>
+						</div>
+					</div>
+					<a href="pages/transparansi.html" class="hover:text-primary"
+						>Transparansi</a
+					>
+					<a href="pages/layanan.html" class="hover:text-primary"
+						>Layanan</a
+					>
+					<!-- Tautan Lapak (Halaman Ini) -->
+					<a href="#" class="font-semibold text-primary"
+						>Lapak Desa</a
+					>
+					<a href="pages/galeri.html" class="hover:text-primary"
+						>Galeri</a
+					>
+				</nav>
+
+				<!-- Navigasi Mobile -->
+				<div @click.outside="mobileMenuOpen = false" class="lg:hidden">
+					<button
+						@click="mobileMenuOpen = !mobileMenuOpen"
+						class="focus:outline-none"
+						aria-label="Toggle menu"
+						:class="{'text-primary': sticky, 'text-white': !sticky}">
+						<svg
+							x-show="!mobileMenuOpen"
+							xmlns="http://www.w3.org/2000/svg"
+							class="w-6 h-6"
+							fill="none"
+							viewBox="0 0 24 24"
+							stroke="currentColor">
+							<path
+								stroke-linecap="round"
+								stroke-linejoin="round"
+								stroke-width="2"
+								d="M4 6h16M4 12h16m-7 6h7" />
+						</svg>
+						<svg
+							x-show="mobileMenuOpen"
+							x-cloak
+							xmlns="http://www.w3.org/2000/svg"
+							class="w-6 h-6"
+							fill="none"
+							viewBox="0 0 24 24"
+							stroke="currentColor">
+							<path
+								stroke-linecap="round"
+								stroke-linejoin="round"
+								stroke-width="2"
+								d="M6 18L18 6M6 6l12 12" />
+						</svg>
+					</button>
+					<nav
+						x-cloak
+						x-show="mobileMenuOpen"
+						x-transition:enter="transition ease-out duration-200"
+						x-transition:enter-start="opacity-0 transform -translate-y-4"
+						x-transition:enter-end="opacity-100 transform translate-y-0"
+						x-transition:leave="transition ease-in duration-150"
+						x-transition:leave-start="opacity-100 transform translate-y-0"
+						x-transition:leave-end="opacity-0 transform -translate-y-4"
+						class="absolute left-0 w-full bg-white border-t border-gray-200 shadow-lg top-full">
+						<ul
+							class="flex flex-col px-6 py-4 space-y-2 font-medium text-textdark">
+							<li>
+								<a
+									href="index.html"
+									class="block py-2 hover:text-primary"
+									>Beranda</a
+								>
+							</li>
+							<li x-data="{ open: false }">
+								<button
+									@click="open = !open"
+									class="flex items-center justify-between w-full py-2 hover:text-primary">
+									<span>Profil Desa</span>
+									<svg
+										:class="{ 'rotate-180': open }"
+										class="w-4 h-4 transition-transform transform"
+										xmlns="http://www.w3.org/2000/svg"
+										fill="none"
+										viewBox="0 0 24 24"
+										stroke="currentColor">
+										<path
+											stroke-linecap="round"
+											stroke-linejoin="round"
+											stroke-width="2"
+											d="M19 9l-7 7-7-7" />
+									</svg>
+								</button>
+								<ul
+									x-show="open"
+									x-transition
+									x-cloak
+									class="pl-3 ml-4 space-y-1 text-sm text-gray-700 border-l border-gray-200">
+									<li>
+										<a
+											href="pages/profil/identitasDesa.html"
+											class="block py-1 hover:text-primary"
+											>Identitas Desa</a
+										>
+									</li>
+									<li>
+										<a
+											href="pages/profil/visiMisi.html"
+											class="block py-1 hover:text-primary"
+											>Visi & Misi</a
+										>
+									</li>
+									<li>
+										<a
+											href="pages/profil/strukturBPD.html"
+											class="block py-1 hover:text-primary"
+											>BPD & Lembaga</a
+										>
+									</li>
+									<li>
+										<a
+											href="pages/profil/sejarahDesa.html"
+											class="block py-1 hover:text-primary"
+											>Sejarah Desa</a
+										>
+									</li>
+								</ul>
+							</li>
+							<li x-data="{ open: false }">
+								<button
+									@click="open = !open"
+									class="flex items-center justify-between w-full py-2 hover:text-primary">
+									<span>Data Desa</span>
+									<svg
+										:class="{ 'rotate-180': open }"
+										class="w-4 h-4 transition-transform transform"
+										xmlns="http://www.w3.org/2000/svg"
+										fill="none"
+										viewBox="0 0 24 24"
+										stroke="currentColor">
+										<path
+											stroke-linecap="round"
+											stroke-linejoin="round"
+											stroke-width="2"
+											d="M19 9l-7 7-7-7" />
+									</svg>
+								</button>
+								<!-- Tautan Submenu Mobile -->
+								<ul
+									x-show="open"
+									x-transition
+									x-cloak
+									class="pl-3 ml-4 space-y-1 overflow-y-auto text-sm text-gray-700 border-l border-gray-200 max-h-64">
+									<a
+										href="pages/data/penduduk.html"
+										class="block px-4 py-2 hover:bg-gray-100"
+										>Data Penduduk</a
+									>
+									<a
+										href="pages/data/wilayah.html"
+										class="block px-4 py-2 hover:bg-gray-100"
+										>Data Wilayah</a
+									>
+									<a
+										href="pages/data/pendidikan-kk.html"
+										class="block px-4 py-2 hover:bg-gray-100"
+										>Pendidikan (Total)</a
+									>
+									<a
+										href="pages/data/pekerjaan.html"
+										class="block px-4 py-2 hover:bg-gray-100"
+										>Pekerjaan</a
+									>
+									<a
+										href="pages/data/pendidikan-ditempuh.html"
+										class="block px-4 py-2 hover:bg-gray-100"
+										>Pendidikan (Ditempuh)</a
+									>
+									<a
+										href="pages/data/agama.html"
+										class="block px-4 py-2 hover:bg-gray-100"
+										>Agama</a
+									>
+									<a
+										href="pages/data/jenisKelamin.html"
+										class="block px-4 py-2 hover:bg-gray-100"
+										>Jenis Kelamin</a
+									>
+									<a
+										href="pages/data/kelompokUmur.html"
+										class="block px-4 py-2 hover:bg-gray-100"
+										>Kelompok Umur</a
+									>
+									<a
+										href="pages/data/idm.html"
+										class="block px-4 py-2 hover:bg-gray-100"
+										>Indeks Desa Membangun</a
+									>
+								</ul>
+							</li>
+							<li>
+								<a
+									href="pages/transparansi.html"
+									class="block py-2 hover:text-primary"
+									>Transparansi</a
+								>
+							</li>
+							<li>
+								<a
+									href="pages/layanan.html"
+									class="block py-2 hover:text-primary"
+									>Layanan</a
+								>
+							</li>
+							<li>
+								<a
+									href="pages/lapak.html"
+									class="block py-2 font-medium text-primary"
+									>Lapak Desa</a
+								>
+							</li>
+							<li>
+								<a
+									href="pages/galeri.html"
+									class="block py-2 hover:text-primary"
+									>Galeri</a
+								>
+							</li>
+						</ul>
+					</nav>
+				</div>
+			</div>
+		</header>
+
+		<main class="pt-24 bg-gray-50">
+			<!-- REVISI: Breadcrumb & Title -->
+			<section class="py-12 bg-white border-b border-gray-200">
+				<div class="px-6 mx-auto max-w-7xl">
+					<nav class="flex mb-2" aria-label="Breadcrumb">
+						<ol
+							class="inline-flex items-center space-x-1 text-sm text-gray-500 md:space-x-2">
+							<li class="inline-flex items-center">
+								<a
+									href="index.html"
+									class="inline-flex items-center transition-colors hover:text-primary">
+									<svg
+										class="w-4 h-4 mr-2"
+										fill="currentColor"
+										viewBox="0 0 20 20"
+										xmlns="http://www.w3.org/2000/svg">
+										<path
+											d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z"></path>
+									</svg>
+									Beranda
+								</a>
+							</li>
+							<li aria-current="page">
+								<div class="flex items-center">
+									<svg
+										class="w-3 h-3 text-gray-400"
+										fill="currentColor"
+										viewBox="0 0 20 20"
+										xmlns="http://www.w3.org/2000/svg">
+										<path
+											fill-rule="evenodd"
+											d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
+											clip-rule="evenodd"></path>
+									</svg>
+									<span
+										class="ml-1 font-medium text-gray-800 md:ml-2"
+										x-text="pageTitle"></span>
+								</div>
+							</li>
+						</ol>
+					</nav>
+					<h1
+						class="text-3xl font-bold text-primary md:text-4xl"
+						x-text="pageTitle"></h1>
+					<p
+						class="mt-2 text-lg text-gray-600"
+						x-text="pageSubtitle"></p>
+				</div>
+			</section>
+
+			<!-- 
+                ============================================================
+                BAGIAN UTAMA: LAPAK DESA (diambil dari snippet Anda)
+                ============================================================
+            -->
+			<section
+				id="lapak"
+				class="py-16 bg-gray-50"
+				x-data="lapakData()"
+				x-init="init()">
+				<div class="px-6 mx-auto max-w-7xl">
+					<!-- FILTER BAR (dari snippet) -->
+					<div
+						class="flex flex-col items-center justify-between gap-4 p-4 mb-10 bg-white shadow-md md:flex-row rounded-xl">
+						<div class="flex items-center w-full gap-3 md:w-auto">
+							<label
+								for="kategori"
+								class="font-medium text-gray-700 whitespace-nowrap"
+								>Kategori:</label
+							>
+							<select
+								id="kategori"
+								x-model="category"
+								@change="currentPage = 1"
+								class="w-full border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary">
+								<template x-for="cat in categories" :key="cat">
+									<option :value="cat" x-text="cat"></option>
+								</template>
+							</select>
+						</div>
+						<div class="relative w-full md:w-auto lg:w-1/3">
+							<input
+								type="text"
+								placeholder="Cari produk..."
+								x-model.debounce.300ms="search"
+								@input="currentPage = 1"
+								class="w-full pl-10 border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary" />
+							<span
+								class="absolute text-gray-400 -translate-y-1/2 left-3 top-1/2">
+								<svg
+									xmlns="http://www.w3.org/2000/svg"
+									viewBox="0 0 20 20"
+									fill="currentColor"
+									class="w-5 h-5">
+									<path
+										fill-rule="evenodd"
+										d="M9 3.5a5.5 5.5 0 100 11 5.5 5.5 0 000-11zM2 9a7 7 0 1112.452 4.391l3.328 3.329a.75.75 0 11-1.06 1.06l-3.329-3.328A7 7 0 012 9z"
+										clip-rule="evenodd" />
+								</svg>
+							</span>
+						</div>
+					</div>
+
+					<!-- GRID PRODUK -->
+					<div
+						class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+						<template
+							x-for="produk in paginatedProduk"
+							:key="produk.id">
+							<div
+								class="flex flex-col overflow-hidden transition duration-300 bg-white border border-gray-100 shadow-lg rounded-2xl hover:shadow-xl hover:-translate-y-1">
+								<img
+									:src="produk.foto"
+									:alt="produk.nama"
+									onerror="this.src='https://placehold.co/600x400/E0E0E0/757575?text=Gambar+Rusak'; this.onerror=null;"
+									class="object-cover w-full h-52" />
+								<div class="flex flex-col flex-1 p-5">
+									<h4
+										class="mb-1 text-lg font-semibold text-gray-800"
+										x-text="produk.nama"></h4>
+									<p
+										class="text-xl font-bold text-primary"
+										x-text="formatHarga(produk.harga)"></p>
+
+									<div class="flex-1 my-3">
+										<p class="mb-1 text-sm text-gray-600">
+											<strong class="font-medium"
+												>Kategori:</strong
+											>
+											<span
+												x-text="produk.kategori"
+												class="bg-gray-100 text-gray-700 px-2 py-0.5 rounded-full text-xs font-medium"></span>
+										</p>
+										<p class="text-sm text-gray-600">
+											<strong class="font-medium"
+												>Pelapak:</strong
+											>
+											<span
+												x-text="produk.pelapak"></span>
+										</p>
+									</div>
+
+									<!-- REVISI: 3 Tombol Aksi -->
+									<div class="grid grid-cols-2 gap-2 mt-auto">
+										<a
+											:href="`https://wa.me/${produk.telepon}?text=Halo%2C%20saya%20tertarik%20dengan%20produk%20'${produk.nama}'%20Anda.`"
+											target="_blank"
+											class="col-span-2 bg-primary text-white py-2 px-3 rounded-lg text-sm font-medium hover:bg-green-700 transition flex items-center justify-center gap-1.5">
+											<svg
+												xmlns="http://www.w3.org/2000/svg"
+												viewBox="0 0 16 16"
+												fill="currentColor"
+												class="w-4 h-4">
+												<path
+													d="M2.5 3A1.5 1.5 0 0 0 1 4.5V5a.5.5 0 0 0 .5.5H2a.5.5 0 0 0 .484-.375A2.484 2.484 0 0 1 4.312 3H2.5zM14 4.5A1.5 1.5 0 0 0 12.5 3h-8.188a2.484 2.484 0 0 1 1.826 1.5H13.5a.5.5 0 0 0 .5-.5V4.5zM1.5 6a.5.5 0 0 0-.5.5v2A1.5 1.5 0 0 0 2.5 10H3a.5.5 0 0 0 .484-.375A2.484 2.484 0 0 1 5.312 8H1.5V6zM14.5 6H5.312a2.484 2.484 0 0 1 1.826 1.5H14.5a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5zM3.484 10.625A.5.5 0 0 0 3 11h1.312a2.484 2.484 0 0 1 1.826 1.5H1.5v-1a.5.5 0 0 0-.5-.5A1.5 1.5 0 0 0 0 12.5v2A1.5 1.5 0 0 0 1.5 16h13A1.5 1.5 0 0 0 16 14.5v-2A1.5 1.5 0 0 0 14.5 11H6.688a2.484 2.484 0 0 1-1.826-1.5H3.484z" />
+											</svg>
+											Beli (WhatsApp)
+										</a>
+										<a
+											href="#"
+											class="border border-gray-300 text-gray-700 py-2 px-3 rounded-lg text-sm font-medium hover:bg-gray-100 transition flex items-center justify-center gap-1.5">
+											<svg
+												xmlns="http://www.w3.org/2000/svg"
+												viewBox="0 0 16 16"
+												fill="currentColor"
+												class="w-4 h-4">
+												<path
+													d="M3.5 3A1.5 1.5 0 0 0 2 4.5v.793c.026.021.051.042.078.064L7.922 9.5l-5.844 5.844a.5.5 0 0 0 .708.708L8.5 10.207l5.714 5.714a.5.5 0 0 0 .707-.707L9.207 9.5l5.844-5.844a.25.25 0 0 0 .064-.078V4.5A1.5 1.5 0 0 0 13.5 3h-10Z" />
+											</svg>
+											Detail
+										</a>
+										<a
+											:href="produk.lokasiLink"
+											target="_blank"
+											class="border border-gray-300 text-gray-700 py-2 px-3 rounded-lg text-sm font-medium hover:bg-gray-100 transition flex items-center justify-center gap-1.5">
+											<svg
+												xmlns="http://www.w3.org/2000/svg"
+												viewBox="0 0 16 16"
+												fill="currentColor"
+												class="w-4 h-4">
+												<path
+													fill-rule="evenodd"
+													d="M8.083 1.75a.75.75 0 0 1 .652.898l-.454 2.27a.75.75 0 0 1-1.478-.295l.454-2.27A.75.75 0 0 1 8.083 1.75Zm-.75 11.5a.75.75 0 0 1 .75-.75h.334a.75.75 0 0 1 0 1.5h-.334a.75.75 0 0 1-.75-.75Zm1.68-8.665a.75.75 0 0 1 1.05.14l.82 1.159a.75.75 0 1 1-1.2.858l-.82-1.159a.75.75 0 0 1 .15-1.05Zm-3.9 1.05a.75.75 0 0 1 .15 1.05l-.82 1.159a.75.75 0 0 1-1.2-.858l.82-1.159a.75.75 0 0 1 1.05-.14Zm6.242 5.342a.75.75 0 0 1 1.05-.14l.82-1.159a.75.75 0 1 1 1.2.858l-.82 1.159a.75.75 0 0 1-1.05.14Zm-8.484-.14a.75.75 0 0 1-1.05.14l-.82 1.159a.75.75 0 1 1-1.2-.858l.82-1.159a.75.75 0 0 1 1.05-.14ZM8 4.75A3.25 3.25 0 1 0 8 11.25 3.25 3.25 0 0 0 8 4.75ZM6.5 8A1.5 1.5 0 1 1 9.5 8 1.5 1.5 0 0 1 6.5 8Z"
+													clip-rule="evenodd" />
+											</svg>
+											Lokasi
+										</a>
+									</div>
+								</div>
+							</div>
+						</template>
+					</div>
+
+					<!-- REVISI: Pesan jika tidak ada produk -->
+					<template x-if="filteredProduk.length === 0">
+						<div
+							class="py-16 text-center text-gray-500 col-span-full">
+							<svg
+								xmlns="http://www.w3.org/2000/svg"
+								fill="none"
+								viewBox="0 0 24 24"
+								stroke-width="1.5"
+								stroke="currentColor"
+								class="w-12 h-12 mx-auto mb-4 text-gray-400">
+								<path
+									stroke-linecap="round"
+									stroke-linejoin="round"
+									d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z" />
+							</svg>
+							<h4 class="text-lg font-semibold text-gray-700">
+								Produk Tidak Ditemukan
+							</h4>
+							<p>
+								Tidak ada produk yang cocok dengan pencarian
+								atau kategori Anda.
+							</p>
+						</div>
+					</template>
+
+					<!-- REVISI: Kontrol Pagination -->
+					<div
+						x-show="totalPages > 1"
+						class="flex items-center justify-center gap-2 mt-12">
+						<button
+							@click="prevPage()"
+							:disabled="currentPage === 1"
+							class="flex items-center justify-center w-10 h-10 transition rounded-full text-primary hover:bg-green-50 disabled:text-gray-400 disabled:hover:bg-transparent">
+							<svg
+								xmlns="http://www.w3.org/2000/svg"
+								viewBox="0 0 20 20"
+								fill="currentColor"
+								class="w-5 h-5">
+								<path
+									fill-rule="evenodd"
+									d="M12.79 5.23a.75.75 0 0 1-.02 1.06L8.832 10l3.938 3.71a.75.75 0 1 1-1.04 1.08l-4.5-4.25a.75.75 0 0 1 0-1.08l4.5-4.25a.75.75 0 0 1 1.06.02Z"
+									clip-rule="evenodd" />
+							</svg>
+						</button>
+						<template x-for="page in pages" :key="page">
+							<button
+								@click="goToPage(page)"
+								:class="currentPage === page ? 'bg-primary text-white' : 'text-gray-600 hover:bg-green-50'"
+								class="flex items-center justify-center w-10 h-10 font-medium transition rounded-full"
+								x-text="page"></button>
+						</template>
+						<button
+							@click="nextPage()"
+							:disabled="currentPage === totalPages"
+							class="flex items-center justify-center w-10 h-10 transition rounded-full text-primary hover:bg-green-50 disabled:text-gray-400 disabled:hover:bg-transparent">
+							<svg
+								xmlns="http://www.w3.org/2000/svg"
+								viewBox="0 0 20 20"
+								fill="currentColor"
+								class="w-5 h-5">
+								<path
+									fill-rule="evenodd"
+									d="M7.21 14.77a.75.75 0 0 1 .02-1.06L11.168 10 7.23 6.29a.75.75 0 1 1 1.04-1.08l4.5 4.25a.75.75 0 0 1 0 1.08l-4.5 4.25a.75.75 0 0 1-1.06-.02Z"
+									clip-rule="evenodd" />
+							</svg>
+						</button>
+					</div>
+				</div>
+			</section>
+		</main>
+
+		<!-- 
+            ============================================================
+            FOOTER (KONSISTEN)
+            ============================================================
+        -->
+		<footer class="pt-16 pb-8 text-white bg-primary" x-data="footerData()">
+			<div class="px-6 mx-auto max-w-7xl md:px-10">
+				<div
+					class="grid grid-cols-1 gap-12 pb-10 border-b md:grid-cols-3 border-white/20">
+					<div>
+						<div class="flex items-center gap-4 mb-4">
+							<img
+								:src="identity.logoSrc"
+								alt="Logo Desa"
+								class="border-2 rounded-full w-14 h-14 border-white/70" />
+							<div>
+								<h2
+									class="text-2xl font-semibold"
+									x-text="identity.name"></h2>
+								<p
+									class="text-sm text-accent"
+									x-text="identity.tagline"></p>
+							</div>
+						</div>
+						<p
+							class="text-sm leading-relaxed text-gray-100"
+							x-text="identity.description"></p>
+					</div>
+
+					<div>
+						<h3 class="mb-4 text-xl font-semibold text-accent">
+							Navigasi Cepat
+						</h3>
+						<ul
+							class="gap-8 space-y-3 text-sm text-gray-100 columns-2">
+							<template
+								x-for="link in quickLinks"
+								:key="link.href">
+								<li>
+									<a
+										:href="link.href"
+										class="inline-block transition-colors hover:text-accent hover:underline underline-offset-4"
+										x-text="link.label">
+									</a>
+								</li>
+							</template>
+						</ul>
+					</div>
+
+					<div>
+						<h3 class="mb-4 text-xl font-semibold text-accent">
+							Kontak & Sosial
+						</h3>
+						<ul class="space-y-3 text-sm text-gray-100">
+							<template
+								x-for="item in contactInfo"
+								:key="item.text">
+								<li class="flex items-start gap-3">
+									<span
+										class="w-5 h-5 flex-shrink-0 mt-0.5 opacity-80"
+										x-html="item.icon"></span>
+									<a
+										:href="item.href"
+										class="transition-colors hover:text-accent"
+										x-text="item.text"></a>
+								</li>
+							</template>
+						</ul>
+						<div class="flex gap-3 mt-6">
+							<template
+								x-for="social in socialLinks"
+								:key="social.title">
+								<a
+									:href="social.href"
+									:title="social.title"
+									target="_blank"
+									rel="noopener noreferrer"
+									class="p-2 text-white transition-colors rounded-full bg-white/10 hover:bg-accent hover:text-primary">
+									<span
+										class="sr-only"
+										x-text="social.title"></span>
+									<div
+										class="w-5 h-5"
+										x-html="social.icon"></div>
+								</a>
+							</template>
+						</div>
+					</div>
+				</div>
+				<div class="pt-6 text-sm text-center text-gray-200" x-cloak>
+					©
+					<span x-text="copyright.year"></span>
+					<span x-text="copyright.text"></span>
+					<a
+						:href="copyright.developerLink"
+						target="_blank"
+						rel="noopener noreferrer"
+						class="font-medium transition-colors text-accent hover:text-white"
+						x-text="copyright.developerName"></a
+					>.
+				</div>
+			</div>
+		</footer>
+
+		<!-- 
+            ============================================================
+            SKRIP (ALPINE.JS)
+            ============================================================
+        -->
+		<script>
+			// Data global untuk seluruh halaman
+			function pageData() {
+				return {
+					// State UI
+					sticky: false,
+					profilOpen: false,
+					dataOpen: false,
+					mobileMenuOpen: false,
+
+					// REVISI: Data Halaman Spesifik
+					pageTitle: "Lapak Desa",
+					pageSubtitle:
+						"Temukan beragam produk, jasa, dan potensi unggulan masyarakat Desa Sukakerta.",
+				};
+			}
+
+			// Data khusus untuk Lapak
+			function lapakData() {
+				return {
+					search: "",
+					category: "Semua",
+					currentPage: 1,
+					itemsPerPage: 8, // Tampilkan 8 produk per halaman
+
+					// REVISI: Daftar kategori dari referensi teks
+					categories: [
+						"Semua",
+						"Foods and Drinks",
+						"Jasa",
+						"Reseller",
+						"Obat dan Herbal",
+						"Toko Kelontongan",
+						"Toko Online",
+						"Rental",
+						"Kerajinan Tangan",
+					],
+
+					// REVISI: Daftar produk dari referensi teks (10 produk)
+					produkList: [
+						{
+							id: 1,
+							foto: "https://placehold.co/600x400/2E7D32/white?text=Madu+Odeng",
+							nama: "Madu Odeng Asli",
+							harga: 200000,
+							kategori: "Obat dan Herbal",
+							pelapak: "SITI ROHIMAH",
+							telepon: "6281234567890",
+							lokasiLink: "https://maps.app.goo.gl/example",
+						},
+						{
+							id: 2,
+							foto: "https://placehold.co/600x400/2E7D32/white?text=Laundry",
+							nama: "Laundry",
+							harga: 3500,
+							kategori: "Jasa",
+							pelapak: "SUSI SUCILAWATI",
+							telepon: "6281234567890",
+							lokasiLink: "https://maps.app.goo.gl/example",
+						},
+						{
+							id: 3,
+							foto: "https://placehold.co/600x400/2E7D32/white?text=Cobek+Kayu",
+							nama: "Cobek Kayu",
+							harga: 8500,
+							kategori: "Toko Online",
+							pelapak: "CEPI CIPTA",
+							telepon: "6281234567890",
+							lokasiLink: "https://maps.app.goo.gl/example",
+						},
+						{
+							id: 4,
+							foto: "https://placehold.co/600x400/2E7D32/white?text=Snack",
+							nama: "RIFAN'S SNACK & COOKIES",
+							harga: 1000,
+							kategori: "Foods and Drinks",
+							pelapak: "NANI SURYANI",
+							telepon: "6281234567890",
+							lokasiLink: "https://maps.app.goo.gl/example",
+						},
+						{
+							id: 5,
+							foto: "https://placehold.co/600x400/2E7D32/white?text=Craft",
+							nama: "RIFAN'S CRAF",
+							harga: 1000,
+							kategori: "Kerajinan Tangan",
+							pelapak: "NANI SURYANI",
+							telepon: "6281234567890",
+							lokasiLink: "https://maps.app.goo.gl/example",
+						},
+						{
+							id: 6,
+							foto: "https://placehold.co/600x400/2E7D32/white?text=Toko",
+							nama: "ACB - Toko Nina Diana",
+							harga: 1000,
+							kategori: "Toko Kelontongan",
+							pelapak: "NINA LESTARI",
+							telepon: "6281234567890",
+							lokasiLink: "https://maps.app.goo.gl/example",
+						},
+						{
+							id: 7,
+							foto: "https://placehold.co/600x400/2E7D32/white?text=Pisang",
+							nama: "Pisang/Bibit - Buana Rahayu",
+							harga: 1000,
+							kategori: "Foods and Drinks",
+							pelapak: "DEDI KUSMANA",
+							telepon: "6281234567890",
+							lokasiLink: "https://maps.app.goo.gl/example",
+						},
+						{
+							id: 8,
+							foto: "https://placehold.co/600x400/2E7D32/white?text=Sandal",
+							nama: "Sandal Kesehatan",
+							harga: 1000,
+							kategori: "Toko Online",
+							pelapak: "CEPI CIPTA",
+							telepon: "6281234567890",
+							lokasiLink: "https://maps.app.goo.gl/example",
+						},
+						{
+							id: 9,
+							foto: "https://placehold.co/600x400/2E7D32/white?text=Superfood",
+							nama: "Superfood Global",
+							harga: 1000,
+							kategori: "Reseller",
+							pelapak: "ANDI AHMAD JAHID HASANI",
+							telepon: "6281234567890",
+							lokasiLink: "https://maps.app.goo.gl/example",
+						},
+						{
+							id: 10,
+							foto: "https://placehold.co/600x400/2E7D32/white?text=Toko+Atik",
+							nama: "Toko Mamah Atik",
+							harga: 1000,
+							kategori: "Toko Kelontongan",
+							pelapak: "ATIKAH",
+							telepon: "6281234567890",
+							lokasiLink: "https://maps.app.goo.gl/example",
+						},
+					],
+
+					init() {
+						// Tidak perlu init kategori, sudah statis
+					},
+
+					// Filter produk berdasarkan search dan kategori
+					get filteredProduk() {
+						return this.produkList.filter(
+							(p) =>
+								(this.category === "Semua" ||
+									p.kategori === this.category) &&
+								(this.search === "" ||
+									p.nama
+										.toLowerCase()
+										.includes(this.search.toLowerCase()))
+						);
+					},
+
+					// --- LOGIKA PAGINATION ---
+					get totalPages() {
+						return Math.ceil(
+							this.filteredProduk.length / this.itemsPerPage
+						);
+					},
+					get paginatedProduk() {
+						const start =
+							(this.currentPage - 1) * this.itemsPerPage;
+						const end = start + this.itemsPerPage;
+						return this.filteredProduk.slice(start, end);
+					},
+					// Mendapatkan daftar halaman untuk tombol
+					get pages() {
+						return Array.from(
+							{ length: this.totalPages },
+							(_, i) => i + 1
+						);
+					},
+					nextPage() {
+						if (this.currentPage < this.totalPages) {
+							this.currentPage++;
+						}
+					},
+					prevPage() {
+						if (this.currentPage > 1) {
+							this.currentPage--;
+						}
+					},
+					goToPage(page) {
+						this.currentPage = page;
+					},
+
+					// Format harga
+					formatHarga(angka) {
+						return new Intl.NumberFormat("id-ID", {
+							style: "currency",
+							currency: "IDR",
+							minimumFractionDigits: 2, // Sesuai referensi
+							maximumFractionDigits: 2,
+						}).format(angka);
+					},
+				};
+			}
+
+			// Data khusus untuk komponen footer
+			function footerData() {
+				return {
+					identity: {
+						logoSrc: "assets/img/logo.webp",
+						name: "Desa Sukakerta",
+						tagline: "Kec. Panumbangan, Kab. Ciamis",
+						description:
+							"Desa Sukakerta merupakan desa yang terus berkembang melalui inovasi pelayanan publik, transparansi keuangan, dan potensi lokal yang berdaya saing.",
+					},
+					// REVISI: Quicklinks diperbarui
+					quickLinks: [
+						{ label: "Beranda", href: "index.html" },
+						{
+							label: "Identitas",
+							href: "pages/profil/identitasDesa.html",
+						},
+						{
+							label: "Visi & Misi",
+							href: "pages/profil/visiMisi.html",
+						},
+						{
+							label: "Struktur BPD",
+							href: "pages/profil/strukturBPD.html",
+						},
+						{
+							label: "Sejarah",
+							href: "pages/profil/sejarahDesa.html",
+						},
+						{
+							label: "Data Penduduk",
+							href: "pages/data/penduduk.html",
+						},
+						{
+							label: "Data Wilayah",
+							href: "pages/data/wilayah.html",
+						},
+						{
+							label: "Pendidikan (Total)",
+							href: "pages/data/pendidikan-kk.html",
+						},
+						{
+							label: "Pendidikan (Ditempuh)",
+							href: "pages/data/pendidikan-ditempuh.html",
+						},
+						{
+							label: "Pekerjaan",
+							href: "pages/data/pekerjaan.html",
+						},
+						{
+							label: "Agama",
+							href: "pages/data/agama.html",
+						},
+						{
+							label: "Jenis Kelamin",
+							href: "pages/data/jenisKelamin.html",
+						},
+						{
+							label: "Kelompok Umur",
+							href: "pages/data/kelompokUmur.html",
+						},
+						{
+							label: "IDM",
+							href: "pages/data/idm.html",
+						},
+						{
+							label: "Transparansi",
+							href: "pages/transparansi.html",
+						},
+						{ label: "Layanan", href: "pages/layanan.html" },
+						{ label: "Lapak", href: "pages/lapak.html" },
+						{ label: "Galeri", href: "pages/galeri.html" },
+					],
+					contactInfo: [
+						{
+							icon: `<svg fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M9.69 18.933l.003.001C9.89 19.02 10 19 10 19s.11.02.308-.066l.002-.001.006-.003.018-.008a5.741 5.741 0 00.281-.14c.186-.096.446-.24.757-.433.62-.384 1.445-.966 2.274-1.765C15.302 14.988 17 12.493 17 9A7 7 0 103 9c0 3.492 1.698 5.988 3.355 7.584a13.733 13.733 0 002.273 1.765 11.842 11.842 0 00.757.433c.126.05.209.09.28.14l.018.008.006.003zM10 11.25a2.25 2.25 0 100-4.5 2.25 2.25 0 000 4.5z" clip-rule="evenodd"></path></svg>`,
+							text: "Jl. Raya Sukakerta No.10, Panumbangan, Ciamis, Jawa Barat",
+							href: "https://maps.google.com/?q=Desa+Sukakerta+Panumbangan+Ciamis",
+						},
+						{
+							icon: `<svg fill="currentColor" viewBox="0 0 20 20"><path d="M2 3.5A1.5 1.5 0 013.5 2h1.148c.16 0 .315.025.462.074l2.54.847a.5.5 0 01.33.633Request.InvalidNumberA 7.0 7.0 0 00-.72 4.04c.09.43.52.72.96.65.07-.01.139-.02.208-.03a.5.5 0 01.58.6c-1.14 3.867-3.867 6.594-7.733 7.734a.5.5 0 01-.6-.58c.01-.07.02-.138.03-.207.07-.44-.22-.87-.65-.96a7.0 7.0 0 00-4.04.72.5.5 0 01-.633-.33L2.074 5.11A1.5 1.5 0 013.5 2H2z"></path></svg>`,
+							text: "(0265) 123456",
+							href: "tel:+62265123456",
+						},
+						{
+							icon: `<svg fill="currentColor" viewBox="0 0 20 20"><path d="M3 4a2 2 0 00-2 2v1.161l8.441 4.221a1.25 1.25 0 001.118 0L19 7.162V6a2 2 0 00-2-2H3z"></path><path d="M19 8.839l-7.77 3.885a2.75 2.75 0 01-2.46 0L1 8.839V14a2 2 0 002 2h14a2 2 0 002-2V8.839z"></path></svg>`,
+							text: "info@desasukakerta.go.id",
+							href: "mailto:info@desasukakerta.go.id",
+						},
+					],
+					socialLinks: [
+						{
+							title: "Facebook",
+							href: "#",
+							icon: `<svg fill="currentColor" viewBox="0 0 24 24"><path d="M22.675 0h-21.35C.597 0 0 .597 0 1.325v21.351C0 23.403.597 24 1.325 24h11.483v-9.294H9.692V11.09h3.116V8.413c0-3.1 1.893-4.788 4.659-4.788 1.325 0 2.463.099 2.795.143v3.24l-1.919.001c-1.504 0-1.796.715-1.796 1.763v2.314h3.59l-.467 3.616h-3.123V24h6.116C23.403 24 24 23.403 24 22.676V1.325C24 .597 23.403 0 22.675 0z"></path></svg>`,
+						},
+						{
+							title: "Instagram",
+							href: "#",
+							icon: `<svg fill="currentColor" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 1.366.062 2.633.35 3.608 1.326.975.975 1.264 2.243 1.326 3.608.058 1.266.07 1.645.07 4.85s-.012 3.584-.07 4.85c-.062 1.366-.35 2.633-1.326 3.608-.975-.975-2.243 1.264-3.608 1.326-1.266.058-1.645.07-4.85.07s-3.584-.012-4.85-.07c-1.366-.062-2.633-.35-3.608-1.326-.975-.975-1.264-2.243-1.326-3.608C2.175 15.647 2.163 15.268 2.163 12s.012-3.584.07-4.85c.062-1.366.35-2.633 1.326-3.608.975-.975 2.243-1.264 3.608-1.326C8.416 2.175 8.796 2.163 12 2.163zm0 1.684c-3.17 0-3.548.012-4.796.07-1.067.05-1.652.23-2.037.385-.513.2-.877.438-1.262.823-.385.385-.623.749-.823 1.262-.155.385-.335.97-.385 2.037-.058 1.248-.07 1.626-.07 4.796s.012 3.548.07 4.796c.05 1.067.23 1.652.385 2.037.2.513.438.877.a823 1.262.385.385.749.623 1.262.823.385.155.97.335 2.037.385 1.248.058 1.626.07 4.796.07s3.548-.012 4.796-.07c1.067-.05 1.652-.23 2.037-.385.513-.2.877.438 1.262.823.385-.385.623-.749.823-1.262.155-.385.335-.97-.385-2.037.058-1.248.07-1.626.07-4.796s-.012-3.548-.07-4.796c-.05-1.067-.23-1.652-.385-2.037-.2-.513-.438-.877-.823-1.262-.385-.385-.749-.623-1.262.823-.385-.155-.97.335-2.037-.385-1.248-.058-1.626-.07-4.796-.07zm0 3.838a5.999 5.999 0 1 1 0 11.998 5.999 5.999 0 0 1 0-11.998zm0 9.9a3.9 3.9 0 1 0 0-7.8 3.9 3.9 0 0 0 0 7.8zm6.406-10.845a1.44 1.44 0 1 1 0-2.88 1.44 1.44 0 0 1 0 2.88z"></path></svg>`,
+						},
+					],
+					copyright: {
+						year: new Date().getFullYear(),
+						text: "Desa Sukakerta. Dikembangkan oleh",
+						developerName: "Hans Dev",
+						developerLink: "#",
+					},
+				};
+			}
+
+			// Inisialisasi Alpine
+			document.addEventListener("alpine:init", () => {
+				Alpine.data("pageData", pageData);
+				Alpine.data("lapakData", lapakData);
+				Alpine.data("footerData", footerData);
+			});
+		</script>
+	</body>
+</html>

@@ -1,0 +1,1050 @@
+<!DOCTYPE html>
+<html lang="id" class="scroll-smooth">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Desa Sukakerta | Galeri</title>
+		<base href="../../" />
+		<script src="https://cdn.tailwindcss.com"></script>
+		<script
+			defer
+			src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+
+		<script
+			defer
+			src="https://cdn.jsdelivr.net/npm/@alpinejs/collapse@3.x.x/dist/cdn.min.js"></script>
+
+		<style type="text/tailwindcss">
+			[x-cloak] {
+				display: none !important;
+			}
+			/* Style kustom yang konsisten */
+			@layer utilities {
+				.text-primary {
+					color: #2e7d32;
+				}
+				.hover\:text-primary:hover {
+					color: #1b6d21;
+				}
+				.text-textdark {
+					color: #1f2937;
+				}
+				.bg-primary {
+					background-color: #2e7d32;
+				}
+				.border-accent {
+					border-color: #fbc02d;
+				}
+				.text-accent {
+					color: #fbc02d;
+				}
+			}
+		</style>
+	</head>
+
+	<body
+		class="font-sans text-gray-800 bg-gray-50"
+		x-data="pageData()"
+		x-init="init()"
+		@scroll.window="sticky = (window.pageYOffset > 50)">
+		<header
+			:class="{ 'shadow-md bg-white/90 backdrop-blur-lg text-gray-700': sticky, 'text-white': !sticky}"
+			class="fixed top-0 left-0 z-50 w-full transition-all duration-300">
+			<div
+				class="flex items-center justify-between px-6 py-4 mx-auto max-w-7xl">
+				<a href="index.html" class="flex items-center gap-2">
+					<img
+						src="assets/img/logo.webp"
+						alt="Logo Desa"
+						class="w-10 h-10 rounded-full" />
+					<div class="flex flex-col leading-tight">
+						<span
+							class="text-lg font-semibold transition-colors"
+							:class="{'text-primary': sticky, 'text-white': !sticky}"
+							>Desa Sukakerta</span
+						>
+						<span class="text-xs"
+							>Kec. Panumbangan, Kab. Ciamis</span
+						>
+					</div>
+				</a>
+				<nav
+					class="hidden lg:flex items-center space-x-8 text-[15px] font-medium">
+					<a href="index.html" class="hover:text-primary">Beranda</a>
+					<div
+						@mouseenter="profilOpen = true"
+						@mouseleave="profilOpen = false"
+						class="relative">
+						<button
+							type="button"
+							class="flex items-center gap-1 transition hover:text-primary"
+							:class="{ 'text-primary': profilOpen }"
+							aria-haspopup="true"
+							:aria-expanded="profilOpen">
+							Profil Desa
+							<svg
+								class="w-4 h-4 mt-[2px] transition-transform duration-200"
+								:class="{ 'rotate-180': profilOpen }"
+								xmlns="http://www.w3.org/2000/svg"
+								fill="none"
+								viewBox="0 0 24 24"
+								stroke="currentColor">
+								<path
+									stroke-linecap="round"
+									stroke-linejoin="round"
+									stroke-width="2"
+									d="M19 9l-7 7-7-7" />
+							</svg>
+						</button>
+						<div
+							x-cloak
+							x-show="profilOpen"
+							x-transition.opacity.duration.150ms
+							class="absolute left-0 w-56 py-2 mt-3 bg-white border border-gray-200 rounded-lg shadow-md text-textdark"
+							role="menu">
+							<a
+								href="pages/profil/identitasDesa.html"
+								class="block px-4 py-2 hover:bg-gray-100"
+								>Identitas Desa</a
+							>
+							<a
+								href="pages/profil/visiMisi.html"
+								class="block px-4 py-2 hover:bg-gray-100"
+								>Visi & Misi</a
+							>
+							<a
+								href="pages/profil/strukturBPD.html"
+								class="block px-4 py-2 hover:bg-gray-100"
+								>BPD & Lembaga</a
+							>
+							<a
+								href="pages/profil/sejarahDesa.html"
+								class="block px-4 py-2 hover:bg-gray-100"
+								>Sejarah Desa</a
+							>
+						</div>
+					</div>
+					<div
+						@mouseenter="dataOpen = true"
+						@mouseleave="dataOpen = false"
+						class="relative">
+						<button
+							type="button"
+							class="flex items-center gap-1 transition hover:text-primary"
+							:class="{ 'text-primary': dataOpen }">
+							Data Desa
+							<svg
+								class="w-4 h-4 mt-[2px] transition-transform duration-200"
+								:class="{ 'rotate-180': dataOpen }"
+								xmlns="http://www.w3.org/2000/svg"
+								fill="none"
+								viewBox="0 0 24 24"
+								stroke="currentColor">
+								<path
+									stroke-linecap="round"
+									stroke-linejoin="round"
+									stroke-width="2"
+									d="M19 9l-7 7-7-7" />
+							</svg>
+						</button>
+						<div
+							x-cloak
+							x-show="dataOpen"
+							x-transition.opacity.duration.150ms
+							class="absolute left-0 w-64 py-2 mt-3 overflow-y-auto bg-white border border-gray-200 rounded-lg shadow-md text-textdark max-h-96">
+							<a
+								href="pages/data/penduduk.html"
+								class="block px-4 py-2 hover:bg-gray-100"
+								>Data Penduduk</a
+							>
+							<a
+								href="pages/data/wilayah.html"
+								class="block px-4 py-2 hover:bg-gray-100"
+								>Data Wilayah</a
+							>
+							<a
+								href="pages/data/pendidikan-kk.html"
+								class="block px-4 py-2 hover:bg-gray-100"
+								>Pendidikan (Total)</a
+							>
+							<a
+								href="pages/data/pekerjaan.html"
+								class="block px-4 py-2 hover:bg-gray-100"
+								>Pekerjaan</a
+							>
+							<a
+								href="pages/data/pendidikan-ditempuh.html"
+								class="block px-4 py-2 hover:bg-gray-100"
+								>Pendidikan (Ditempuh)</a
+							>
+							<a
+								href="pages/data/agama.html"
+								class="block px-4 py-2 hover:bg-gray-100"
+								>Agama</a
+							>
+							<a
+								href="pages/data/jenisKelamin.html"
+								class="block px-4 py-2 hover:bg-gray-100"
+								>Jenis Kelamin</a
+							>
+							<a
+								href="pages/data/kelompokUmur.html"
+								class="block px-4 py-2 hover:bg-gray-100"
+								>Kelompok Umur</a
+							>
+							<a
+								href="pages/data/idm.html"
+								class="block px-4 py-2 hover:bg-gray-100"
+								>Indeks Desa Membangun</a
+							>
+						</div>
+					</div>
+					<a href="pages/transparansi.html" class="hover:text-primary"
+						>Transparansi</a
+					>
+					<a href="pages/layanan.html" class="hover:text-primary"
+						>Layanan</a
+					>
+					<a href="pages/lapak.html" class="hover:text-primary"
+						>Lapak Desa</a
+					>
+					<a href="#" class="font-semibold text-primary">Galeri</a>
+				</nav>
+
+				<div @click.outside="mobileMenuOpen = false" class="lg:hidden">
+					<button
+						@click="mobileMenuOpen = !mobileMenuOpen"
+						class="focus:outline-none"
+						aria-label="Toggle menu"
+						:class="{'text-primary': sticky, 'text-white': !sticky}">
+						<svg
+							x-show="!mobileMenuOpen"
+							xmlns="http://www.w3.org/2000/svg"
+							class="w-6 h-6"
+							fill="none"
+							viewBox="0 0 24 24"
+							stroke="currentColor">
+							<path
+								stroke-linecap="round"
+								stroke-linejoin="round"
+								stroke-width="2"
+								d="M4 6h16M4 12h16m-7 6h7" />
+						</svg>
+						<svg
+							x-show="mobileMenuOpen"
+							x-cloak
+							xmlns="http://www.w3.org/2000/svg"
+							class="w-6 h-6"
+							fill="none"
+							viewBox="0 0 24 24"
+							stroke="currentColor">
+							<path
+								stroke-linecap="round"
+								stroke-linejoin="round"
+								stroke-width="2"
+								d="M6 18L18 6M6 6l12 12" />
+						</svg>
+					</button>
+					<nav
+						x-cloak
+						x-show="mobileMenuOpen"
+						x-transition:enter="transition ease-out duration-200"
+						x-transition:enter-start="opacity-0 transform -translate-y-4"
+						x-transition:enter-end="opacity-100 transform translate-y-0"
+						x-transition:leave="transition ease-in duration-150"
+						x-transition:leave-start="opacity-100 transform translate-y-0"
+						x-transition:leave-end="opacity-0 transform -translate-y-4"
+						class="absolute left-0 w-full bg-white border-t border-gray-200 shadow-lg top-full">
+						<ul
+							class="flex flex-col px-6 py-4 space-y-2 font-medium text-textdark">
+							<li>
+								<a
+									href="index.html"
+									class="block py-2 hover:text-primary"
+									>Beranda</a
+								>
+							</li>
+							<li x-data="{ open: false }">
+								<button
+									@click="open = !open"
+									class="flex items-center justify-between w-full py-2 hover:text-primary">
+									<span>Profil Desa</span>
+									<svg
+										:class="{ 'rotate-180': open }"
+										class="w-4 h-4 transition-transform transform"
+										xmlns="http://www.w3.org/2000/svg"
+										fill="none"
+										viewBox="0 0 24 24"
+										stroke="currentColor">
+										<path
+											stroke-linecap="round"
+											stroke-linejoin="round"
+											stroke-width="2"
+											d="M19 9l-7 7-7-7" />
+									</svg>
+								</button>
+								<ul
+									x-show="open"
+									x-transition
+									x-cloak
+									class="pl-3 ml-4 space-y-1 text-sm text-gray-700 border-l border-gray-200">
+									<li>
+										<a
+											href="pages/profil/identitasDesa.html"
+											class="block py-1 hover:text-primary"
+											>Identitas Desa</a
+										>
+									</li>
+									<li>
+										<a
+											href="pages/profil/visiMisi.html"
+											class="block py-1 hover:text-primary"
+											>Visi & Misi</a
+										>
+									</li>
+									<li>
+										<a
+											href="pages/profil/strukturBPD.html"
+											class="block py-1 hover:text-primary"
+											>BPD & Lembaga</a
+										>
+									</li>
+									<li>
+										<a
+											href="pages/profil/sejarahDesa.html"
+											class="block py-1 hover:text-primary"
+											>Sejarah Desa</a
+										>
+									</li>
+								</ul>
+							</li>
+							<li x-data="{ open: false }">
+								<button
+									@click="open = !open"
+									class="flex items-center justify-between w-full py-2 hover:text-primary">
+									<span>Data Desa</span>
+									<svg
+										:class="{ 'rotate-180': open }"
+										class="w-4 h-4 transition-transform transform"
+										xmlns="http://www.w3.org/2000/svg"
+										fill="none"
+										viewBox="0 0 24 24"
+										stroke="currentColor">
+										<path
+											stroke-linecap="round"
+											stroke-linejoin="round"
+											stroke-width="2"
+											d="M19 9l-7 7-7-7" />
+									</svg>
+								</button>
+								<ul
+									x-show="open"
+									x-transition
+									x-cloak
+									class="pl-3 ml-4 space-y-1 overflow-y-auto text-sm text-gray-700 border-l border-gray-200 max-h-64">
+									<a
+										href="pages/data/penduduk.html"
+										class="block px-4 py-2 hover:bg-gray-100"
+										>Data Penduduk</a
+									>
+									<a
+										href="pages/data/wilayah.html"
+										class="block px-4 py-2 hover:bg-gray-100"
+										>Data Wilayah</a
+									>
+									<a
+										href="pages/data/pendidikan-kk.html"
+										class="block px-4 py-2 hover:bg-gray-100"
+										>Pendidikan (Total)</a
+									>
+									<a
+										href="pages/data/pekerjaan.html"
+										class="block px-4 py-2 hover:bg-gray-100"
+										>Pekerjaan</a
+									>
+									<a
+										href="pages/data/pendidikan-ditempuh.html"
+										class="block px-4 py-2 hover:bg-gray-100"
+										>Pendidikan (Ditempuh)</a
+									>
+									<a
+										href="pages/data/agama.html"
+										class="block px-4 py-2 hover:bg-gray-100"
+										>Agama</a
+									>
+									<a
+										href="pages/data/jenisKelamin.html"
+										class="block px-4 py-2 hover:bg-gray-100"
+										>Jenis Kelamin</a
+									>
+									<a
+										href="pages/data/kelompokUmur.html"
+										class="block px-4 py-2 hover:bg-gray-100"
+										>Kelompok Umur</a
+									>
+									<a
+										href="pages/data/idm.html"
+										class="block px-4 py-2 hover:bg-gray-100"
+										>Indeks Desa Membangun</a
+									>
+								</ul>
+							</li>
+							<li>
+								<a
+									href="pages/transparansi.html"
+									class="block py-2 hover:text-primary"
+									>Transparansi</a
+								>
+							</li>
+							<li>
+								<a
+									href="pages/layanan.html"
+									class="block py-2 hover:text-primary"
+									>Layanan</a
+								>
+							</li>
+							<li>
+								<a
+									href="pages/lapak.html"
+									class="block py-2 hover:text-primary"
+									>Lapak Desa</a
+								>
+							</li>
+							<li>
+								<a
+									href="pages/galeri.html"
+									class="block py-2 font-medium text-primary"
+									>Galeri</a
+								>
+							</li>
+						</ul>
+					</nav>
+				</div>
+			</div>
+		</header>
+
+		<main class="pt-24 bg-gray-50">
+			<section class="py-12 bg-white border-b border-gray-200">
+				<div class="px-6 mx-auto max-w-7xl">
+					<nav class="flex mb-2" aria-label="Breadcrumb">
+						<ol
+							class="inline-flex items-center space-x-1 text-sm text-gray-500 md:space-x-2">
+							<li class="inline-flex items-center">
+								<a
+									href="index.html"
+									class="inline-flex items-center transition-colors hover:text-primary">
+									<svg
+										class="w-4 h-4 mr-2"
+										fill="currentColor"
+										viewBox="0 0 20 20"
+										xmlns="http://www.w3.org/2000/svg">
+										<path
+											d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z"></path>
+									</svg>
+									Beranda
+								</a>
+							</li>
+							<li aria-current="page">
+								<div class="flex items-center">
+									<svg
+										class="w-3 h-3 text-gray-400"
+										fill="currentColor"
+										viewBox="0 0 20 20"
+										xmlns="http://www.w3.org/2000/svg">
+										<path
+											fill-rule="evenodd"
+											d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
+											clip-rule="evenodd"></path>
+									</svg>
+									<span
+										class="ml-1 font-medium text-gray-800 md:ml-2"
+										x-text="pageTitle"></span>
+								</div>
+							</li>
+						</ol>
+					</nav>
+					<h1
+						class="text-3xl font-bold text-primary md:text-4xl"
+						x-text="pageTitle"></h1>
+					<p
+						class="mt-2 text-lg text-gray-600"
+						x-text="pageSubtitle"></p>
+				</div>
+			</section>
+
+			<section
+				id="galeri"
+				class="py-16 overflow-hidden bg-gray-50"
+				x-data="galleryData"
+				x-init="init()">
+				<div class="px-6 mx-auto max-w-7xl">
+					<div class="flex flex-wrap justify-center gap-3 mb-10">
+						<template x-for="btn in categories" :key="btn.key">
+							<button
+								@click="tab = btn.key"
+								:class="tab === btn.key ? 'bg-primary text-white' : 'bg-white border text-gray-700 hover:bg-green-50'"
+								class="px-5 py-2 font-medium transition duration-150 border rounded-full shadow-sm"
+								x-text="btn.label"></button>
+						</template>
+					</div>
+
+					<div
+						class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+						<template
+							x-for="album in filteredAlbums"
+							:key="album.id">
+							<div
+								@click="openModal(album)"
+								class="relative overflow-hidden transition-all duration-300 shadow-lg cursor-pointer group rounded-2xl hover:shadow-xl">
+								<img
+									:src="album.img"
+									:alt="album.title"
+									onerror="this.src='https://placehold.co/600x600/E0E0E0/757575?text=Gambar+Rusak'; this.onerror=null;"
+									class="object-cover w-full transition-transform duration-500 aspect-square group-hover:scale-105" />
+
+								<div
+									class="absolute bottom-0 left-0 w-full p-4 text-white bg-gradient-to-t from-black/80 to-transparent">
+									<h4
+										class="text-lg font-semibold"
+										x-text="album.title"></h4>
+									<span
+										class="text-sm opacity-80"
+										x-text="categories.find(c => c.key === album.category)?.label || album.category"></span>
+								</div>
+
+								<div
+									class="absolute p-2 text-white transition-opacity duration-300 rounded-full opacity-0 top-3 right-3 bg-black/30 group-hover:opacity-100">
+									<svg
+										xmlns="http://www.w3.org/2000/svg"
+										fill="none"
+										viewBox="0 0 24 24"
+										stroke-width="1.5"
+										stroke="currentColor"
+										class="w-5 h-5">
+										<path
+											stroke-linecap="round"
+											stroke-linejoin="round"
+											d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607zM10.5 7.5v6m3-3h-6" />
+									</svg>
+								</div>
+							</div>
+						</template>
+					</div>
+
+					<template x-if="filteredAlbums.length === 0">
+						<div
+							class="py-16 text-center text-gray-500 col-span-full">
+							<svg
+								xmlns="http://www.w3.org/2000/svg"
+								fill="none"
+								viewBox="0 0 24 24"
+								stroke-width="1.5"
+								stroke="currentColor"
+								class="w-12 h-12 mx-auto mb-4 text-gray-400">
+								<path
+									stroke-linecap="round"
+									stroke-linejoin="round"
+									d="m2.25 15.75 5.159-5.159a2.25 2.25 0 0 1 3.182 0l5.159 5.159m-1.5-1.5 1.409-1.409a2.25 2.25 0 0 1 3.182 0l2.909 2.909m-18 3.75h16.5a1.5 1.5 0 0 0 1.5-1.5V6a1.5 1.5 0 0 0-1.5-1.5H3.75A1.5 1.5 0 0 0 2.25 6v12a1.5 1.5 0 0 0 1.5 1.5Zm10.5-11.25h.008v.008h-.008V8.25Zm.375 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Z" />
+							</svg>
+							<h4 class="text-lg font-semibold text-gray-700">
+								Galeri Kosong
+							</h4>
+							<p>
+								Tidak ada album yang ditemukan untuk kategori
+								ini.
+							</p>
+						</div>
+					</template>
+				</div>
+
+				<div
+					x-show="modalOpen"
+					@click="closeModal()"
+					@keydown.escape.window="closeModal()"
+					x-cloak
+					x-transition.opacity.duration.300ms
+					class="fixed inset-0 z-[99] flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm">
+					<div
+						x-show="modalOpen"
+						x-transition:enter="transition ease-out duration-300"
+						x-transition:enter-start="opacity-0 scale-90"
+						x-transition:enter-end="opacity-100 scale-100"
+						x-transition:leave="transition ease-in duration-200"
+						x-transition:leave-start="opacity-100 scale-100"
+						x-transition:leave-end="opacity-0 scale-90"
+						@click.stop
+						class="relative max-w-3xl max-h-[90vh] w-full bg-white rounded-xl shadow-2xl overflow-hidden">
+						<img
+							:src="modalImage?.img"
+							:alt="modalImage?.title"
+							class="w-full h-auto object-contain max-h-[calc(90vh-4rem)]" />
+						<h4
+							class="p-4 pt-3 text-lg font-semibold text-center text-gray-800 border-t"
+							x-text="modalImage?.title"></h4>
+
+						<button
+							@click="closeModal()"
+							class="absolute p-2 text-white transition-colors rounded-full top-3 right-3 bg-gray-800/50 hover:bg-gray-800">
+							<svg
+								xmlns="http://www.w3.org/2000/svg"
+								fill="none"
+								viewBox="0 0 24 24"
+								stroke-width="1.5"
+								stroke="currentColor"
+								class="w-5 h-5">
+								<path
+									stroke-linecap="round"
+									stroke-linejoin="round"
+									d="M6 18L18 6M6 6l12 12" />
+							</svg>
+						</button>
+					</div>
+				</div>
+			</section>
+		</main>
+
+		<footer class="pt-16 pb-8 text-white bg-primary" x-data="footerData()">
+			<div class="px-6 mx-auto max-w-7xl md:px-10">
+				<div
+					class="grid grid-cols-1 gap-12 pb-10 border-b md:grid-cols-3 border-white/20">
+					<div>
+						<div class="flex items-center gap-4 mb-4">
+							<img
+								:src="identity.logoSrc"
+								alt="Logo Desa"
+								class="border-2 rounded-full w-14 h-14 border-white/70" />
+							<div>
+								<h2
+									class="text-2xl font-semibold"
+									x-text="identity.name"></h2>
+								<p
+									class="text-sm text-accent"
+									x-text="identity.tagline"></p>
+							</div>
+						</div>
+						<p
+							class="text-sm leading-relaxed text-gray-100"
+							x-text="identity.description"></p>
+					</div>
+
+					<div>
+						<h3 class="mb-4 text-xl font-semibold text-accent">
+							Navigasi Cepat
+						</h3>
+						<ul
+							class="gap-8 space-y-3 text-sm text-gray-100 columns-2">
+							<template
+								x-for="link in quickLinks"
+								:key="link.href">
+								<li>
+									<a
+										:href="link.href"
+										class="inline-block transition-colors hover:text-accent hover:underline underline-offset-4"
+										x-text="link.label">
+									</a>
+								</li>
+							</template>
+						</ul>
+					</div>
+
+					<div>
+						<h3 class="mb-4 text-xl font-semibold text-accent">
+							Kontak & Sosial
+						</h3>
+						<ul class="space-y-3 text-sm text-gray-100">
+							<template
+								x-for="item in contactInfo"
+								:key="item.text">
+								<li class="flex items-start gap-3">
+									<span
+										class="w-5 h-5 flex-shrink-0 mt-0.5 opacity-80"
+										x-html="item.icon"></span>
+									<a
+										:href="item.href"
+										class="transition-colors hover:text-accent"
+										x-text="item.text"></a>
+								</li>
+							</template>
+						</ul>
+						<div class="flex gap-3 mt-6">
+							<template
+								x-for="social in socialLinks"
+								:key="social.title">
+								<a
+									:href="social.href"
+									:title="social.title"
+									target="_blank"
+									rel="noopener noreferrer"
+									class="p-2 text-white transition-colors rounded-full bg-white/10 hover:bg-accent hover:text-primary">
+									<span
+										class="sr-only"
+										x-text="social.title"></span>
+									<div
+										class="w-5 h-5"
+										x-html="social.icon"></div>
+								</a>
+							</template>
+						</div>
+					</div>
+				</div>
+				<div class="pt-6 text-sm text-center text-gray-200" x-cloak>
+					©
+					<span x-text="copyright.year"></span>
+					<span x-text="copyright.text"></span>
+					<a
+						:href="copyright.developerLink"
+						target="_blank"
+						rel="noopener noreferrer"
+						class="font-medium transition-colors text-accent hover:text-white"
+						x-text="copyright.developerName"></a
+					>.
+				</div>
+			</div>
+		</footer>
+
+		<script>
+			// Data global untuk seluruh halaman
+			function pageData() {
+				return {
+					// State UI
+					sticky: false,
+					profilOpen: false,
+					dataOpen: false,
+					mobileMenuOpen: false,
+
+					// Data Halaman Spesifik
+					pageTitle: "Galeri Desa",
+					pageSubtitle:
+						"Dokumentasi kegiatan, pembangunan, dan momen penting Desa Sukakerta.",
+
+					// --- Logika Galeri (dari snippet Anda) ---
+					tab: "all",
+					categories: [],
+					modalOpen: false,
+					modalImage: null,
+
+					// REVISI: Menggunakan path gambar yang lebih realistis
+					albums: [
+						{
+							id: 1,
+							title: "Penyaluran BLT Dana Desa TA. 2024",
+							category: "pembangunan",
+							img: "assets/img/galeri/blt-2024.jpg",
+						},
+						{
+							id: 2,
+							title: "PKK Desa Jelang HKP 2021",
+							category: "sosial",
+							img: "assets/img/galeri/pkk-hkp-2021.jpg",
+						},
+						{
+							id: 3,
+							title: "TPT Jln Lapang Volley Sukasari",
+							category: "pembangunan",
+							img: "assets/img/galeri/tpt-sukasari.jpg",
+						},
+						{
+							id: 4,
+							title: "Normalisasi Saluran Cikapundung 21-11-2021",
+							category: "pembangunan",
+							img: "assets/img/galeri/saluran-cikapundung.jpg",
+						},
+						// Tambahkan data lain di sini jika perlu
+						{
+							id: 5,
+							title: "Kegiatan Posyandu",
+							category: "sosial",
+							img: "https://placehold.co/600x600/E91E63/white?text=Galeri+5",
+						},
+						{
+							id: 6,
+							title: "Kerja Bakti Warga",
+							category: "sosial",
+							img: "https://placehold.co/600x600/03A9F4/white?text=Galeri+6",
+						},
+						{
+							id: 7,
+							title: "Pembangunan Jalan Desa",
+							category: "pembangunan",
+							img: "https://placehold.co/600x600/4CAF50/white?text=Galeri+7",
+						},
+						{
+							id: 8,
+							title: "Musyawarah Desa",
+							category: "lainnya",
+							img: "https://placehold.co/600x600/FF9800/white?text=Galeri+8",
+						},
+					],
+
+					init() {
+						const allCategories = this.albums.map(
+							(a) => a.category
+						);
+						const uniqueCategories = [...new Set(allCategories)];
+
+						const labelMap = {
+							pembangunan: "Pembangunan",
+							sosial: "Kegiatan Sosial",
+							lainnya: "Lainnya",
+							// Tambahkan label lain jika ada kategori baru
+						};
+
+						this.categories = [
+							{ key: "all", label: "Semua Album" },
+							...uniqueCategories.map((key) => ({
+								key: key,
+								label:
+									labelMap[key] ||
+									key.charAt(0).toUpperCase() + key.slice(1),
+							})),
+						];
+					},
+
+					get filteredAlbums() {
+						return this.tab === "all"
+							? this.albums
+							: this.albums.filter(
+									(a) => a.category === this.tab
+							  );
+					},
+
+					openModal(album) {
+						this.modalImage = album;
+						this.modalOpen = true;
+					},
+
+					closeModal() {
+						this.modalOpen = false;
+						setTimeout(() => {
+							this.modalImage = null;
+						}, 300); // Tunggu animasi selesai
+					},
+				};
+			}
+
+			// Data khusus untuk komponen footer
+			function footerData() {
+				return {
+					identity: {
+						logoSrc: "assets/img/logo.webp",
+						name: "Desa Sukakerta",
+						tagline: "Kec. Panumbangan, Kab. Ciamis",
+						description:
+							"Desa Sukakerta merupakan desa yang terus berkembang melalui inovasi pelayanan publik, transparansi keuangan, dan potensi lokal yang berdaya saing.",
+					},
+					quickLinks: [
+						{ label: "Beranda", href: "index.html" },
+						{
+							label: "Identitas",
+							href: "pages/profil/identitasDesa.html",
+						},
+						{
+							label: "Visi & Misi",
+							href: "pages/profil/visiMisi.html",
+						},
+						{
+							label: "Struktur BPD",
+							href: "pages/profil/strukturBPD.html",
+						},
+						{
+							label: "Sejarah",
+							href: "pages/profil/sejarahDesa.html",
+						},
+						{
+							label: "Data Penduduk",
+							href: "pages/data/penduduk.html",
+						},
+						{
+							label: "Data Wilayah",
+							href: "pages/data/wilayah.html",
+						},
+						{
+							label: "Pendidikan (Total)",
+							href: "pages/data/pendidikan-kk.html",
+						},
+						{
+							label: "Pendidikan (Ditempuh)",
+							href: "pages/data/pendidikan-ditempuh.html",
+						},
+						{
+							label: "Pekerjaan",
+							href: "pages/data/pekerjaan.html",
+						},
+						{
+							label: "Agama",
+							href: "pages/data/agama.html",
+						},
+						{
+							label: "Jenis Kelamin",
+							href: "pages/data/jenisKelamin.html",
+						},
+						{
+							label: "Kelompok Umur",
+							href: "pages/data/kelompokUmur.html",
+						},
+						{
+							label: "IDM",
+							href: "pages/data/idm.html",
+						},
+						{
+							label: "Transparansi",
+							href: "pages/transparansi.html",
+						},
+						{ label: "Layanan", href: "pages/layanan.html" },
+						{ label: "Lapak", href: "pages/lapak.html" },
+						{ label: "Galeri", href: "pages/galeri.html" },
+					],
+					contactInfo: [
+						{
+							icon: `<svg fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M9.69 18.933l.003.001C9.89 19.02 10 19 10 19s.11.02.308-.066l.002-.001.006-.003.018-.008a5.741 5.741 0 00.281-.14c.186-.096.446-.24.757-.433.62-.384 1.445-.966 2.274-1.765C15.302 14.988 17 12.493 17 9A7 7 0 103 9c0 3.492 1.698 5.988 3.355 7.584a13.733 13.733 0 002.273 1.765 11.842 11.842 0 00.757.433c.126.05.209.09.28.14l.018.008.006.003zM10 11.25a2.25 2.25 0 100-4.5 2.25 2.25 0 000 4.5z" clip-rule="evenodd"></path></svg>`,
+							text: "Jl. Raya Sukakerta No.10, Panumbangan, Ciamis, Jawa Barat",
+							href: "https://maps.google.com/?q=Desa+Sukakerta+Panumbangan+Ciamis",
+						},
+						{
+							icon: `<svg fill="currentColor" viewBox="0 0 20 20"><path d="M2 3.5A1.5 1.5 0 013.5 2h1.148c.16 0 .315.025.462.074l2.54.847a.5.5 0 01.33.633Request.InvalidNumberA 7.0 7.0 0 00-.72 4.04c.09.43.52.72.96.65.07-.01.139-.02.208-.03a.5.5 0 01.58.6c-1.14 3.867-3.867 6.594-7.733 7.734a.5.5 0 01-.6-.58c.01-.07.02-.138.03-.207.07-.44-.22-.87-.65-.96a7.0 7.0 0 00-4.04.72.5.5 0 01-.633-.33L2.074 5.11A1.5 1.5 0 013.5 2H2z"></path></svg>`,
+							text: "(0265) 123456",
+							href: "tel:+62265123456",
+						},
+						{
+							icon: `<svg fill="currentColor" viewBox="0 0 20 20"><path d="M3 4a2 2 0 00-2 2v1.161l8.441 4.221a1.25 1.25 0 001.118 0L19 7.162V6a2 2 0 00-2-2H3z"></path><path d="M19 8.839l-7.77 3.885a2.75 2.75 0 01-2.46 0L1 8.839V14a2 2 0 002 2h14a2 2 0 002-2V8.839z"></path></svg>`,
+							text: "info@desasukakerta.go.id",
+							href: "mailto:info@desasukakerta.go.id",
+						},
+					],
+					socialLinks: [
+						{
+							title: "Facebook",
+							href: "#",
+							icon: `<svg fill="currentColor" viewBox="0 0 24 24"><path d="M22.675 0h-21.35C.597 0 0 .597 0 1.325v21.351C0 23.403.597 24 1.325 24h11.483v-9.294H9.692V11.09h3.116V8.413c0-3.1 1.893-4.788 4.659-4.788 1.325 0 2.463.099 2.795.143v3.24l-1.919.001c-1.504 0-1.796.715-1.796 1.763v2.314h3.59l-.467 3.616h-3.123V24h6.116C23.403 24 24 23.403 24 22.676V1.325C24 .597 23.403 0 22.675 0z"></path></svg>`,
+						},
+						{
+							title: "Instagram",
+							href: "#",
+							icon: `<svg fill="currentColor" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 1.366.062 2.633.35 3.608 1.326.975.975 1.264 2.243 1.326 3.608.058 1.266.07 1.645.07 4.85s-.012 3.584-.07 4.85c-.062 1.366-.35 2.633-1.326 3.608-.975-.975-2.243 1.264-3.608 1.326-1.266.058-1.645.07-4.85.07s-3.584-.012-4.85-.07c-1.366-.062-2.633-.35-3.608-1.326-.975-.975-1.264-2.243-1.326-3.608C2.175 15.647 2.163 15.268 2.163 12s.012-3.584.07-4.85c.062-1.366.35-2.633 1.326-3.608.975-.975 2.243-1.264 3.608-1.326C8.416 2.175 8.796 2.163 12 2.163zm0 1.684c-3.17 0-3.548.012-4.796.07-1.067.05-1.652.23-2.037.385-.513.2-.877.438-1.262.823-.385.385-.623.749-.823 1.262-.155.385-.335.97-.385 2.037-.058 1.248-.07 1.626-.07 4.796s.012 3.548.07 4.796c.05 1.067.23 1.652.385 2.037.2.513.438.877.a823 1.262.385.385.749.623 1.262.823.385.155.97.335 2.037.385 1.248.058 1.626.07 4.796.07s3.548-.012 4.796-.07c1.067-.05 1.652-.23 2.037-.385.513-.2.877.438 1.262.823.385-.385.623-.749.823-1.262.155-.385.335-.97-.385-2.037.058-1.248.07-1.626.07-4.796s-.012-3.548-.07-4.796c-.05-1.067-.23-1.652-.385-2.037-.2-.513-.438-.877-.823-1.262-.385-.385-.749-.623-1.262.823-.385-.155-.97.335-2.037-.385-1.248-.058-1.626-.07-4.796-.07zm0 3.838a5.999 5.999 0 1 1 0 11.998 5.999 5.999 0 0 1 0-11.998zm0 9.9a3.9 3.9 0 1 0 0-7.8 3.9 3.9 0 0 0 0 7.8zm6.406-10.845a1.44 1.44 0 1 1 0-2.88 1.44 1.44 0 0 1 0 2.88z"></path></svg>`,
+						},
+					],
+					copyright: {
+						year: new Date().getFullYear(),
+						text: "Desa Sukakerta. Dikembangkan oleh",
+						developerName: "Hans Dev",
+						developerLink: "#",
+					},
+				};
+			}
+
+			// Inisialisasi Alpine
+			document.addEventListener("alpine:init", () => {
+				// REVISI: Menggabungkan pageData dan galleryData
+				Alpine.data("pageData", () => ({
+					...pageData(),
+					...galleryData(),
+				}));
+				Alpine.data("footerData", footerData);
+			});
+
+			// REVISI: Memindahkan logika galeri ke fungsi terpisah
+			function galleryData() {
+				return {
+					tab: "all",
+					categories: [],
+					modalOpen: false,
+					modalImage: null,
+
+					albums: [
+						{
+							id: 1,
+							title: "Penyaluran BLT Dana Desa TA. 2024",
+							category: "pembangunan",
+							img: "assets/img/galeri/blt-2024.jpg",
+						},
+						{
+							id: 2,
+							title: "PKK Desa Jelang HKP 2021",
+							category: "sosial",
+							img: "assets/img/galeri/pkk-hkp-2021.jpg",
+						},
+						{
+							id: 3,
+							title: "TPT Jln Lapang Volley Sukasari",
+							category: "pembangunan",
+							img: "assets/img/galeri/tpt-sukasari.jpg",
+						},
+						{
+							id: 4,
+							title: "Normalisasi Saluran Cikapundung 21-11-2021",
+							category: "pembangunan",
+							img: "assets/img/galeri/saluran-cikapundung.jpg",
+						},
+						{
+							id: 5,
+							title: "Kegiatan Posyandu",
+							category: "sosial",
+							img: "https://placehold.co/600x600/E91E63/white?text=Galeri+5",
+						},
+						{
+							id: 6,
+							title: "Kerja Bakti Warga",
+							category: "sosial",
+							img: "https://placehold.co/600x600/03A9F4/white?text=Galeri+6",
+						},
+						{
+							id: 7,
+							title: "Pembangunan Jalan Desa",
+							category: "pembangunan",
+							img: "https://placehold.co/600x600/4CAF50/white?text=Galeri+7",
+						},
+						{
+							id: 8,
+							title: "Musyawarah Desa",
+							category: "lainnya",
+							img: "https://placehold.co/600x600/FF9800/white?text=Galeri+8",
+						},
+					],
+
+					init() {
+						const allCategories = this.albums.map(
+							(a) => a.category
+						);
+						const uniqueCategories = [...new Set(allCategories)];
+
+						const labelMap = {
+							pembangunan: "Pembangunan",
+							sosial: "Kegiatan Sosial",
+							lainnya: "Lainnya",
+						};
+
+						this.categories = [
+							{ key: "all", label: "Semua Album" },
+							...uniqueCategories.map((key) => ({
+								key: key,
+								label:
+									labelMap[key] ||
+									key.charAt(0).toUpperCase() + key.slice(1),
+							})),
+						];
+					},
+
+					get filteredAlbums() {
+						return this.tab === "all"
+							? this.albums
+							: this.albums.filter(
+									(a) => a.category === this.tab
+							  );
+					},
+
+					openModal(album) {
+						this.modalImage = album;
+						this.modalOpen = true;
+					},
+
+					closeModal() {
+						this.modalOpen = false;
+						setTimeout(() => {
+							this.modalImage = null;
+						}, 300); // Tunggu animasi selesai
+					},
+				};
+			}
+		</script>
+	</body>
+</html>
